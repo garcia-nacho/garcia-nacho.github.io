@@ -4,12 +4,8 @@ title: About
 permalink: /about/
 ---
 
-Some information about you!
-
-### More Information
-
-A place to include any other types of information that you'd like to include about yourself.
+Biochemist in love with data science. machine learning and AI
 
 ### Contact me
 
-[email@domain.com](mailto:email@domain.com)
+[garcia.nacho@gmail..com](mailto:ohcan.aicrag@gmail.com)
