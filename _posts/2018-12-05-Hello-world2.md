@@ -4,7 +4,7 @@ title:  "Welcome to my blog!"
 ---
 
 
-Finally I have decided get a blog where I can share all my code and ideas about ML and AI. 
+Finally I have decided to write a blog where I can share all my code and ideas about ML and AI. 
 Stay tuned \!
 
 
