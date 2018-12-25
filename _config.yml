@@ -58,10 +58,14 @@ permalink: /:title/
 # The release of Jekyll Now that you're using
 version: v1.2.0
 
+highlighter: rouge
+markdown: kramdown
+
 # Jekyll 3 now only supports Kramdown for Markdown
-kramdown: kramdown
+kramdown:
   # Use GitHub flavored markdown, including triple backtick fenced code blocks
   input: GFM
+  auto_ids: true
   # Jekyll 3 and GitHub Pages now only support rouge for syntax highlighting
   syntax_highlighter: rouge
   syntax_highlighter_opts:
