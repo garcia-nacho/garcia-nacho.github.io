@@ -4,7 +4,7 @@ title: About
 permalink: /about/
 ---
 
-Biochemist in love with data science, machine learning and AI
+Scientist in love with data analysis, machine learning and AI.
 
 ### Contact me
 
