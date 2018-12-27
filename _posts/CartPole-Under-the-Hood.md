@@ -6,10 +6,17 @@ date: '2018-12-25 15:25:00'
 
 
 ### Introduction.
-In [my last post](https://garcia-nacho.github.io/AI-in-R/) I was explaining how to use AI to solve the [CartPole environment](https://gym.openai.com/envs/CartPole-v0/) by testing sets of 10 radom values as weights of a very simple neural network. In this post we are going to investigate a bit more on what is going on during these processes.
+In [my last post](https://garcia-nacho.github.io/AI-in-R/) I was explaining how to use AI to solve the [CartPole environment](https://gym.openai.com/envs/CartPole-v0/) by testing sets of 10 radom values as weights of a very simple neural network. In this post we are going to investigate a bit more on what is going on during these processes. 
+In machine learning the weights are the internal parameters that are used to sequentially transform 
+
+, during the training process the weights are modified to optimize the output
+
 
 ### Distribution of valid sets of weights.
-In my previous post about the CartPole I showed that random search of weights is strong enough to solve the enviroment in few rounds. That means that the range of weights that 
+In neural networks the weights are the internal parameters of the 
+
+In the previous post I showed that random search of weights is strong enough to solve the enviroment in a few rounds; indeed, the first time that I run the agent, the script was able to find a set of weights that 
+
 
 ### Neural network vs linear model.
 In my last post I mentioned that the CartPole environment could be solved finding the weights (and the intercept) of a linear model such like this:
