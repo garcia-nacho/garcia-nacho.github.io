@@ -7,7 +7,7 @@ date: '2018-12-25 15:25:00'
 
 ### Introduction.
 In [my last post](https://garcia-nacho.github.io/AI-in-R/) I was explaining how to use AI to solve the [CartPole environment](https://gym.openai.com/envs/CartPole-v0/) by testing sets of 10 radom values as weights of a very simple neural network. In this post we are going to investigate a bit more on what is going on during these processes. 
-In machine learning the weights are the internal parameters that are used to sequentially transform 
+In machine learning the weights are the internal parameters that are used to transform the input values into the prediction. Usually they are randomly initiated and tuned during the training process so the predictions are more and more accurated. In our neural network we don't really tune them, we randomly asign values to the weigths and check the performance of the agent. This strategy only works if the space of working weights is big enought, so it is very likely that we can find them just by chance.      
 
 , during the training process the weights are modified to optimize the output
 
