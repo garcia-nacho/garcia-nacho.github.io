@@ -1,7 +1,7 @@
 ---
 layout: post
 title:  "CartPole, Under the Hood"
-date: '2018-12-25 15:25:00'
+date: '2019-01-01 15:25:00'
 ---
 
 
@@ -22,16 +22,13 @@ Action = Obs1*Weight1 + Obs2*Weight2 + Obs3*Weight3 + Obs4*Weight4 + Intercept
 However this type of linear models (without the intercept) belong indeed to special case of a neural network in which the weight connecting one neuron with the output (*WN2.2*) is 0 and the other weight of the other neuron is 1 (*WN2.1*):
 ![P3Scheme](/images/P3Scheme1.jpg)
 
-So I wanted to explore the weights, specially the distribution of *WN2.2* and *WN2.1* to see if it was somehow related with the ability of the agent to solve the CartPole.
+So I wanted to explore the weights, specially the distribution of *WN2.2* and *WN2.1* to see if it was somehow related with the ability of the agent to solve the CartPole.   
 ![P3LinReg](/images/P3LinReg.png)
-
-
-### Generation of novel neural networks able to solve the CartPole
-
-Until this point I have shown that 
-
+V9 is the weight *WN2.1* and V10 is *WN2.2*, in blue are represented those values of *WN2.1* and *WN2.2* that are able to solve the CartPole (together with the other 8 weights). The triangles represent those values of WN2.1 and WN2.2 in which our neural network approximates a linear regression model (very high or low ratios *WN2.1* / *WN2.2*).   
+First of all, it seems that all range of *WN2.1* and *WN2.2* are permited in the agents able to solve the CartPole. It also seems that some of the solving agents (3 out of 39) have a linear regression policy instead of a neural network. So the next question is if the NNet agents perform differently from the LinReg ones in any condition.
 
 ### Neural networks seem to be more stable in noise conditions.
+Unfortunately there 
 
 <pre><code>
 Noise<-0.7
@@ -48,3 +45,8 @@ NNet No Noise: (69%) N=36
 NNet noise 0.7 (25%)
 
 Everything seems to suggest that neural networks provide more stability to the agent than linear regressions. However the number of observations is too low to conclude it without any doubt so more simulations would be needed.
+
+
+### *Artificial* Generation of Agents Able to Solve the CartPole
+
+Until this point I have shown that 
