@@ -31,8 +31,10 @@ First of all, it seems that all range of *WN2.1* and *WN2.2* are permited in the
 Just from a visual inspection of the episodes executed by different agents we can find that even though all of them solve the environment there are differences in the behaviour of them.
 
 *LinReg-Agent-1*
+![LinRegCartPole](/images/LinRegCartPole.gif)
 
 *NNet-Agent-1*
+![LinRegNNet](/images/NNetCartPole.gif)
 
 Unfortunately there is no easy way to run the environment for more than 200 steps without touching the Python code, so it is not easy to find out how the different agents would perform in longer episodes. 
 
