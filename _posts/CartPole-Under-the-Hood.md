@@ -50,3 +50,5 @@ Everything seems to suggest that neural networks provide more stability to the a
 ### *Artificial* Generation of Agents Able to Solve the CartPole
 
 Until this point I have shown that 
+
+![P3Clones.gif](/images/P3Clones.gif)
