@@ -6,17 +6,11 @@ date: '2018-12-25 15:25:00'
 
 
 ### Introduction.
-In [my last post](https://garcia-nacho.github.io/AI-in-R/) I was explaining how to use AI to solve the [CartPole environment](https://gym.openai.com/envs/CartPole-v0/) by testing sets of 10 radom values as weights of a very simple neural network. In this post we are going to investigate a bit more on what is going on during these processes. 
-In machine learning the weights are the internal parameters that are used to transform the input values into the prediction. Usually they are randomly initiated and tuned during the training process so the predictions are more and more accurated. In our neural network we don't really tune them, we randomly asign values to the weigths and check the performance of the agent. This strategy only works if the space of working weights is big enought, so it is very likely that we can find them just by chance.      
-
-, during the training process the weights are modified to optimize the output
-
+In [my last post](https://garcia-nacho.github.io/AI-in-R/) I was showing how to use AI to solve the [CartPole environment](https://gym.openai.com/envs/CartPole-v0/) by assigning and testing sets of 10 random values as weights of a very simple neural network. In this post, we are going to investigate a bit more on what is going on during these processes. 
+In machine learning, the weights are the internal parameters that are used to transform the input values into the predictions. The weights are usually initiated in a random manner and tuned during the training process so the predictions are more and more accurate. We can say that the training process is indeed the adjustment of the weights of the model. In our neural network, we don't really tune them, we randomly assign values to the weights and check the performance of the agent. This strategy only works if the space of working weights is big enough, so it is very likely that we can find them just by chance.   
 
 ### Distribution of valid sets of weights.
-In neural networks the weights are the internal parameters of the 
-
-In the previous post I showed that random search of weights is strong enough to solve the enviroment in a few rounds; indeed, the first time that I run the agent, the script was able to find a set of weights that 
-
+In [our model](https://github.com/garcia-nacho/ArtificialIntelligence/blob/master/ExplorationRandomSearchNN.R) the chance of getting a working model is that high that the first time that I run the model I obtained a valid model able to solve the enviroment after 3 rounds. However, how likely is to find a valid set of weights? To answer this question I modified the script to it doesn't break when the solved condition is acchieve  
 
 ### Neural network vs linear model.
 In my last post I mentioned that the CartPole environment could be solved finding the weights (and the intercept) of a linear model such like this:
