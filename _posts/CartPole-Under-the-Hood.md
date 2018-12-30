@@ -69,3 +69,5 @@ As you can see there is endles fun under the hood of AI implementations and the 
 
 
 ![P3Clones.gif](/images/P3Clones.gif)
+***"The best thing about being me, there's so many me's"***
+*Agent Smith (The Matrix Reloaded, 2003)*
