@@ -35,22 +35,23 @@ Just from a visual inspection of the episodes executed by different agents we ca
 ![LinRegNNet](/images/NNetCartPole.gif)
 *NNet-Agent-1*
 
-Unfortunately there is no easy way to run the environment for more than 200 steps without touching the Python code, so it is not easy to find out how the different agents would perform in longer episodes. 
-
-
+If you carefully look at the course of the pool, the two agents clearly behave differently. That means that there might be differences in the performace of different agents, unfortunately there is no easy way to run the environment for more than 200 steps without touching the Python code of the gym, so it is not easy to find out how the different agents would perform in longer episodes. However, we could introduce a noise parameter to evaluate the performace of the agents in a noisy environment comparing them. Noise, in this context, can be undestood as a random modification of the observations that the agent observes. I implemented the noise as follows:
 <pre><code>
+#Noise level up to 70%
 Noise<-0.7
     for (l in 1:Observations) {
     dfEyes[j,l]<-dfEyes[j,l]+(runif(1, min = -Noise, max = Noise)*dfEyes[j,l]) 
     }
     Input<-dfEyes[j,1:Observations]
 </code></pre>
+The agent perceives the enviroment with a distortion in all observation up to a 70% (added or substracted). We can think of this type of noise a real-world situation in which the sensors connected to the agent are faulty or imprecise. This type of situations is really common in some delicate computer-assisted operations such as those carried out in the aerospacial field (you can read more about this [here](https://ieeexplore.ieee.org/document/5466132).
 
-LinReg No Noise: (66%) N=3
-LinReg Noise 0.7: (0%)
+I re-evaluated the performance of the *LinReg* (n=3) and *NNet* (n=36) agents under this noisy conditions and I found that none of the the *LinReg* agents were able to solve the environment, however almost half of the *NNet* agents were still able to solve the noisy environment:
 
-NNet No Noise: (69%) N=36
-NNet noise 0.7 (25%)
+*LinReg agent 1* + Noise
+
+*NNet agent 1* + Noise
+
 
 Everything seems to suggest that neural networks provide more stability to the agent than linear regressions. However the number of observations is too low to conclude it without any doubt so more simulations would be needed.
 
