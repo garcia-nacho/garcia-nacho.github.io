@@ -12,7 +12,7 @@ In machine learning, the weights are the internal parameters that are used to tr
 ### Distribution of valid sets of weights.
 In [our model](https://github.com/garcia-nacho/ArtificialIntelligence/blob/master/ExplorationRandomSearchNN.R) the chance of getting a working model is that high that the first time that I run the model, I obtained a valid set of weights able to solve the enviroment just after 3 rounds. However, how likely is to find a valid set of weights? To answer this question I modified the script so it doesn't stop when the environment is solved so we can count the number of valid models at the after N rounds.
 After 1500 rounds we found this distribution of success:
-[!P3Density](/images/P3Density.png)
+![P3Density](/images/P3Density.png)
 In which atmost a 3% of the combinations of weights are able to solve the environment.
 
 ### Neural network vs linear model.
