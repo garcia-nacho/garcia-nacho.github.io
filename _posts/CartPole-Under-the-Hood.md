@@ -10,7 +10,10 @@ In [my last post](https://garcia-nacho.github.io/AI-in-R/) I was showing how to 
 In machine learning, the weights are the internal parameters that are used to transform the input values into the predictions. The weights are usually initiated in a random manner and tuned during the training process so the predictions are more and more accurate. We can say that the training process is indeed the adjustment of the weights of the model. In our neural network, we don't really tune them, we randomly assign values to the weights and check the performance of the agent. This strategy only works if the space of working weights is big enough, so it is very likely that we can find them just by chance.   
 
 ### Distribution of valid sets of weights.
-In [our model](https://github.com/garcia-nacho/ArtificialIntelligence/blob/master/ExplorationRandomSearchNN.R) the chance of getting a working model is that high that the first time that I run the model I obtained a valid model able to solve the enviroment after 3 rounds. However, how likely is to find a valid set of weights? To answer this question I modified the script to it doesn't break when the solved condition is acchieve  
+In [our model](https://github.com/garcia-nacho/ArtificialIntelligence/blob/master/ExplorationRandomSearchNN.R) the chance of getting a working model is that high that the first time that I run the model, I obtained a valid set of weights able to solve the enviroment just after 3 rounds. However, how likely is to find a valid set of weights? To answer this question I modified the script so it doesn't stop when the environment is solved so we can count the number of valid models at the after N rounds.
+After 1500 rounds we found this distribution of success:
+[!P3Density](/images/P3Density.png)
+In which atmost a 3% of the combinations of weights are able to solve the environment.
 
 ### Neural network vs linear model.
 In my last post I mentioned that the CartPole environment could be solved finding the weights (and the intercept) of a linear model such like this:
