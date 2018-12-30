@@ -28,7 +28,14 @@ V9 is the weight *WN2.1* and V10 is *WN2.2*, in blue are represented those value
 First of all, it seems that all range of *WN2.1* and *WN2.2* are permited in the agents able to solve the CartPole. It also seems that some of the solving agents (3 out of 39) have a linear regression policy instead of a neural network. So the next question is if the NNet agents perform differently from the LinReg ones in any condition.
 
 ### Neural networks seem to be more stable in noise conditions.
-Unfortunately there 
+Just from a visual inspection of the episodes executed by different agents we can find that even though all of them solve the environment there are differences in the behaviour of them.
+
+*LinReg-Agent-1*
+
+*NNet-Agent-1*
+
+Unfortunately there is no easy way to run the environment for more than 200 steps without touching the Python code, so it is not easy to find out how the different agents would perform in longer episodes. 
+
 
 <pre><code>
 Noise<-0.7
