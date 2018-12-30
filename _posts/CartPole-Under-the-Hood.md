@@ -17,7 +17,7 @@ In which almost a 3% of the combinations of weights are able to solve the enviro
 
 ### Neural network vs linear model.
 In my last post I already mentioned that the CartPole environment could be solved finding the weights (and the intercept) of a linear model such like this:<pre><code>
-Action = Obs1*Weight1 + Obs2*Weight2 + Obs3*Weight3 + Obs4*Weight4 + Intercept 
+Action = Obs1 * Weight1 + Obs2 * Weight2 + Obs3 * Weight3 + Obs4 * Weight4 + Intercept 
 </code></pre>
 However this type of linear models (without the intercept) belong indeed to special case of a neural network in which the weight connecting one neuron with the output (*WN2.2*) is 0 and the other weight of the other neuron is 1 (*WN2.1*):
 ![P3Scheme](/images/P3Scheme1.jpg)
@@ -53,11 +53,19 @@ I re-evaluated the performance of the *LinReg* (n=3) and *NNet* (n=36) agents un
 *NNet agent 1* + Noise
 
 
-Everything seems to suggest that neural networks provide more stability to the agent than linear regressions. However the number of observations is too low to conclude it without any doubt so more simulations would be needed.
-
+Everything seems to suggest that neural networks provide more stability to the agent than linear regressions. However the number of observations is too low to conclude it without any doubt so more simulations would be needed. Anyhow it seems to be clear that there is a lot of approaches for the different agents to solve the environment, some of them more resistant to noise intererences. 
 
 ### *Artificial* Generation of Agents Able to Solve the CartPole
 
-Until this point I have shown that 
+Until this point we have seen that the different agents obtained by the random search approach peform distinctly. Therefore it would be very interesting to multiply the number of agents so we could study and rank them. In this section I am going to show you an iterative approach able to generate thousands of agents in just few minutes.
+
+We are going to use the data that we already have 
+
+further studies could be oriented to infer the non linear relationships between weights so we could understand it. 
+
+
+As you can see there is endles fun under the hood of AI implementations and the more control you have over your algorithms and functions the more you can explore. 
+
+
 
 ![P3Clones.gif](/images/P3Clones.gif)
