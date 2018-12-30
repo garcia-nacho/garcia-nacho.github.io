@@ -16,9 +16,8 @@ After 1500 rounds we found this distribution of success:
 In which atmost a 3% of the combinations of weights are able to solve the environment. However as you can see from the plot we have created a large range of agents, most of them don't work, some of them perform over a random-agent and some of them solve the environment.  
 
 ### Neural network vs linear model.
-In my last post I already mentioned that the CartPole environment could be solved finding the weights (and the intercept) of a linear model such like this:
-<pre><code>
-Action = Obs1 * Weight1 + Obs1 * Weight1 +Obs1 * Weight1 +Obs1 * Weight1 + Intercept 
+In my last post I already mentioned that the CartPole environment could be solved finding the weights (and the intercept) of a linear model such like this:<pre><code>
+Action = Obs1*Weight1 + Obs2*Weight2 + Obs3*Weight3 + Obs4*Weight4 + Intercept 
 </code></pre>
 However this type of linear models (without the intercept) belong indeed to special case of a neural network in which the weight connecting one neuron with the output is 0 and the other weight of the other neuron is 1:
 
