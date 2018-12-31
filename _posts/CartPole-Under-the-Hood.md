@@ -35,7 +35,7 @@ Just from a visual inspection of the episodes executed by different agents we ca
 ![LinRegNNet](/images/NNetCartPole.gif)
 *NNet-Agent-1*
 
-If you carefully look at the course of the pool, the two agents clearly behave differently. That means that there might be differences in the performace of different agents, unfortunately there is no easy way to run the environment for more than 200 steps without touching the Python code of the gym, so it is not easy to find out how the different agents would perform in longer episodes. However, we could introduce a noise parameter to evaluate the performace of the agents in a noisy environment comparing them. Noise, in this context, can be undestood as a random modification of the observations that the agent observes. I implemented the noise as follows:
+If you carefully look at how the pool balances, it becomes clear that the two agents behave differently. That means that there might be differences in the performace of different agents, unfortunately there is no easy way to run the environment for more than 200 steps without touching the Python code of the gym, so it is not easy to find out how the different agents would perform in longer episodes. However, we could introduce a noise parameter to evaluate the performace of the agents in a noisy environment comparing them. Noise, in this context, can be undestood as a random modification of the observations that the agent observes. I have implemented the noise as follows:
 <pre><code>
 #Noise level up to 70%
 Noise<-0.7
