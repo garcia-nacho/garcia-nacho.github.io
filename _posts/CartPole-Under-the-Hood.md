@@ -112,16 +112,73 @@ Next, I created a matrix of 1000 new possible random agents:
 <pre></code>weights.space <- as.data.frame(matrix(runif(10000, min = -1, max = 1), ncol = 10, nrow = 1000))
 weights.space.h2o <- as.h2o(weights.space)</code></pre>
 
-I retrained the model using the training and the testing set and look for positive agents in the matrix of agents.
+I re-trained the model using the training and the testing set and look for positive agents in the matrix of agents.
 <pre><code>Agent.Pred<-h2o.predict(NNet, weights.space.h2o)
 weights.space$predicted<-as.vector(Agent.Pred$predict)</code></pre>
 
 It predicted 108 out of 1000 agents to be working. Let's try them out in the gym environment:
+<pre><code>#Restart the gym
+instance_id <- env_create(server, env_id)
+Agents<-subset(weights.space, weights.space$predicted == 1)
 
-The performance was not as good as I expected since only 
+for (k in 1:nrow(Agents)) {
+  weightsT<-Agents[k,1:10]
+  
+  #dfGod is the dataframe where all the observation for all iterations are stored
+  dfGod<-as.data.frame(t(c(1:9)))
+  dfGod<-dfGod[!1,]
+  
+  print(paste("Round",k,sep = " "))
+  for (i in 1:(iterations)) {
+    dfEyes<-as.data.frame(t(rep(NA,4)))
+    colnames(dfEyes)<-c("Obs1","Obs2","Obs3","Obs4")
+    
+    ob <- env_reset(server, instance_id)
+    dfEyes[1,1:4]<-ob
+    dfEyes$iteration[1]<-0
+    dfEyes$Reward[1]<-NA
+    dfEyes$Done[1]<-FALSE
+    dfEyes$action[1]<-NA
+    
+    for (j in 1:max_steps) {
 
-but the good thing about our strategie is that I am going to use the newly created agents to improve the performance of the h2o model by merging the old set of weights with the new ones that I have already tested and retrain the model. After doing this several times we end up with a highly improved model. We can do this implementing this loop:
+      Input<-dfEyes[j,1:Observations]
+      
+      Neuron.layer[1]<-sigmoid(sum(Input[, 1:Observations]*weightsT[1:4]), method = "tanh")  
+      Neuron.layer[2]<-sigmoid(sum(Input[, 1:Observations]*weightsT[5:8]), method = "tanh")
+            
+      action<-round(sigmoid(sum(Neuron.layer*weightsT[9:10]), method = "logistic"))
+      results <- env_step(server, instance_id, action, render = TRUE)
+      
+      dfEyes[j+1,1:4]<-results[[1]]
+      dfEyes$Reward[j+1]<-results[[2]]
+      dfEyes$Done[j+1]<-results[[3]]
+      dfEyes$action[j+1]<-action
+      dfEyes$iteration[j+1]<-j
+      dfEyes$round<-i
+      t.zero<-unlist(ob)
+      
+      if (results[["done"]]) break
+    }
+    dfEyes$Reward<-nrow(dfEyes)
+    colnames(dfGod)<-colnames(dfEyes)
+    dfGod[(nrow(dfGod)+1):(nrow(dfGod)+nrow(dfEyes)),]<-dfEyes
+  }
+  
+  dfGod<-dfGod[complete.cases(dfGod),]
+  Reward<-mean(unique(dfGod$Reward))
+  RewardT[k]<-Reward
 
+  print(Reward)
+}
+
+#Closing the environment
+env_close(server,instance_id)</code></pre>
+
+The performance was not as good as in training set since only 24 out of the 108 agents were able to solve the environment; however, the good thing about our strategy is that we can use the newly created agents to improve the performance of the h2o model by merging the old set of weights with the new ones that I have already tested and retrain the model. 
+After doing this several times we end up with a highly improved model, check out the code [here](ExplorationRandomUnderTheHood2.R)
+
+### Conclusions
 In this example I have implemented a very simple classifier but imagine the possibilities, one could implement an scoring system based on the performance in noisy enviroments to train and retrain the perfect set of agents:
 
 ![P3Clones.gif](/images/P3Clones.gif)
