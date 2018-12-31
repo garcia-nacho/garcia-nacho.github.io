@@ -86,8 +86,8 @@ dfWeightsTest<-dfWeights[901:1000,]
 df.h2oTrain <- as.h2o(dfWeightsTrain)
 df.h2oTest <- as.h2o(dfWeightsTest)
 
-  NNet    <-         h2o.deeplearning(x= 1:10,
-                     y=12,
+  NNet    <-         h2o.deeplearning(x= 1:10,  #Weights
+                     y=11,  #completed column
                      stopping_metric="logloss",
                      distribution = "bernoulli",
                      loss = "CrossEntropy",
@@ -95,25 +95,40 @@ df.h2oTest <- as.h2o(dfWeightsTest)
                      validation_frame = df.h2oTest,
                      training_frame	=	df.h2oTrain,
                      hidden = c(24,24),
-                     nfolds = nfolds,
+                     nfolds = 5,
                      fold_assignment = "Modulo",
                      keep_cross_validation_predictions = TRUE,
-                     epochs = 5) </code></pre>
+                     epochs = 10) </code></pre>
                  
-After training I checked the performance on the test set
+After training I checked the performance on the test set, it predicted 2 of the 3 working agents and predicted as positive only one out of 100 non-working agents:
 
+<pre><code>P<-h2o.predict(NNet, df.h2oTest)
+dfWeightsTest$predicted<-as.vector(P$predict)</code></pre>
 
+![P2Predicitions](/images/P2Predicitions.png)
 
-further studies could be oriented to infer the non linear relationships between weights so we could understand it. 
+Next, I created a matrix of 1000 new possible random agents:
 
+<pre></code>weights.space <- as.data.frame(matrix(runif(10000, min = -1, max = 1), ncol = 10, nrow = 1000))
+weights.space.h2o <- as.h2o(weights.space)</code></pre>
 
-As you can see there is endles fun under the hood of AI implementations and the more control you have over your algorithms and functions the more you can explore. 
+I retrained the model using the training and the testing set and look for positive agents in the matrix of agents.
+<pre><code>Agent.Pred<-h2o.predict(NNet, weights.space.h2o)
+weights.space$predicted<-as.vector(Agent.Pred$predict)</code></pre>
 
+It predicted 108 out of 1000 agents to be working. Let's try them out in the gym environment:
 
+The performance was not as good as I expected since only 
+
+but the good thing about our strategie is that I am going to use the newly created agents to improve the performance of the h2o model by merging the old set of weights with the new ones that I have already tested and retrain the model. After doing this several times we end up with a highly improved model. We can do this implementing this loop:
+
+In this example I have implemented a very simple classifier but imagine the possibilities, one could implement an scoring system based on the performance in noisy enviroments to train and retrain the perfect set of agents:
 
 ![P3Clones.gif](/images/P3Clones.gif)
 ***"The best thing about being me, there's so many me's"***
 *Agent Smith (The Matrix Reloaded, 2003)*
+
+As you can see there is endles fun under the hood of AI implementations and the more control you have over your algorithms and functions the more you can explore. 
 
 ### Notes
 After testing to fit a linear regression model to a 
