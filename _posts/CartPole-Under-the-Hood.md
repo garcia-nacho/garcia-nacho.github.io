@@ -36,8 +36,7 @@ Just from a visual inspection of the episodes executed by different agents we ca
 *NNet-Agent-1*
 
 If you carefully look at how the pool balances, it becomes clear that the two agents behave differently. That means that there might be differences in the performace of different agents, unfortunately there is no easy way to run the environment for more than 200 steps without touching the Python code of the gym, so it is not easy to find out how the different agents would perform in longer episodes. However, we could introduce a noise parameter to evaluate the performace of the agents in a noisy environment comparing them. Noise, in this context, can be undestood as a random modification of the observations that the agent observes. I have implemented the noise as follows:
-<pre><code>
-#Noise level up to 70%
+<pre><code>#Noise level up to 70%
 Noise<-0.7
     for (l in 1:Observations) {
     dfEyes[j,l]<-dfEyes[j,l]+(runif(1, min = -Noise, max = Noise)*dfEyes[j,l]) 
@@ -66,10 +65,10 @@ It is logical to expect that all working sets of weights have internally somethi
 
 We are going to train the network using the 1500 sets of weights that we already obtained. In this case we are going to use a standalone library that we can access from R, h2o. I like h2o because it is simple but pretty flexible, you can implement deep neural networks, random forests, gradient boosting machines, linear regressions or model ensembles among others. It also has a function to perform hyperparameter searches, which make it a very complete library for basic (and not that basic) machine learning tasks.
 
-The goal of this post is not talk about h2o how to install it or how to run it. You can read about those topics [here](http://docs.h2o.ai/h2o/latest-stable/h2o-docs/welcome.html). 
+The goal of this post is not talk about h2o how to install it or how to run it. You can read about those topics [here](http://docs.h2o.ai/h2o/latest-stable/h2o-docs/welcome.html).   
 
 I implemented a clasifier using a basic deep neural net whith two internal layers of 24 neurons (I was playing a little bit with the architectures and 24-24 performed fairly well. 
-<pre><code 
+<pre><code> 
 #h2o initialization
 h2o.init()
 
