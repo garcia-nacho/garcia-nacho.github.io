@@ -48,18 +48,61 @@ The agent perceives the enviroment with a distortion in all observation up to a 
 
 I re-evaluated the performance of the *LinReg* (n=3) and *NNet* (n=36) agents under this noisy conditions and I found that none of the the *LinReg* agents were able to solve the environment, however almost half of the *NNet* agents were still able to solve the noisy environment:
 
-*LinReg agent 1* + Noise
+![LinRegNoise](/images/LinRegNoise.gif)
+*LinReg agent #1* + Noise
 
-*NNet agent 1* + Noise
+![NNetNoise5](/images/NNetNoise5.gif)
+*NNet agent #5* + Noise
 
+Everything seems to suggest that neural networks based policies provide more stability to the agent than linear regressions ones. However the number of observations is too low to conclude it without any doubt so more simulations and simulations in which *WeightN2.1* and *WeightN2.2* are forced to 1 and 0 respectively. 
 
-Everything seems to suggest that neural networks provide more stability to the agent than linear regressions. However the number of observations is too low to conclude it without any doubt so more simulations would be needed. Anyhow it seems to be clear that there is a lot of approaches for the different agents to solve the environment, some of them more resistant to noise intererences. 
+Anyhow it seems to be clear that there is a lot of approaches for the different agents to solve the environment and some of them more resistant to noise interferences. 
 
 ### *Artificial* Generation of Agents Able to Solve the CartPole
 
-Until this point we have seen that the different agents obtained by the random search approach peform distinctly. Therefore it would be very interesting to multiply the number of agents so we could study and rank them. In this section I am going to show you an iterative approach able to generate thousands of agents in just few minutes.
+Since the weights are what define an agent, we could say that they would represent *"the software of the sotfware"* and the neural network would be the *"hardware of the software"*. Until this point we have seen that the different agents loaded with different versions of the *"software"* peform distinctly. Therefore it would be very interesting to expand the number of agents so we could study and maybe rank them. In this section I am going to show you an iterative approach able to generate thousands of agents in just few steps.
 
-We are going to use the data that we already have 
+It is logical to expect that all working sets of weights have internally something in common, meaning that there is an internall hidden relationship between the 10 weights that conform a valid set, and this is the hypothesis that we are going to test. To do that we are going to implement another deep neural network in which we are going to use the 10 weights as inputs and the 
+
+We are going to train the network using the 1500 sets of weights that we already obtained. In this case we are going to use a standalone library that we can access from R, h2o. I like h2o because it is simple but pretty flexible, you can implement deep neural networks, random forests, gradient boosting machines, linear regressions or model ensembles among others. It also has a function to perform hyperparameter searches, which make it a very complete library for basic (and not that basic) machine learning tasks.
+
+The goal of this post is not talk about h2o how to install it or how to run it. You can read about those topics [here](http://docs.h2o.ai/h2o/latest-stable/h2o-docs/welcome.html). 
+
+I implemented a clasifier using a basic deep neural net whith two internal layers of 24 neurons (I was playing a little bit with the architectures and 24,24 performed fairly well. 
+<pre><code 
+#h2o initialization
+h2o.init()
+
+#Transforming the output variable into a binary columns with two factors
+dfWeights$Completed[dfWeights$Completed=="YES"]<-1
+dfWeights$Completed[dfWeights$Completed=="NO"]<-0
+dfWeights$Completed<-as.factor(dfWeights$Completed)
+
+#Split the dataset into training and testing to validate the performance
+dfWeightsTrain<-dfWeights[1:900,]
+dfWeightsTest<-dfWeights[901:1000,]
+
+#Load the datasets into h2o
+df.h2oTrain <- as.h2o(dfWeightsTrain)
+df.h2oTest <- as.h2o(dfWeightsTest)
+
+  NNet    <-         h2o.deeplearning(x= 1:10,
+                     y=12,
+                     stopping_metric="logloss",
+                     distribution = "bernoulli",
+                     loss = "CrossEntropy",
+                     balance_classes = TRUE,
+                     validation_frame = df.h2oTest,
+                     training_frame	=	df.h2oTrain,
+                     hidden = c(24,24),
+                     nfolds = nfolds,
+                     fold_assignment = "Modulo",
+                     keep_cross_validation_predictions = TRUE,
+                     epochs = 5) </code></pre>
+                 
+
+
+
 
 further studies could be oriented to infer the non linear relationships between weights so we could understand it. 
 
@@ -71,3 +114,7 @@ As you can see there is endles fun under the hood of AI implementations and the 
 ![P3Clones.gif](/images/P3Clones.gif)
 ***"The best thing about being me, there's so many me's"***
 *Agent Smith (The Matrix Reloaded, 2003)*
+
+### Notes
+After testing to fit a linear regression model to a 
+When I say h2o is used for basic machine learning task I am talking about task that do not require advance modifications of the model. However h2o is used in many production environments in which the basic analyses are enough. 
