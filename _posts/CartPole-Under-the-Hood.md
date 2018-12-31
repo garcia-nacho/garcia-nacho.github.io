@@ -68,7 +68,7 @@ We are going to train the network using the 1500 sets of weights that we already
 
 The goal of this post is not talk about h2o how to install it or how to run it. You can read about those topics [here](http://docs.h2o.ai/h2o/latest-stable/h2o-docs/welcome.html). 
 
-I implemented a clasifier using a basic deep neural net whith two internal layers of 24 neurons (I was playing a little bit with the architectures and 24,24 performed fairly well. 
+I implemented a clasifier using a basic deep neural net whith two internal layers of 24 neurons (I was playing a little bit with the architectures and 24-24 performed fairly well. 
 <pre><code 
 #h2o initialization
 h2o.init()
@@ -100,7 +100,7 @@ df.h2oTest <- as.h2o(dfWeightsTest)
                      keep_cross_validation_predictions = TRUE,
                      epochs = 5) </code></pre>
                  
-
+After training I checked the performance on the test set
 
 
 
