@@ -217,7 +217,7 @@ In this example I have shown how to implement a very simple classifier but imagi
 
 ![P3Clones.gif](/images/P3Clones.gif)   
 
-***"The best thing about being me, there's so many me's"***   
+***"The best thing about being me, there's so many "me"s"***   
 *Agent Smith (The Matrix Reloaded, 2003)*
 
 As you can see there is endless fun *under the hood* of AI implementations and the more control you have over your algorithms and functions the deeper you can explore. 
