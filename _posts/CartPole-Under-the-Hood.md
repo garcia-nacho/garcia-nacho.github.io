@@ -13,7 +13,7 @@ In machine learning, the weights are the internal parameters that are used to tr
 In [our model](https://github.com/garcia-nacho/ArtificialIntelligence/blob/master/ExplorationRandomSearchNN.R) the chance of getting a working model is that high that the first time that I run the model, I obtained a valid set of weights able to solve the enviroment just after 3 rounds. However, how likely is to find a valid set of weights? To answer this question I modified the script so it doesn't stop when the environment is solved so we can count the number of valid models at the after N rounds.
 After 1500 rounds I obtained this distribution of successes:
 ![P3Density](/images/P3Density.png)
-In which almost a 3% of the combinations of weights are able to solve the environment. However as you can see from the plot we have created a large range of agents, most of them don't work, some of them perform over a random-agent and some of them solve the environment.  
+In which almost 3% of the combinations of weights are able to solve the environment. However as you can see from the plot we have created a large range of agents, most of them don't work, some of them perform over a random-agent and some of them solve the environment.  
 
 ### Neural network vs linear model.
 In my last post I already mentioned that the CartPole environment could be solved finding the weights (and the intercept) of a linear model such like this:<pre><code>
@@ -22,20 +22,20 @@ Action = Obs1 * Weight1 + Obs2 * Weight2 + Obs3 * Weight3 + Obs4 * Weight4 + Int
 However this type of linear models (without the intercept) belong indeed to special case of a neural network in which the weight connecting one neuron with the output (*WN2.2*) is 0 and the other weight of the other neuron is 1 (*WN2.1*):
 ![P3Scheme](/images/P3Scheme1.jpg)
 
-So I wanted to explore the weights, specially the distribution of *WN2.2* and *WN2.1* to see if it was somehow related with the ability of the agent to solve the CartPole.   
+So I wanted to explore the weights, especially the distribution of *WN2.2* and *WN2.1* to see if it was somehow related with the ability of the agent to solve the CartPole.   
 ![P3LinReg](/images/P3LinReg.png)
 V9 is the weight *WN2.1* and V10 is *WN2.2*, in blue are represented those values of *WN2.1* and *WN2.2* that are able to solve the CartPole (together with the other 8 weights). The triangles represent those values of WN2.1 and WN2.2 in which our neural network approximates a linear regression model (very high or low ratios *WN2.1* / *WN2.2*).   
-First of all, it seems that all range of *WN2.1* and *WN2.2* are permited in the agents able to solve the CartPole. It also seems that some of the solving agents (3 out of 39) have a linear regression policy instead of a neural network. So the next question is if the NNet agents perform differently from the LinReg ones in any condition.
+First of all, it seems that all range of *WN2.1* and *WN2.2* are permitted in the agents able to solve the CartPole. It also seems that some of the solving agents (3 out of 39) have a linear regression policy instead of a neural network. So the next question is if the NNet agents perform differently from the LinReg ones in any condition.
 
 ### Neural networks seem to be more stable in noise conditions.
-Just from a visual inspection of the episodes executed by different agents we can find that even though all of them solve the environment there are differences in the behaviour of them.
+Just from a visual inspection of the episodes executed by different agents we can find that even though all of them solve the environment there are differences in the behavior of them.
 ![LinRegCartPole](/images/LinRegCartPole.gif)
 *LinReg-Agent-1*
 
 ![LinRegNNet](/images/NNetCartPole.gif)
 *NNet-Agent-1*
 
-If you carefully look at how the pool balances, it becomes clear that the two agents behave differently. That means that there might be differences in the performace of different agents, unfortunately there is no easy way to run the environment for more than 200 steps without touching the Python code of the gym, so it is not easy to find out how the different agents would perform in longer episodes. However, we could introduce a noise parameter to evaluate the performace of the agents in a noisy environment comparing them. Noise, in this context, can be undestood as a random modification of the observations that the agent observes. I have implemented the noise as follows:
+If you carefully look at how the pool balances, it becomes clear that the two agents behave differently. That means that there might be differences in the performance of different agents; unfortunately, there is no easy way to run the environment for more than 200 steps without touching the Python code of the gym, so it is not easy to find out how the different agents would perform in longer episodes. However, we could introduce a noise parameter to evaluate the performance of the agents in a noisy environment comparing them. Noise, in this context, can be understood as a random modification of the observations that the agent observes. I have implemented the noise as follows:
 <pre><code>#Noise level up to 70%
 Noise<-0.7
     for (l in 1:Observations) {
@@ -43,9 +43,9 @@ Noise<-0.7
     }
     Input<-dfEyes[j,1:Observations]
 </code></pre>
-The agent perceives the enviroment with a distortion in all observation up to a 70% (added or substracted). We can think of this type of noise a real-world situation in which the sensors connected to the agent are faulty or imprecise. This type of situations is really common in some delicate computer-assisted operations such as those carried out in the aerospacial field (you can read more about this [here](https://ieeexplore.ieee.org/document/5466132).
+The agent perceives the environment with a distortion in all observation up to a 70% (added or subtracted). We can think of this type of noise a real-world situation in which the sensors connected to the agent are faulty or imprecise. This type of situations is really common in some delicate computer-assisted operations such as those carried out in the aerospace industry (you can read more about this [here](https://ieeexplore.ieee.org/document/5466132).   
 
-I re-evaluated the performance of the *LinReg* (n=3) and *NNet* (n=36) agents under this noisy conditions and I found that none of the the *LinReg* agents were able to solve the environment, however almost half of the *NNet* agents were still able to solve the noisy environment:
+I re-evaluated the performance of the *LinReg* (n=3) and *NNet* (n=36) agents under this *noisy* conditions and I found that none of the *LinReg* agents was able to solve the environment; however, almost half of the *NNet* agents were still able to solve it:
 
 ![LinRegNoise](/images/LinRegNoise.gif)
 *LinReg agent #1* + Noise
