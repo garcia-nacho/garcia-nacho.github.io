@@ -32,7 +32,8 @@ However, this type of linear models (without the intercept) is indeed a special 
 
 So I explored the weights of the model, especially the distribution of *WN2.2* and *WN2.1* to see if it linear regression models were somehow related with the ability of the agent to solve the CartPole:
 {: style="text-align: justify"}   
-![P3LinReg](/images/P3LinReg.png)
+![P3LinReg](/images/P3LinReg.png)   
+
 In this plot V9 represents the weight *WN2.1* and V10 *WN2.2*. In blue are represented those *WN2.1* and *WN2.2* values that are able to solve the CartPole (together with the other 8 weights). The triangles represent those values of *WN2.1* and *WN2.2* in which our neural network approximates to a linear regression model (very high or low ratios between *WN2.1* and *WN2.2*).
 {: style="text-align: justify"}   
 First of all, it seems that all the ranges of *WN2.1* and *WN2.2* are permitted in the agents able to solve the CartPole. It also seems that some of the solving agents (3 out of 39) have a linear regression policy. So the next question is if the *NNet agents* perform differently from the *LinReg* ones in any condition.
@@ -41,10 +42,12 @@ First of all, it seems that all the ranges of *WN2.1* and *WN2.2* are permitted 
 ### Neural networks seem to be more stable in noise conditions.
 Just from a visual inspection of the episodes executed by different agents, we can find that even though all of them solve the environment there are differences in their behavior.
 {: style="text-align: justify"}
-![LinRegCartPole](/images/LinRegCartPole.gif)
+![LinRegCartPole](/images/LinRegCartPole.gif)   
+
 *LinReg-Agent-1*
 
-![LinRegNNet](/images/NNetCartPole.gif)
+![LinRegNNet](/images/NNetCartPole.gif)   
+
 *NNet-Agent-1*
 
 If you carefully look at how the pool balances, it becomes clear that the two agents act differently. That means that there might also exist differences in the performance of the different agents. Unfortunately, there is no easy way to run the CartPole for more than 200 steps without touching the Python code of the gym, so it is not easy to find out how the different agents would perform in longer episodes. However, we could introduce a noise parameter to evaluate the performance of the agents in a noisy environment to compare them. Noise, in this context, can be understood as a random modification of the observations that the agent *perceives*. I have implemented the noise as follows: 
@@ -76,7 +79,7 @@ Anyhow, it seems to be clear that there is a lot of approaches from the differen
 
 ### *Artificial* Generation of Agents Able to Solve the CartPole.
 
-Since the weights are what define an agent, we could say that they represent *"the software of the software"* and the neural network architecture is the *"hardware of the software"*. Until this point, we have seen that the different agents loaded with different versions of the *"software"* perform distinctly; therefore, it would be very interesting to expand the number of agents so we could study and maybe rank them.{: style="text-align: justify"}  
+Since the weights are what define an agent, we could say that they represent *"the software of the software"* and the neural network architecture is the *"hardware of the software"*. Until this point, we have seen that the different agents loaded with different versions of the *"software"* perform distinctly; therefore, it would be very interesting to expand the number of agents so we could study and maybe rank them.  
 In this section, I am going to show you an iterative approach able to generate thousands of agents in just a few steps.
 {: style="text-align: justify"} 
 
@@ -127,7 +130,8 @@ After the training step, I checked the performance of the model on the test set,
 
 <pre><code>P<-h2o.predict(NNet, df.h2oTest)
 dfWeightsTest$predicted<-as.vector(P$predict)</code></pre>
-
+   
+   
 ![P2Predicitions](/images/P2Predicitions.png)
    
 Next, I created 1000 new agents by generating a matrix of random sets of weights:
