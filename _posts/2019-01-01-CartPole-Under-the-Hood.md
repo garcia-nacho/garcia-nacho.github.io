@@ -16,7 +16,8 @@ In our neural network, we don't really tune them, we randomly assign values to t
 In [our model](https://github.com/garcia-nacho/ArtificialIntelligence/blob/master/ExplorationRandomSearchNN.R) the chance of getting a working model is that high that the first time that I run the model, I obtained a valid set of weights able to solve the environment just after 3 rounds. However, how likely is indeed to find a valid set of weights? To answer this question I modified the script so it doesn't stop when the environment is solved so we can count the total number of valid models after several rounds.
 After 1500 rounds I obtained the following distribution of successes:   
 {: style="text-align: justify"}
-![P3Density](/images/P3Density.png)
+![P3Density](/images/P3Density.png)   
+
 Almost 3% of all combinations of weights are able to solve the environment. However as you can see from the plot, there is a large range of agents in terms of success, most of them don't work at all, some of them perform better than a random set of weights and some of them solve the environment.  
 {: style="text-align: justify"}
 
