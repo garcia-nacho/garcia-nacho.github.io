@@ -218,6 +218,6 @@ In this example I have implemented a very simple classifier but imagine the poss
 As you can see there is endless fun *under the hood* of AI implementations and the more control you have over your algorithms and functions the deeper you can explore. 
 
 ### Notes.
-*Note 1: First I tried to fit the relationship between weights and the ability to solve the CartPole using a linear regression model but the performance was terrible, implying that the relationships are non-linear.
+*Note 1: First I tried to fit the relationship between weights and the ability to solve the CartPole using a linear regression model but the performance was terrible, implying that the relationships are non-linear.*
 
 *Note 2: When I say h2o is used for basic machine learning task I am talking about a task that does not require advance modifications of the model. However, h2o is used in many production environments in which the basic analyses are enough.* 
