@@ -26,23 +26,29 @@ In the last post I already mentioned that the CartPole environment could be solv
 <pre><code>Action = Obs1 * Weight1 + Obs2 * Weight2 + Obs3 * Weight3 + Obs4 * Weight4 + Intercept 
 </code></pre>
 {: style="text-align: justify"}
-However, this type of linear models (without the intercept) is indeed a special case of neural networks in which the weight connecting one neuron with the output (*WN2.2*) is 0 and the other weight of the other neuron is 1 (*WN2.1*):{: style="text-align: justify"}
+However, this type of linear models (without the intercept) is indeed a special case of neural networks in which the weight connecting one neuron with the output (*WN2.2*) is 0 and the other weight of the other neuron is 1 (*WN2.1*):
+{: style="text-align: justify"}
 ![P3Scheme](/images/P3Scheme1.jpg)
 
-So I explored the weights of the model, especially the distribution of *WN2.2* and *WN2.1* to see if it linear regression models were somehow related with the ability of the agent to solve the CartPole:{: style="text-align: justify"}   
+So I explored the weights of the model, especially the distribution of *WN2.2* and *WN2.1* to see if it linear regression models were somehow related with the ability of the agent to solve the CartPole:
+{: style="text-align: justify"}   
 ![P3LinReg](/images/P3LinReg.png)
-In this plot V9 represents the weight *WN2.1* and V10 *WN2.2*. In blue are represented those *WN2.1* and *WN2.2* values that are able to solve the CartPole (together with the other 8 weights). The triangles represent those values of *WN2.1* and *WN2.2* in which our neural network approximates to a linear regression model (very high or low ratios between *WN2.1* and *WN2.2*).{: style="text-align: justify"}   
-First of all, it seems that all the ranges of *WN2.1* and *WN2.2* are permitted in the agents able to solve the CartPole. It also seems that some of the solving agents (3 out of 39) have a linear regression policy. So the next question is if the *NNet agents* perform differently from the *LinReg* ones in any condition.{: style="text-align: justify"}
+In this plot V9 represents the weight *WN2.1* and V10 *WN2.2*. In blue are represented those *WN2.1* and *WN2.2* values that are able to solve the CartPole (together with the other 8 weights). The triangles represent those values of *WN2.1* and *WN2.2* in which our neural network approximates to a linear regression model (very high or low ratios between *WN2.1* and *WN2.2*).
+{: style="text-align: justify"}   
+First of all, it seems that all the ranges of *WN2.1* and *WN2.2* are permitted in the agents able to solve the CartPole. It also seems that some of the solving agents (3 out of 39) have a linear regression policy. So the next question is if the *NNet agents* perform differently from the *LinReg* ones in any condition.
+{: style="text-align: justify"}
 
 ### Neural networks seem to be more stable in noise conditions.
-Just from a visual inspection of the episodes executed by different agents, we can find that even though all of them solve the environment there are differences in their behavior.{: style="text-align: justify"}
+Just from a visual inspection of the episodes executed by different agents, we can find that even though all of them solve the environment there are differences in their behavior.
+{: style="text-align: justify"}
 ![LinRegCartPole](/images/LinRegCartPole.gif)
 *LinReg-Agent-1*
 
 ![LinRegNNet](/images/NNetCartPole.gif)
 *NNet-Agent-1*
 
-If you carefully look at how the pool balances, it becomes clear that the two agents act differently. That means that there might also exist differences in the performance of the different agents. Unfortunately, there is no easy way to run the CartPole for more than 200 steps without touching the Python code of the gym, so it is not easy to find out how the different agents would perform in longer episodes. However, we could introduce a noise parameter to evaluate the performance of the agents in a noisy environment to compare them. Noise, in this context, can be understood as a random modification of the observations that the agent *perceives*. I have implemented the noise as follows: {: style="text-align: justify"}
+If you carefully look at how the pool balances, it becomes clear that the two agents act differently. That means that there might also exist differences in the performance of the different agents. Unfortunately, there is no easy way to run the CartPole for more than 200 steps without touching the Python code of the gym, so it is not easy to find out how the different agents would perform in longer episodes. However, we could introduce a noise parameter to evaluate the performance of the agents in a noisy environment to compare them. Noise, in this context, can be understood as a random modification of the observations that the agent *perceives*. I have implemented the noise as follows: 
+{: style="text-align: justify"}
 <pre><code>#Noise level up to 70%
 Noise<-0.7
     for (l in 1:Observations) {
@@ -51,15 +57,17 @@ Noise<-0.7
     Input<-dfEyes[j,1:Observations]
 </code></pre>
 The agent *senses* the environment with a random distortion in all the observations up to a 70% of the real value (added or subtracted). We can think of this type of noise in a real-world situation in which the sensors connected to the agent are faulty or imprecise. This type of situations is indeed very common in some delicate computer-assisted operations such as those carried out in the aerospace industry (you can read more about this [here](https://ieeexplore.ieee.org/document/5466132)).   
+{: style="text-align: justify"}
 
 I re-evaluated the performance of the *LinReg* (n=3) and *NNet* (n=36) agents under these new *noisy* conditions and I found out that none of the *LinReg* agents was able to solve the environment; however, almost half of the *NNet* agents were still able to solve it:
+{: style="text-align: justify"}
 
 ![LinRegNoise](/images/LinRegNoise.gif)   
-
+   
 *LinReg agent #1* + Noise
 
 ![NNetNoise5](/images/NNetNoise5.gif)   
-
+   
 *NNet agent #5* + Noise
 
 Everything seems to suggest that neural networks based policies provide more stability to the agent than linear regressions ones. However, the number of observations is too low to conclude it without any doubt so more simulations and networks in which *WeightN2.1* and *WeightN2.2* are forced to 1 and 0 respectively are required to conclude that.{: style="text-align: justify"} 
@@ -69,15 +77,20 @@ Anyhow, it seems to be clear that there is a lot of approaches from the differen
 ### *Artificial* Generation of Agents Able to Solve the CartPole.
 
 Since the weights are what define an agent, we could say that they represent *"the software of the software"* and the neural network architecture is the *"hardware of the software"*. Until this point, we have seen that the different agents loaded with different versions of the *"software"* perform distinctly; therefore, it would be very interesting to expand the number of agents so we could study and maybe rank them.{: style="text-align: justify"}  
-In this section, I am going to show you an iterative approach able to generate thousands of agents in just a few steps.{: style="text-align: justify"} 
+In this section, I am going to show you an iterative approach able to generate thousands of agents in just a few steps.
+{: style="text-align: justify"} 
 
-It is logical to expect that all working sets of weights have internally something in common, meaning that there is an internal hidden relationship between the 10 weights that form a set that works, and this is the hypothesis that we are going to test. To do that we need to implement another deep neural network in which we are going to use the 10 weights as inputs and the ability to solve the CartPole as output.{: style="text-align: justify"}
+It is logical to expect that all working sets of weights have internally something in common, meaning that there is an internal hidden relationship between the 10 weights that form a set that works, and this is the hypothesis that we are going to test. To do that we need to implement another deep neural network in which we are going to use the 10 weights as inputs and the ability to solve the CartPole as output.
+{: style="text-align: justify"}
 
-We are going to train the network using the 1500 sets of weights that we have already obtained. For the deep neural network, we are going to use a standalone library that we can access from R: [h2o](https://www.h2o.ai/). I like h2o because it is simple but pretty flexible, you can implement deep neural networks, random forests, gradient boosting machines, linear regressions or model ensembles among others in few lines. It also has a function to perform hyperparameter searches, which makes it a very complete library for basic (and not that basic) machine learning tasks.{: style="text-align: justify"}
+We are going to train the network using the 1500 sets of weights that we have already obtained. For the deep neural network, we are going to use a standalone library that we can access from R: [h2o](https://www.h2o.ai/). I like h2o because it is simple but pretty flexible, you can implement deep neural networks, random forests, gradient boosting machines, linear regressions or model ensembles among others in few lines. It also has a function to perform hyperparameter searches, which makes it a very complete library for basic (and not that basic) machine learning tasks.
+{: style="text-align: justify"}
 
-The goal of this post is not to talk about h2o how to install it or how to run it but you can read about those topics [here](http://docs.h2o.ai/h2o/latest-stable/h2o-docs/welcome.html).{: style="text-align: justify"}   
+The goal of this post is not to talk about h2o how to install it or how to run it but you can read about those topics [here](http://docs.h2o.ai/h2o/latest-stable/h2o-docs/welcome.html).
+{: style="text-align: justify"}   
 
-I have implemented a simple classifier using a basic deep neural net with two internal layers of 24 neurons (I was playing a little bit with the architectures and 24-24 performed fairly well).{: style="text-align: justify"} 
+I have implemented a simple classifier using a basic deep neural net with two internal layers of 24 neurons (I was playing a little bit with the architectures and 24-24 performed fairly well).
+{: style="text-align: justify"} 
 <pre><code> 
 #h2o initialization
 h2o.init()
@@ -109,23 +122,27 @@ df.h2oTest <- as.h2o(dfWeightsTest)
                      keep_cross_validation_predictions = TRUE,
                      epochs = 10) </code></pre>
                  
-After the training step, I checked the performance of the model on the test set, it predicted 2 of the 3 working agents and predicted as positive only one out of 100 non-working agents, so it is good enough for the purpose.{: style="text-align: justify"} 
+After the training step, I checked the performance of the model on the test set, it predicted 2 of the 3 working agents and predicted as positive only one out of 100 non-working agents, so it is good enough for the purpose.
+{: style="text-align: justify"} 
 
 <pre><code>P<-h2o.predict(NNet, df.h2oTest)
 dfWeightsTest$predicted<-as.vector(P$predict)</code></pre>
 
 ![P2Predicitions](/images/P2Predicitions.png)
-
-Next, I created 1000 new agents by generating a matrix of random sets of weights:{: style="text-align: justify"} 
+   
+Next, I created 1000 new agents by generating a matrix of random sets of weights:
+{: style="text-align: justify"} 
 
 <pre><code>weights.space <- as.data.frame(matrix(runif(10000, min = -1, max = 1), ncol = 10, nrow = 1000))
 weights.space.h2o <- as.h2o(weights.space)</code></pre>
 
-I re-trained the model merging the training and the testing sets and predicted which agents in the matrix would solve the CartPole.{: style="text-align: justify"} 
+I re-trained the model merging the training and the testing sets and predicted which agents in the matrix would solve the CartPole.
+{: style="text-align: justify"} 
 <pre><code>Agent.Pred<-h2o.predict(NNet, weights.space.h2o)
 weights.space$predicted<-as.vector(Agent.Pred$predict)</code></pre>
 
 It predicted 108 out of 1000 agents to be working. Let's try them out in the gym environment:
+{: style="text-align: justify"}
 <pre><code>#Restart the gym
 instance_id <- env_create(server, env_id)
 Agents<-subset(weights.space, weights.space$predicted == 1)
@@ -184,15 +201,18 @@ for (k in 1:nrow(Agents)) {
 #Closing the environment
 env_close(server,instance_id)</code></pre>
 
-The performance was not as good as in training set since only 24 out of the 108 agents were able to solve the environment; however, the good thing about our strategy is that we can use the newly created agents to improve the performance of the h2o model by merging the old set of weights with the new ones that I are already tested and iteratively retrained the model again and again.{: style="text-align: justify"}  
-After doing this several times we end up with a highly improved model, check out the code [here](ExplorationRandomUnderTheHood2.R){: style="text-align: justify"} 
+The performance was not as good as in training set since only 24 out of the 108 agents were able to solve the environment; however, the good thing about our strategy is that we can use the newly created agents to improve the performance of the h2o model by merging the old set of weights with the new ones that I are already tested and iteratively retrained the model again and again.
+{: style="text-align: justify"}  
+After doing this several times we end up with a highly improved model, check out the code [here.](ExplorationRandomUnderTheHood2.R)
+{: style="text-align: justify"} 
 
 ### Conclusions.
-In this example I have implemented a very simple classifier but imagine the possibilities, one could implement a scoring system based on the performance in noisy environments to train and retrain the model to obtain perfect set of agents:{: style="text-align: justify"} 
+In this example I have implemented a very simple classifier but imagine the possibilities, one could implement a scoring system based on the performance in noisy environments to train and retrain the model to obtain perfect set of agents:
+{: style="text-align: justify"} 
 
 ![P3Clones.gif](/images/P3Clones.gif)   
 
-***"The best thing about being me, there's so many me's"***
+***"The best thing about being me, there's so many me's"***   
 *Agent Smith (The Matrix Reloaded, 2003)*
 
 As you can see there is endless fun *under the hood* of AI implementations and the more control you have over your algorithms and functions the deeper you can explore. 
