@@ -221,7 +221,59 @@ In the 2D density plot of working weights(*WN2.1* and *WN2.2*) it is possible to
 
 **2.** The script doesn't improve the identification of working agents as quickly as I expected. After 50 rounds of training only 33% of the predicted *working-agents* are really working. Because of this two observations I decided to implement a more advance h2o model in which the hyperparameters (the settings of the model) are iteratively searched:
 
+<pre><code>
+dfWeights$Completed<-as.factor(dfWeights$Completed)
+df.h2oWeights<-as.h2o(dfWeights)
 
+df.split <- h2o.splitFrame(data=df.h2oWeights, ratios=0.90)
+df.train <- df.split[[1]]
+df.test <- df.split[[2]]
+
+#Hyperparameter searching (architecture,epochs, act function, drop-out)
+hyper_params.NN <- list(
+  hidden=list(c(32,32,32),c(64,64), c(80,40,20), c(40,40), c(20,20), c(12,12,12)),
+  input_dropout_ratio=c(0,0.05, 0.1),
+  rate = c(0, 0.1, 0.005, 0.001),
+  rate_annealing=c(1e-8,1e-7,1e-6),
+  epochs = c(5, 10, 20),
+  l1 = c(0, 0.00001, 0.0001), 
+  l2 = c(0, 0.00001, 0.0001),
+  rho = c(0.9, 0.95, 0.99, 0.999),
+  epsilon = c(1e-10, 1e-8, 1e-6, 1e-4),
+  activation = c("Rectifier", "Maxout", "Tanh", "RectifierWithDropout", "MaxoutWithDropout", "TanhWithDropout")
+  )
+
+#Search criteria (it will explore 100 models)
+search_crit.NN<-list(strategy = "RandomDiscrete", max_models = 50)
+
+grid.NN <- h2o.grid(
+  x=1:10, 
+  y=11,
+  algorithm="deeplearning",
+  nfolds = nfolds,
+  fold_assignment = "Modulo",
+  keep_cross_validation_predictions = TRUE,
+  seed = 1,
+  grid_id="dl_grid.NN", 
+  training_frame=df.h2oWeights,
+  balance_classes=TRUE,
+  distribution="bernoulli",
+  #adaptive_rate=T,                
+  loss="CrossEntropy",
+  stopping_metric="logloss",
+  #max_w2=10,                      
+  hyper_params=hyper_params.NN,
+  search_criteria = search_crit.NN
+)
+
+#Order the models by their accuracy
+grids.nn<- h2o.getGrid(grid_id = "dl_grid.NN",
+                       sort_by = "accuracy",
+                       decreasing = TRUE)
+grids.nn
+</code></pre>
+
+After 150 models the maximum accuracy acchieved was 0.804 (architecture 32-32-32, l1/l2=0). This suggests that even though we have achieved a significant enrichment, some of the combinations that lead into *working-agents* might just be unpredictable by a neural network and other ML strategies such as GBM or random-forests might improve the prediction.
 
 ### Conclusions.
 In this example I have shown how to implement a very simple classifier but imagine the possibilities. For example, one could apply a scoring system based on the performance in noisy environments to train and retrain the model and obtain a *perfect* set of agents:
