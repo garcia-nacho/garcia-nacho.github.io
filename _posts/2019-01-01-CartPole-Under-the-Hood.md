@@ -211,6 +211,18 @@ The performance is not as good as in training set since only 24 out of the 108 a
 After doing this several times we will end up with a highly improved model, check out the code [here.](ExplorationRandomUnderTheHood2.R)
 {: style="text-align: justify"} 
 
+#### *Update 02.January.2018*
+After few hours of running the script I found two things:
+
+**1.** The script preferentially finds LinReg-agents:       
+![P3Density2D](/images/P3Density2D.png)
+   
+In the 2D density plot of working weights(*WN2.1* and *WN2.2*) it is possible to observe an enrichment in *LinReg* agents (*WN2.1*=1 and *WN2.1*=1). A possible explanation for this is that is it the occurrence of a combination of working weights follows, complex rules that can't be fully identified by our current model.   
+
+**2.** The script doesn't improve the identification of working agents as quickly as I expected. After 50 rounds of training only 33% of the predicted *working-agents* are really working. Because of this two observations I decided to implement a more advance h2o model in which the hyperparameters (the settings of the model) are iteratively searched:
+
+
+
 ### Conclusions.
 In this example I have shown how to implement a very simple classifier but imagine the possibilities. For example, one could apply a scoring system based on the performance in noisy environments to train and retrain the model and obtain a *perfect* set of agents:
 {: style="text-align: justify"} 
