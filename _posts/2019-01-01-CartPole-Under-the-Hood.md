@@ -214,12 +214,12 @@ After doing this several times we will end up with a highly improved model, chec
 #### *Update 02.January.2018*
 After few hours of running the script I found two things:
 
-**1.** The script preferentially finds LinReg-agents:       
+1. The script preferentially finds *LinReg* agents:       
 ![P3Density2D](/images/P3Density2D.png)
    
 In the 2D density plot of working weights(*WN2.1* and *WN2.2*) it is possible to observe an enrichment in *LinReg* agents (*WN2.1*=1 and *WN2.1*=1). A possible explanation for this is that is it the occurrence of a combination of working weights follows, complex rules that can't be fully identified by our current model.   
 
-**2.** The script doesn't improve the identification of working agents as quickly as I expected. After 50 rounds of training only 33% of the predicted *working-agents* are really working. Because of this two observations I decided to implement a more advance h2o model in which the hyperparameters (the settings of the model) are iteratively searched:
+2.The script doesn't improve the identification of working agents as quickly as I expected. After 50 rounds of training only 33% of the predicted *working-agents* are really working. Because of this two observations I decided to implement a more advance h2o model in which the hyperparameters (the settings of the model) are iteratively searched:
 
 <pre><code>
 dfWeights$Completed<-as.factor(dfWeights$Completed)
@@ -229,7 +229,7 @@ df.split <- h2o.splitFrame(data=df.h2oWeights, ratios=0.90)
 df.train <- df.split[[1]]
 df.test <- df.split[[2]]
 
-#Hyperparameter searching (architecture,epochs, act function, drop-out)
+#Hyperparameter search (architecture,epochs, act function, drop-out)
 hyper_params.NN <- list(
   hidden=list(c(32,32,32),c(64,64), c(80,40,20), c(40,40), c(20,20), c(12,12,12)),
   input_dropout_ratio=c(0,0.05, 0.1),
