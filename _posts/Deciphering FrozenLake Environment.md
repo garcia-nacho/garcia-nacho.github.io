@@ -4,6 +4,20 @@ title:  "Deciphering FrozenLake Environment"
 date: '2018-12-25 15:25:00'
 ---
 
+### Introduction
+Welcome to the second post about AI in R. In this post we are going to solve another simple AI included in the OpenAI Gym, the FrozenLake. FrozenLake in a maze-like environment and the goal is to escape from it. The environment is a representation of a frozen lake full of holes so the agent must go from the starting point to the ending point evading the holes. FrozenLake is represented by a grid of 4x4 positions numbered from 0 to 15. The starting point is located in the position number 0 and the goal in the position number 15 and the holes are located in positions 5, 7, 11 and 12:
+<pre><code>
+SFFF
+FHFH
+FFFH
+HFFG</code></pre>
+S: Starting tile
+F: Frozen tile
+H: Hole
+G: Goal
+
+
+
 
 Lets calculate the efficiency of the random policy almost 0.55%. It might look too low, but it's much higher than the efficacy of the random policy in the CartPole environment.
 
