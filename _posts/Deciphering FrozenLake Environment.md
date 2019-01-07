@@ -19,12 +19,44 @@ G: Goal
 
 
 
-Lets calculate the efficiency of the random policy almost 0.55%. It might look too low, but it's much higher than the efficacy of the random policy in the CartPole environment.
+The efficiency of the random policy is around 0.5%. It might look too low, but it's much higher than the efficacy of the random policy in the CartPole environment. But the good thing of the random policy is that we can extract of the information regarding the failures and reward so the coming agents can learn from them. 
+
+Hole avoidance policy:
+<pre></code>
+      #Action driven by hole avoidance
+      PosAct<-subset(SpaceTree, SpaceTree$Position==dfGodN$Position[j] & SpaceTree$Fail==1)
+      action <- subset(PosAct,PosAct$Prob == min(PosAct$Prob))
+      action <- action$Action
+      if (length(action) > 1) action<- action[round(runif(1,min = 1, max = length(action)))]</code></pre>
+
+The efficiency of the hole avoidance policy is around 42%      
+
+Reward based policy: 
+<pre><code>
+      #Action driven by Reward
+      PosAct<-subset(SpaceTree, SpaceTree$Position==dfGodN$Position[j] & SpaceTree$Fail==0)
+      action <- subset(PosAct,PosAct$Reward == max(PosAct$Reward))
+      action <- action$Action
+      if (length(action) > 1) action<- action[round(runif(1,min = 1, max = length(action)))]</code></pre>
+
+The efficiency of the Reward-based policy is 15.4% (30 times better than the random policy), probably because the number of solved episodes by the random policy is too low. 9 steps on average for the reward based policy
+
+Reward-Hole policy:
+
+<pre><code>
+       PosAct<-subset(SpaceTree, SpaceTree$Position==dfGodN$Position[j] & SpaceTree$Fail==1)
+       action <- subset(PosAct,PosAct$Prob == min(PosAct$Prob))
+       action <- action$Action[action$Reward == max(action$Reward)]
+       if (length(action) > 1) action<- action[round(runif(1,min = 1, max = length(action)))]</code></pre>
+       
 
 
-The tree policy 
 
-The average length of an episode is 7.758 steps while the average lengh of an episode under the tree policy is 35.556 steps. That means that the efficiency is too low. 
+
+
+
+The average length of an episode is 7.6 steps while the average lengh of an episode under the hole avoidance policy is 35 steps
+
 
 The efficiency of the tree policy 0.63%, slightly higher but still very far from solving the environment. The main problem is indeed that the agent spends too much time in a "dangerous" environment and this happens because there are several situations in which the agent is forced to make a random decision since the probabily of falling in a hole is 0 instead doing the optimal movement. To solve it I have included another extra step, once the agent encounters several actions with the same probabilty of fail in checks which one has a higher probability of solving the environment and executes that one. 
 
