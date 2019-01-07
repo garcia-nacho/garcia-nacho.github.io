@@ -49,7 +49,7 @@ Reward-Hole policy:
        action <- action$Action[action$Reward == max(action$Reward)]
        if (length(action) > 1) action<- action[round(runif(1,min = 1, max = length(action)))]</code></pre>
        
-
+Efficiency = 0.734 and average length 41... it seems it got stucked at the begginning
 
 
 
