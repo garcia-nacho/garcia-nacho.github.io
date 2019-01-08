@@ -75,8 +75,15 @@ Few questions what if we prioritize the solution of the environment over the pro
       action <- PosAct$Action[PosAct$Prob == min(PosAct$Prob)]
       if (length(action) > 1) action<- action[round(runif(1,min = 1, max = length(action)))]</code></pre>
 
-Now the agent solves the environment 41.2% of the times with tan average episode lenght of 37.1 steps
+Now the agent solves the environment 41.2% of the times with tan average episode lenght of 37.1 steps but the problem is that the agent behaves erratic moving up and down. (Image)
 
-
+Reward-speed policy
+<pre><code>
+       action <- subset(PosAct,PosAct$Reward == max(PosAct$Reward))
+       action <- action$Action[action$Length == min(action$Length)]
+       if (length(action) > 1) action<- action[round(runif(1,min = 1, max = length(action)))]</code></pre>
+       
+16.7% of the episodes are solved. 
+       
 
 
