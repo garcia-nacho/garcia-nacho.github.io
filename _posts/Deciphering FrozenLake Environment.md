@@ -16,7 +16,12 @@ FHFH
 FFFH
 HFFG</code></pre>
 
-The efficiency of the random policy solving the FrozenLake is around 0.5%. It might look too low, but indeed it's much higher than the efficacy of the random policy in the CartPole environment. However, there is a good thing about the random policy, we can use it to extract the information about actions, failures and rewards to train coming agents so they can learn from it. To do that we need to create a decision tree in which we define the falling probabilities for all combinations of positions-actions.  
+The efficiency of the random policy solving the FrozenLake is around 0.5%.
+
+![RPagent](/images/FrozenLakeTraining.gif)
+Random policy example
+
+It might look too low, but indeed it's much higher than the efficacy of the random policy in the CartPole environment. However, there is a good thing about the random policy, we can use it to extract the information about actions, failures and rewards to train coming agents so they can learn from it. To do that we need to create a decision tree in which we define the falling probabilities for all combinations of positions-actions.  
 
 ![Tree](/images/P3Tree.jpg)
 
@@ -33,7 +38,45 @@ SpaceTree$Length<-0
 
 The tree is going to account for the falling probability (*SpaceTree$Prob*), the probability of getting a reward when performing that action (*SpaceTree$Reward*), the number of times the agent has visited that tile (*SpaceTree$N*) and how many steps the agent takes until the episode ends (*SpaceTree$Length*).
 
-Next we fill all those parameters with the values obtained by the *random-policy* agent
+Next we fill those parameters with the values obtained by the *random-policy* agent stored in the dfGod variable (check the complete script here)
+
+<pre><code>
+for (i in 1:nrow(SpaceTree)) {
+  SpaceTree$Prob[i] <- length(dfGod2$Position[dfGod2$Position==SpaceTree$Position[i] &
+                                                dfGod2$Action==SpaceTree$Action[i] & 
+                                                dfGod2$Fail==SpaceTree$Fail[i]])/
+                        length(dfGod2$Position[dfGod2$Position==SpaceTree$Position[i] &
+                                                dfGod2$Action==SpaceTree$Action[i]])
+  
+  SpaceTree$N[i] <-length(dfGod2$Position[dfGod2$Position==SpaceTree$Position[i] &
+                                               dfGod2$Action==SpaceTree$Action[i] & 
+                                               dfGod2$Fail==SpaceTree$Fail[i]])
+
+  SpaceTree$Reward[i] <- length(dfGod2$Position[dfGod2$Position==SpaceTree$Position[i] &
+                                               dfGod2$Action==SpaceTree$Action[i] & 
+                                                 dfGod2$RewardEp==1])/
+                      length(dfGod2$Position[dfGod2$Position==SpaceTree$Position[i] &
+                                              dfGod2$Action==SpaceTree$Action[i]])
+  
+  SpaceTree$Length[i]<-mean(dfGod2$StepMax[dfGod2$Position==SpaceTree$Position[i] &
+                                             dfGod2$Action==SpaceTree$Action[i]&
+                                             dfGod2$RewardEp==1])
+  
+}
+</code></pre>
+
+Now that we have the *library* of actions-fails-rewards we can create several policies so the agent look for the better option based on previous oservations:
+
+
+Reward based policy: 
+<pre><code>
+      #Action driven by Reward
+      PosAct<-subset(SpaceTree, SpaceTree$Position==dfGodN$Position[j] & SpaceTree$Fail==0)
+      action <- subset(PosAct,PosAct$Reward == max(PosAct$Reward))
+      action <- action$Action
+      if (length(action) > 1) action<- action[round(runif(1,min = 1, max = length(action)))]</code></pre>
+
+
 
 
 Hole avoidance policy:
@@ -46,13 +89,6 @@ Hole avoidance policy:
 
 The efficiency of the hole avoidance policy is around 42%      
 
-Reward based policy: 
-<pre><code>
-      #Action driven by Reward
-      PosAct<-subset(SpaceTree, SpaceTree$Position==dfGodN$Position[j] & SpaceTree$Fail==0)
-      action <- subset(PosAct,PosAct$Reward == max(PosAct$Reward))
-      action <- action$Action
-      if (length(action) > 1) action<- action[round(runif(1,min = 1, max = length(action)))]</code></pre>
 
 The efficiency of the Reward-based policy is 15.4% (30 times better than the random policy), probably because the number of solved episodes by the random policy is too low. 9 steps on average for the reward based policy
 
