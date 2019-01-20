@@ -11,13 +11,30 @@ The environment is finished when the agent reaches the <code>(G)</code> tile (Re
 <!--more-->
 The FrozenLake is represented as a 4x4 grid with the positions numbered from 0 to 15. The <code>(S)</code> is located in the position number 0, the <code>(G)</code> in the position number 15 and the holes are located in positions 5, 7, 11 and 12:
 {: style="text-align: justify"}
-<pre><code>
-SFFF
+<pre><code>SFFF
 FHFH
 FFFH
 HFFG</code></pre>
 
-The efficiency of the random policy solving the FrozenLake is around 0.5%. It might look too low, but indeed it's much higher than the efficacy of the random policy in the CartPole environment. However, there is a good thing about the random policy, we can use it to extract the information about actions, failures and rewards to train coming agents so they can learn from it. To do that we need to create a decision tree in which we 
+The efficiency of the random policy solving the FrozenLake is around 0.5%. It might look too low, but indeed it's much higher than the efficacy of the random policy in the CartPole environment. However, there is a good thing about the random policy, we can use it to extract the information about actions, failures and rewards to train coming agents so they can learn from it. To do that we need to create a decision tree in which we define the falling probabilities for all combinations of positions-actions.  
+
+![Tree](/images/P3Tree.jpg)
+
+We create the such tree with the following code 
+
+<pre><code>#Growing a tree
+SpaceTree<-expand.grid(c(0:16),c(0:3),c(0,1))
+colnames(SpaceTree)<-c("Position","Action","Fail")
+SpaceTree$N<-0
+SpaceTree$Prob<-0
+SpaceTree$Reward<-0
+SpaceTree$Length<-0
+ </pre></code>
+
+The tree is going to account for the falling probability (*SpaceTree$Prob*), the probability of getting a reward when performing that action (*SpaceTree$Reward*), the number of times the agent has visited that tile (*SpaceTree$N*) and how many steps the agent takes until the episode ends (*SpaceTree$Length*).
+
+Next we fill all those parameters with the values obtained by the *random-policy* agent
+
 
 Hole avoidance policy:
 <pre></code>
