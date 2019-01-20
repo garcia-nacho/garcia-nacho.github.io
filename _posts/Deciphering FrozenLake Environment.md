@@ -5,21 +5,19 @@ date: '2018-12-25 15:25:00'
 ---
 
 ### Introduction
-Welcome to the second post about AI in R. In this post we are going to solve another simple AI included in the OpenAI Gym, the FrozenLake. FrozenLake in a maze-like environment and the goal is to escape from it. The environment is a representation of a frozen lake full of holes so the agent must go from the starting point to the ending point evading the holes. FrozenLake is represented by a grid of 4x4 positions numbered from 0 to 15. The starting point is located in the position number 0 and the goal in the position number 15 and the holes are located in positions 5, 7, 11 and 12:
+Welcome to a new post about AI in R. In this post we are going to solve another *simple* AI scenario included in the OpenAI Gym, the FrozenLake. FrozenLake in a maze-like environment and the goal is to escape from it. The environment is a representation of a frozen lake full of holes, the agent have to go from the starting point <code>(S)</code> to the ending point <code>(G)</code> avoiding the holes <code>(H)</code>. The trick is that the frozen tiles <code>(F)</code> don't let the agent move accurately, so each time an agent performs one action there is a chance that it ends up moving into an unwanted direction.  
+The environment is finished when the agent reaches the <code>(G)</code> tile (Reward=1) or when it falls into a hole (Reward=0).
+{: style="text-align: justify"}
+<!--more-->
+The FrozenLake is represented as a 4x4 grid with the positions numbered from 0 to 15. The <code>(S)</code> is located in the position number 0, the <code>(G)</code> in the position number 15 and the holes are located in positions 5, 7, 11 and 12:
+{: style="text-align: justify"}
 <pre><code>
 SFFF
 FHFH
 FFFH
 HFFG</code></pre>
-S: Starting tile
-F: Frozen tile
-H: Hole
-G: Goal
 
-
-
-
-The efficiency of the random policy is around 0.5%. It might look too low, but it's much higher than the efficacy of the random policy in the CartPole environment. But the good thing of the random policy is that we can extract of the information regarding the failures and reward so the coming agents can learn from them. 
+The efficiency of the random policy solving the FrozenLake is around 0.5%. It might look too low, but indeed it's much higher than the efficacy of the random policy in the CartPole environment. However, there is a good thing about the random policy, we can use it to extract the information about actions, failures and rewards to train coming agents so they can learn from it. To do that we need to create a decision tree in which we 
 
 Hole avoidance policy:
 <pre></code>
