@@ -67,8 +67,7 @@ for (i in 1:nrow(SpaceTree)) {
 
 Now that we have the *library* of actions-fails-rewards we can create several policies so the agent look for the better option based on previous oservations:
 
-
-Reward based policy: 
+***Reward based policy:*** 
 <pre><code>
       #Action driven by Reward
       PosAct<-subset(SpaceTree, SpaceTree$Position==dfGodN$Position[j] & SpaceTree$Fail==0)
@@ -76,10 +75,10 @@ Reward based policy:
       action <- action$Action
       if (length(action) > 1) action<- action[round(runif(1,min = 1, max = length(action)))]</code></pre>
 
+This agent searches the probability of solving the environment for each combination of position/action and performs the action in which this probability is the highest. In the case that two or more positions/actions have the same probability of solving the environment the agent randomly selects one of them.
+This agent solves the enviroment in **15.4%** of the attempts (30 times better than the random policy).
 
-
-
-Hole avoidance policy:
+***Hole avoidance policy:***
 <pre></code>
       #Action driven by hole avoidance
       PosAct<-subset(SpaceTree, SpaceTree$Position==dfGodN$Position[j] & SpaceTree$Fail==1)
@@ -87,37 +86,27 @@ Hole avoidance policy:
       action <- action$Action
       if (length(action) > 1) action<- action[round(runif(1,min = 1, max = length(action)))]</code></pre>
 
-The efficiency of the hole avoidance policy is around 42%      
+This agent performs the action in which the probability of falling into a hole is lowest, independetly if the agent solves the enviroment at the or not This agent also includes the random selection of actions if two or more actions have the same probability of not falling. 
+The efficiency of this avoidance policy is around **42%**. It makes sense that this agent performs better than the reward-based agent because the random-policy obtained much more information about actions that lead to a fall in the hole than combinations of actions that solve the environment.        
 
-
-The efficiency of the Reward-based policy is 15.4% (30 times better than the random policy), probably because the number of solved episodes by the random policy is too low. 9 steps on average for the reward based policy
-
-Reward-Hole policy:
-
+***Reward-Hole policy:***
 <pre><code>
        PosAct<-subset(SpaceTree, SpaceTree$Position==dfGodN$Position[j] & SpaceTree$Fail==1)
        action <- subset(PosAct,PosAct$Prob == min(PosAct$Prob))
        action <- action$Action[action$Reward == max(action$Reward)]
        if (length(action) > 1) action<- action[round(runif(1,min = 1, max = length(action)))]</code></pre>
        
-Efficiency = 0.734 and average length 41... it seems it got stucked at the begginning
+Based on the results obtained by the *hole-avoider* and the *reward-searcher* agents I decided to combine their policies to see if it is possible to increase the efficiency. This *hole-avoider-reward-searcher* agent, avoid the actions that leaded the random agent to fall in a hole and in case of several actions having the same minimal probability of falling the agent selects the one with the highest probability of solving the episode. This agent performs surprinsingly well, it solves the enviroment 73.4% of the times. However I noticed that the agent took a lot of steps to solve the environment (41 steps on average), by introducing a delay in the execution of the actions with <code>Sys.sleep()</code> I could explore the behaviour of the agent:
 
+![Stucked](/images/Stucked.gif)
 
-
+The agent gets stucked at the beggining of the episode and it seems that it can only continue when randomly it ends in any other tile. We  think of this behaviour as if the were agent pushing the borders of the enviroment to avoid falling, which is indeed a smart solution for not falling.
 
 
 The average length of an episode is 7.6 steps while the average lengh of an episode under the hole avoidance policy is 35 steps
 
 
-The efficiency of the tree policy 0.63%, slightly higher but still very far from solving the environment. The main problem is indeed that the agent spends too much time in a "dangerous" environment and this happens because there are several situations in which the agent is forced to make a random decision since the probabily of falling in a hole is 0 instead doing the optimal movement. To solve it I have included another extra step, once the agent encounters several actions with the same probabilty of fail in checks which one has a higher probability of solving the environment and executes that one. 
 
-<pre><code>
-      action <- subset(PosAct,PosAct$Prob == min(PosAct$Prob))
-      action <- PosAct$Action[PosAct$Reward == max(PosAct$Reward)]
-      if (length(action) > 1) action<- action[round(runif(1,min = 1, max = length(action)))] </code></pre>
-
-
-Now the agent is able to solve the environment in 12% of the episodes and the episode lenght has been reduced to 10.22 steps.
 
 Few questions what if we prioritize the solution of the environment over the probability of failing? Until now the agent makes the destitions based first on the probability of not falling in a hole and in case of doubt it checks the final reward. Lets invert the two steps of the algorithm: 
 
