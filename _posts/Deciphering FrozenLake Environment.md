@@ -24,7 +24,7 @@ Random policy example
 
 It might look too low, but indeed it's much higher than the efficacy of the random policy in the CartPole environment. However, there is a good thing about the random policy, we can use it to extract the information about actions, failures and rewards to train coming agents so they can learn from it. To do that we need to create a decision tree in which we define the falling probabilities for all combinations of positions-actions.  
 
-![Tree](/images/P3Tree.jpg)
+![Tree](/images/P3Tree.jpg | width=200)
 
 We create the such tree with the following code 
 
