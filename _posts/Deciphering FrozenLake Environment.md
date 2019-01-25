@@ -24,7 +24,7 @@ Random policy example
 
 It might look too low, but indeed it's much higher than the efficacy of the random policy in the CartPole environment. However, there is a good thing about the random policy, we can use it to extract the information about actions, failures and rewards to train coming agents so they can learn from it. To do that we need to create a decision tree in which we define the falling probabilities for all combinations of positions-actions.  
 
-<img src="/images/P3Tree.jpg" width="500">
+<img src="/images/P3Tree.jpg" width="650">
 
 We create the such tree with the following code 
 
@@ -125,7 +125,7 @@ Until this point we have seen how it is possible to optimize the use of the libr
 ***The self-learner agent***
 A self-learner agent needs to store the information that it gets during the different episodes. To do that I have implemented a tree/library at end of every episode to store all the adquired information during previos episodes. The structure of the tree is mainly the same as the one implemented in the other agents, but in order for the agent to learn as it *understands* the environment we need a *learning curve* to make decisions. If the agent hasn't visited enough the current position it executes a random agent so the more experiences about a position the agent has the more it relies on its library of experiences.
 I have defined the following learning curve:
-![LearningCurve](/images/Learningcurve.jpg)
+<img src="/images/Learningcurve.jpg" width="650">
 
 There are three parameters that can be adjusted:
 Slope: How fast the agent transitions from not trusting their experiences to trust them. 
