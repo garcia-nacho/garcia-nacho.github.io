@@ -8,6 +8,8 @@ date: '2018-12-25 15:25:00'
 Welcome to a new post about AI in R. In this post we are going to solve another *simple* AI scenario included in the OpenAI Gym, the FrozenLake. FrozenLake in a maze-like environment and the goal is to escape from it. The environment is a representation of a frozen lake full of holes, the agent have to go from the starting point <code>(S)</code> to the ending point <code>(G)</code> avoiding the holes <code>(H)</code>. The trick is that the frozen tiles <code>(F)</code> don't let the agent move accurately, so each time an agent performs one action there is a chance that it ends up moving into an unwanted direction.  
 The environment is finished when the agent reaches the <code>(G)</code> tile (Reward=1) or when it falls into a hole (Reward=0).{: style="text-align: justify"}
 
+![](https://gyazo.com/eb5c5741b6a9a16c692170a41a49c858.png | width=100)
+
 <!--more-->
 The FrozenLake is represented as a 4x4 grid with the positions numbered from 0 to 15. The <code>(S)</code> is located in the position number 0, the <code>(G)</code> in the position number 15 and the holes are located in positions 5, 7, 11 and 12:
 {: style="text-align: justify"}
