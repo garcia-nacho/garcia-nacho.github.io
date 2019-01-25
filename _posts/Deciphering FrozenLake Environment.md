@@ -16,6 +16,7 @@ FHFH
 FFFH
 HFFG</code></pre>
 
+### Results
 The efficiency of the random policy solving the FrozenLake is around 0.5%.
 
 ![RPagent](/images/FrozenLakeTraining.gif)   
@@ -111,7 +112,7 @@ But what if we prioritize the solution of the environment over the probability o
 
 This agent shows a decent performance although is not as good its sibling's, only **41.2%** of the times partialy inheriting the erratic behaviour observed in its sibling.
 
-**Reward-Speed policy**
+***Reward-Speed policy***
 <pre><code>
        action <- subset(PosAct,PosAct$Reward == max(PosAct$Reward))
        action <- action$Action[action$Length == min(action$Length)]
@@ -121,7 +122,57 @@ As a solution to fix the erratic behaviour observed in some of the agents I impl
 
 Until this point we have seen how it is possible to optimize the use of the library that the random agent obtains; however, none of this agents can really *learn* anything, they need a library of actions and this library could be incorrect, could be outdated or could be very poor in rewared episodes. Additionally it could also be possible to have a library larger that what it's necessary. We need an agent that learns as it experiences the enviroment.
 
-**The self-learner agent**
+***The self-learner agent***
+A self-learner agent needs to store the information that it gets during the different episodes. To do that I have implemented a tree/library at end of every episode to store all the adquired information during previos episodes. The structure of the tree is mainly the same as the one implemented in the other agents, but in order for the agent to learn as it *understands* the environment we need a *learning curve* to make decisions. If the agent hasn't visited enough the current position it executes a random agent so the more experiences about a position the agent has the more it relies on its library of experiences.
+I have defined the following learning curve:
+![LearningCurve](/images/Learningcurve.jpg)
+
+There are three parameters that can be adjusted:
+Slope: How fast the agent transitions from not trusting their experiences to trust them. 
+Curiosity50: The number of observations for a position that leads to a 50% chances of trusting the tree/library.
+Min: Basal level. The percentage of performing a random action no matter how many observations the agent had.
+
+This type of learning curve allows the agent to adapt as it experiences the enviroment trusting more and more its past observations. Interestingly the inclusion of a basal level would allow for the agent to adapt to a changing enviroment (some adjustments could be included to reset the *library of experiences* if necessary).
+
+I implemented the learning curve as a function, and set the default parameters:
+
+<pre><code>#Learning Curve
+
+learn.curve <- function(x, min, slope, L50){
+  min+((1-min)/(1+exp(-slope*(L50-x))))
+}
+
+min<-0.05
+slope<-0.05
+L50<-100
+
+randomness <- learn.curve(1:250,min,slope,L50)
+plot(randomness, type = "l", ylim = c(0,1), xlab = "Observations")</code></pre>
+
+![LearningCurveR](/images/learningcurveR.png)
+
+Then to make it have any effect we need to include a control parameter at the end of the action loop to overwrite the selected action with a random one according the the learning curve:
+
+<pre><code>Curiosity <- learn.curve(experienceN,min,slope,L50)
+    if(Curiosity > runif(1,min =0 , max= 1) ){
+    action <- env_action_space_sample(server, instance_id)
+    }</code></pre>
+
+And that's all. We have implemented a simple algorithmic solution for the agent to *learn*. 
+
+To test the *self-learner agent* we calculate the percentage of solved episodes as the number of episodes increase:
+
+![Learner](/images/learner.png)
+
+As you can see the agents starts to increase its performance just after running few iterations. 
+
+### Conclusions
+
+
+
+
+
+
        
 
 
