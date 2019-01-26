@@ -4,50 +4,53 @@ title:  "Deciphering FrozenLake Environment"
 date: '2018-12-25 15:25:00'
 ---
 
-### Introduction
-Welcome to a new post about AI in R. In this post we are going to solve another *simple* AI scenario included in the OpenAI Gym, the FrozenLake. FrozenLake in a maze-like environment and the goal is to escape from it. The environment is a representation of a frozen lake full of holes, the agent have to go from the starting point <code>(S)</code> to the ending point <code>(G)</code> avoiding the holes <code>(H)</code>. The trick is that the frozen tiles <code>(F)</code> don't let the agent move accurately, so each time an agent performs one action there is a chance that it ends up moving into an unwanted direction.  
+### Introduction.
+Welcome to a new post about AI in R. In this post, we are going to explore different ways to solve another *simple* AI scenario included in the OpenAI Gym, the FrozenLake. FrozenLake in a maze-like environment and the final goal of the agent is to escape from it. The environment is a representation of a frozen lake full of holes, the agent has to go from the starting point <code>(S)</code> to the ending point <code>(G)</code> avoiding the holes <code>(H)</code>. The trick is that the agent must walk over frozen tiles <code>(F)</code> to reach the ending point. Unfortunately, the agent can't perform the desired actions accurately when hs is *walking* over a frozen tile, so each time an agent performs one action there is a chance that it ends up moving into an unwanted direction.  
 The environment is finished when the agent reaches the <code>(G)</code> tile (Reward=1) or when it falls into a hole (Reward=0).{: style="text-align: justify"}
 
 <!--more-->
-The FrozenLake is represented as a 4x4 grid with the positions numbered from 0 to 15. The <code>(S)</code> is located in the position number 0, the <code>(G)</code> in the position number 15 and the holes are located in positions 5, 7, 11 and 12:
+The FrozenLake is represented as a 4x4 grid with the positions numbered from 0 to 15. The <code>(S)</code> is located at the position number 0, the <code>(G)</code> at the position number 15 and the holes are located at positions 5, 7, 11 and 12:
 {: style="text-align: justify"}
 <pre><code>SFFF
 FHFH
 FFFH
 HFFG</code></pre>
 
-### Results
-The efficiency of the random policy solving the FrozenLake is around 0.5%.
+### Results.
+As I did with the [CartPole environment](https://garcia-nacho.github.io/AI-in-R/) I first tested the performance of a random agent because it provides a first impression of the difficulty of the environment and the presence of possible challenges. 
+The performance of an agent executing a random policy looks like this:{: style="text-align: justify"}
 
 ![RPagent](/images/FrozenLakeTraining.gif)   
-Random policy example
 
-It might look too low, but indeed it's much higher than the efficacy of the random policy in the CartPole environment. However, there is a good thing about the random policy, we can use it to extract the information about actions, failures and rewards to train coming agents so they can learn from it. To do that we need to create a decision tree in which we define the falling probabilities for all combinations of positions-actions.  
+The overall efficiency of the *random agent* is around 0.5%. At a first glance, it might look too low but indeed it's much higher than the efficacy of the random policy in the CartPole environment. 
+The second good reason why I always try to run a *random agent* is because it is possible to extract detailed information about actions and how they drive to positive rewards so it is possible to extract this information to train subsequent agents that can use that information to learn.{: style="text-align: justify"}   
+
+The FrozenLake is a simple environment in which the combination of positions/actions is quite manageable (64 possible combinations of actions/positions, counting holes and goal tile) so it is possible to implement a kind of decision tree in which we define the falling probabilities for all combinations of positions-actions. It looks something like this:{: style="text-align: justify"}  
 
 <img src="/images/P3Tree.jpg" width="650">
 
-We create the such tree with the following code 
+I created the tree with the following code:
 
-<pre><code>#Growing a tree
-SpaceTree<-expand.grid(c(0:16),c(0:3),c(0,1))
+<pre><code>#Growing a tree 
+SpaceTree<-expand.grid(c(0:15),c(0:3),c(0,1))
 colnames(SpaceTree)<-c("Position","Action","Fail")
 SpaceTree$N<-0
 SpaceTree$Prob<-0
 SpaceTree$Reward<-0
-SpaceTree$Length<-0
- </pre></code>
+SpaceTree$Length<-0</pre></code>
 
-The tree is going to account for the falling probability (*SpaceTree$Prob*), the probability of getting a reward when performing that action (*SpaceTree$Reward*), the number of times the agent has visited that tile (*SpaceTree$N*) and how many steps the agent takes until the episode ends (*SpaceTree$Length*).
+I have included four additional parameters for each combination to have a more complete view of what is going on. 
 
-Next we fill those parameters with the values obtained by the *random-policy* agent stored in the dfGod variable (check the complete script here)
+The tree is going to account for the falling probability (*SpaceTree$Prob*), the probability of getting a reward when performing that action (*SpaceTree$Reward*), the number of times the agent has visited that tile (*SpaceTree$N*) and how many steps the agent takes until the episode is solved (*SpaceTree$Length*).
 
-<pre><code>
-for (i in 1:nrow(SpaceTree)) {
+Next we fill in those parameters with the values obtained by the *random-agent* that, as in the CartPole scripts, are stored in the variable dfGod(check an updated form of the script [here](ExplorationFrozenLakeTree.R))
+
+<pre><code>for (i in 1:nrow(SpaceTree)) {
   SpaceTree$Prob[i] <- length(dfGod2$Position[dfGod2$Position==SpaceTree$Position[i] &
-                                                dfGod2$Action==SpaceTree$Action[i] & 
-                                                dfGod2$Fail==SpaceTree$Fail[i]])/
-                        length(dfGod2$Position[dfGod2$Position==SpaceTree$Position[i] &
-                                                dfGod2$Action==SpaceTree$Action[i]])
+                                               dfGod2$Action==SpaceTree$Action[i] & 
+                                               dfGod2$Fail==SpaceTree$Fail[i]])/
+                       length(dfGod2$Position[dfGod2$Position==SpaceTree$Position[i] &
+                                               dfGod2$Action==SpaceTree$Action[i]])
   
   SpaceTree$N[i] <-length(dfGod2$Position[dfGod2$Position==SpaceTree$Position[i] &
                                                dfGod2$Action==SpaceTree$Action[i] & 
@@ -55,31 +58,29 @@ for (i in 1:nrow(SpaceTree)) {
 
   SpaceTree$Reward[i] <- length(dfGod2$Position[dfGod2$Position==SpaceTree$Position[i] &
                                                dfGod2$Action==SpaceTree$Action[i] & 
-                                                 dfGod2$RewardEp==1])/
-                      length(dfGod2$Position[dfGod2$Position==SpaceTree$Position[i] &
-                                              dfGod2$Action==SpaceTree$Action[i]])
+                                               dfGod2$RewardEp==1])/
+                         length(dfGod2$Position[dfGod2$Position==SpaceTree$Position[i] &
+                                               dfGod2$Action==SpaceTree$Action[i]])
   
   SpaceTree$Length[i]<-mean(dfGod2$StepMax[dfGod2$Position==SpaceTree$Position[i] &
-                                             dfGod2$Action==SpaceTree$Action[i]&
-                                             dfGod2$RewardEp==1])
+                                               dfGod2$Action==SpaceTree$Action[i]&
+                                               dfGod2$RewardEp==1])
   
-}
-</code></pre>
+}</code></pre>
 
-Now that we have the *library* of actions-fails-rewards we can create several policies so the agent look for the better option based on previous oservations:
+Now that *tree/library* of actions-fails-rewards is ready it is possible to use it as the engine to create different policies: 
 
-***Reward based policy:*** 
-<pre><code>
-      #Action driven by Reward
+***The Reward based policy:*** 
+<pre><code>#Action driven by Reward
       PosAct<-subset(SpaceTree, SpaceTree$Position==dfGodN$Position[j] & SpaceTree$Fail==0)
       action <- subset(PosAct,PosAct$Reward == max(PosAct$Reward))
       action <- action$Action
       if (length(action) > 1) action<- action[round(runif(1,min = 1, max = length(action)))]</code></pre>
 
-This agent searches the probability of solving the environment for each combination of position/action and performs the action in which this probability is the highest. In the case that two or more positions/actions have the same probability of solving the environment the agent randomly selects one of them.
-This agent solves the enviroment in **15.4%** of the attempts (30 times better than the random policy).
+An agent following this policy searches for the probability of solving the environment for each combination of position/action and performs the action in which this probability is the highest. In the case that two or more positions/actions have the same probability of solving the environment the agent randomly selects one of them.
+This agent solves the environment in **15.4%** of the attempts (30 times better than the random policy).
 
-***Hole avoidance policy:***
+***The Hole avoidance policy:***
 <pre></code>
       #Action driven by hole avoidance
       PosAct<-subset(SpaceTree, SpaceTree$Position==dfGodN$Position[j] & SpaceTree$Fail==1)
@@ -90,7 +91,7 @@ This agent solves the enviroment in **15.4%** of the attempts (30 times better t
 This agent performs the action in which the probability of falling into a hole is lowest, independetly if the agent solves the enviroment at the or not This agent also includes the random selection of actions if two or more actions have the same probability of not falling. 
 The efficiency of this avoidance policy is around **42%**. It makes sense that this agent performs better than the reward-based agent because the random-policy obtained much more information about actions that lead to a fall in the hole than combinations of actions that solve the environment.        
 
-***Reward-Hole policy:***
+***The Reward-Hole policy:***
 <pre><code>
        PosAct<-subset(SpaceTree, SpaceTree$Position==dfGodN$Position[j] & SpaceTree$Fail==1)
        action <- subset(PosAct,PosAct$Prob == min(PosAct$Prob))
