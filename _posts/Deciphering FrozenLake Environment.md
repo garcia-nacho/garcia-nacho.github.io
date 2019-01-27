@@ -39,11 +39,11 @@ SpaceTree$Prob<-0
 SpaceTree$Reward<-0
 SpaceTree$Length<-0</pre></code>
 
-I have included four additional parameters for each combination to have a more complete view of what is going on. 
+I have included four additional parameters for each combination to have a more complete view of what is going on.{: style="text-align: justify"}   
 
-The tree is going to account for the falling probability (*SpaceTree$Prob*), the probability of getting a reward when performing that action (*SpaceTree$Reward*), the number of times the agent has visited that tile (*SpaceTree$N*) and how many steps the agent takes until the episode is solved (*SpaceTree$Length*).
+The tree is going to account for the falling probability (*SpaceTree$Prob*), the probability of getting a reward when performing that action (*SpaceTree$Reward*), the number of times the agent has visited that tile (*SpaceTree$N*) and how many steps the agent takes until the episode is solved (*SpaceTree$Length*).{: style="text-align: justify"}  
 
-Next we fill in those parameters with the values obtained by the *random-agent* that, as in the CartPole scripts, are stored in the variable dfGod(check an updated form of the script [here](ExplorationFrozenLakeTree.R))
+Next we fill in those parameters with the values obtained by the *random-agent* that, as in the CartPole scripts, are stored into the variable <code>dfGod</code>(check an updated form of the script [here](ExplorationFrozenLakeTree.R)){: style="text-align: justify"}  
 
 <pre><code>for (i in 1:nrow(SpaceTree)) {
   SpaceTree$Prob[i] <- length(dfGod2$Position[dfGod2$Position==SpaceTree$Position[i] &
@@ -64,11 +64,10 @@ Next we fill in those parameters with the values obtained by the *random-agent* 
   
   SpaceTree$Length[i]<-mean(dfGod2$StepMax[dfGod2$Position==SpaceTree$Position[i] &
                                                dfGod2$Action==SpaceTree$Action[i]&
-                                               dfGod2$RewardEp==1])
-  
+                                               dfGod2$RewardEp==1])  
 }</code></pre>
 
-Now that *tree/library* of actions-fails-rewards is ready it is possible to use it as the engine to create different policies: 
+Now that *tree/library* of actions-fails-rewards is ready it is possible to use it as the engine to create different policies:{: style="text-align: justify"}   
 
 ***The Reward based policy:*** 
 <pre><code>#Action driven by Reward
@@ -77,8 +76,8 @@ Now that *tree/library* of actions-fails-rewards is ready it is possible to use 
       action <- action$Action
       if (length(action) > 1) action<- action[round(runif(1,min = 1, max = length(action)))]</code></pre>
 
-An agent following this policy searches for the probability of solving the environment for each combination of position/action and performs the action in which this probability is the highest. In the case that two or more positions/actions have the same probability of solving the environment the agent randomly selects one of them.
-This agent solves the environment in **15.4%** of the attempts (30 times better than the random policy).
+An agent following this policy searches for the action with the highest probability of solving the environment for the current position. In the case that two or more actions have the same probability of solving the environment the agent randomly selects one of them.
+This agent solves the environment **15.4%** of the times, which is 30 times better than the *random agent*.{: style="text-align: justify"}  
 
 ***The Hole avoidance policy:***
 <pre></code>
@@ -88,8 +87,9 @@ This agent solves the environment in **15.4%** of the attempts (30 times better 
       action <- action$Action
       if (length(action) > 1) action<- action[round(runif(1,min = 1, max = length(action)))]</code></pre>
 
-This agent performs the action in which the probability of falling into a hole is lowest, independetly if the agent solves the enviroment at the or not This agent also includes the random selection of actions if two or more actions have the same probability of not falling. 
-The efficiency of this avoidance policy is around **42%**. It makes sense that this agent performs better than the reward-based agent because the random-policy obtained much more information about actions that lead to a fall in the hole than combinations of actions that solve the environment.        
+This agent performs the action in which the probability of falling into a hole is lowest, independetly if the agent solves the enviroment or not This agent also executes a random selection of actions if two or more actions have the same probability of falling. 
+The efficiency of this avoidance policy is around **42%**.   
+It makes sense that this agent performs better than the reward-based agent because the random-policy obtained much more information about actions that lead to a fall in the hole than combinations of actions that solve the environment.        
 
 ***The Reward-Hole policy:***
 <pre><code>
