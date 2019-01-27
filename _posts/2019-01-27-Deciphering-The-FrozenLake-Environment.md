@@ -42,7 +42,7 @@ colnames(SpaceTree)<-c("Position","Action","Fail")
 SpaceTree$N<-0
 SpaceTree$Prob<-0
 SpaceTree$Reward<-0
-SpaceTree$Length<-0</pre></code>
+SpaceTree$Length<-0</code></pre>
 
 I have included four additional parameters for each combination to have a more complete view of what is going on.
 {: style="text-align: justify"} 
@@ -50,7 +50,7 @@ I have included four additional parameters for each combination to have a more c
 The tree is going to account for the falling probability (*SpaceTree$Prob*), the probability of getting a reward when performing that action (*SpaceTree$Reward*), the number of times the agent has visited that tile (*SpaceTree$N*) and how many steps the agent takes until the episode is solved (*SpaceTree$Length*).
 {: style="text-align: justify"}
 
-Next we fill in those parameters with the values obtained by the *random-agent* that, as in the CartPole scripts, are stored into the variable *dfGod*(check an updated form of the script [here](ExplorationFrozenLakeTree.R))
+Next we fill in those parameters with the values obtained by the *random-agent* that, as in the CartPole scripts, are stored into the variable *dfGod*(check an updated form of the script [here](ExplorationFrozenLakeTree.R))   
 {: style="text-align: justify"}
 
 <pre><code>for (i in 1:nrow(SpaceTree)) {
