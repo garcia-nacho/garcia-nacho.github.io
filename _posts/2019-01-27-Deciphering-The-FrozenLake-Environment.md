@@ -1,7 +1,7 @@
 ---
 layout: post
 title:  "Deciphering FrozenLake Environment"
-date: '2018-12-25 15:25:00'
+date: '2019-01-27 19:19:00'
 ---
 
 ### Introduction.
