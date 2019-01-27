@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "Deciphering FrozenLake Environment"
+title:  "Deciphering the FrozenLake Environment"
 date: '2019-01-27 19:19:00'
 ---
 
