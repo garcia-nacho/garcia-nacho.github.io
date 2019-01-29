@@ -209,4 +209,4 @@ Stay tuned for new AI solutions based in R.
 -----------------------------------
 ***Update 29th of January 2019***
 
-*The ideas behind this post were purely based on my intuition about the optimal solutions to solve the environment; however, after reading more about RL I found out that my strategy to solve the environment could be considered a short of [Q-learning](https://en.wikipedia.org/wiki/Q-learning) strategy. Following posts will treat that whit more detail* 
+*The ideas behind this post were purely based on my intuition about the optimal solutions to solve the environment; however, after reading more about RL I found out that my strategy to solve the environment could be considered a short of [Q-learning](https://en.wikipedia.org/wiki/Q-learning) strategy. Following posts will treat that topic with more detail* 
