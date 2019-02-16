@@ -30,3 +30,7 @@ Otherwise it is filtered out:
 
 Of course CNN are much mor ecomplex than this. The filter can slide through the matrix position by position, the values obtained after applying the filter can be added together, etc... however the concept is exactly the same.
 
+So the idea behind the face recognition algorithm is to send the images through several convolutional layers to find the patterns that are unique for each person and link them to the identity of the person through a neural net that we can train.  
+## The Olivetti face database 
+
+Since I just wanted to play around with this concepts testing different models, I needed a small database so I did't expend several hours training the model each time that I wanted to change a parameter. For that purpose the Olivetti database is fantastic, it consist of 400 B/W images from 10 different subjects. The images are 92 x 114 with 256 tones of grey (8 bits). You can dowload the original dataset from the AT&T lab [here](https://www.cl.cam.ac.uk/research/dtg/attarchive/facedatabase.html) or a version ready to use [here](/images/faces.zip) (The version ready to use is exactly the same as the original one but all images are under the same folder with the number of the subject already encoded in the name of the file)
