@@ -36,6 +36,42 @@ So the idea behind the face recognition algorithm is to send the images through 
 
 Since I just wanted to play around with this concepts testing different models, I needed a small database so I did't expend several hours training the model each time that I wanted to change a parameter. For that purpose the Olivetti database is fantastic, it consist of 400 B/W images from 10 different subjects. The images are 92 x 114 with 256 tones of grey (8 bits). You can dowload the original dataset from the AT&T lab [here](https://www.cl.cam.ac.uk/research/dtg/attarchive/facedatabase.html) or a version ready to use [here](/images/faces.zip) (The version ready to use is exactly the same as the original one but all images are under the same folder with the number of the subject already encoded in the name of the file).
 
+This is basically how the 10 images of a subject (#5 in this case) look like: 
+![Faces](/images/10faces.jpg)
+
 If you use the *ready-to-use* file you will find that the images have this name structure *SX-Y.pgm* where X is the number of the subject and Y the number of the picture.
 
-## Loading image
+### Loading of images into the R environment.
+Here is the code that loads all the images into the R environment
+
+<pre><code>library(imager)
+
+Path<-"/home/nacho/ML/faces/"
+
+files<-list.files(Path)
+setwd(Path)
+
+df.temp <- load.image(files[1])
+df.temp<-as.matrix(df.temp)
+
+df<-array(data = 0, dim = c(length(files),nrow(df.temp),ncol(df.temp),1))
+
+for (i in 2:length(files)) {
+  df.temp <- load.image(files[i])
+  df.temp<-as.matrix(df.temp)
+  df[i,,,1]<-df.temp
+   }</code></pre>
+
+First, we need the *imager* library and the path where the images are located. Next, in order to make the script working idependently the number size of the images, the first image in the folder is loaded, transformed into a matrix and acommodated in an array with 4 dimensions: Number of images, hight, width and 1 (since the images are b/w one channel is enough the describe the colour depth. Finally, all the images are sequentially loaded into the array with a *for()* loop.
+
+By inspecting the array it is possible to see that all the grey values have already been normalized so the maximum possible white value is 1. To visualize the images in R I use the *image()* function like this:
+
+<pre><code>image(df[1,,,],
+        useRaster = TRUE,
+        axes=FALSE,
+        col = gray.colors(256, start = 0, end = 1, gamma = 2.2, alpha = NULL))</pre></code>
+
+This code reconstruct the first image stored in the array (df[1,,,]) to produce this plot:
+![Face1](/images/Face1.png)
+
+It seems that the data is loaded in the array upside down, but we don't really care since this inversion is common to all the images in the array.
