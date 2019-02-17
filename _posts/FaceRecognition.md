@@ -236,10 +236,10 @@ Another amazing feature of Keras/TensorFlow is the possibility of using *TensorB
 In this post, we have seen a very basic example of image recognition and classification in R using Keras. Using this playground it is possible to implement more advanced models to solve complex classification tasks. 
 I hope you enjoy it as much as I did. 
 {: style="text-align: justify"}
-[Code download](/MachineLearning/FacialRecognition.R)
+[Code download](https://github.com/garcia-nacho/MachineLearning/blob/master/FacialRecognition.R)
 
 ## Bibliography and Sources of Inspiration.
-[Keras for R](https://keras.rstudio.com/)
+[Keras for R](https://keras.rstudio.com/)</br>
 [How to implement Deep Learning in R using Keras and Tensorflow](https://towardsdatascience.com/how-to-implement-deep-learning-in-r-using-keras-and-tensorflow-82d135ae4889)
 
 
