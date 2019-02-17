@@ -188,7 +188,18 @@ The final step is to train the model:
               view_metrics=TRUE,
               shuffle=TRUE)</code></pre>
 
-The important parameters are the batch size and the number of epochs
+The important parameters are the batch size which is the number that samples that are processed before the model is updated and the number of epochs which is the number of times that the model goes through the entire dataset. I started setting both to 10. 
+
+After 10 minutes of training in my slow computer (i5-4200U/4Gb) the model achieves a 92.5% prediction accuracy which considering that the model only had 9 samples to train and it only run through the whole dataset 10 times it's pretty good. The model only failed predicting 3 faces; moreover, by looking at the shape of the training curve it is possible to predict that more epochs would lead to better predictions.
+
+![Loss](/images/RPlotLoss.png)
+
+An amazing feature of Keras/TensorFlow is the possibility of using *TensorBoard* which is a kind of front-end for TensorFlow with a lot of information presented in a beautiful way
+
+![TensorBoard](/images/TensorBoard.png)
+
+
+
               
               
 
