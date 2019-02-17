@@ -93,14 +93,43 @@ y_train <- Y[-TestSeq]</code></pre>
 
 ### Constructing the model.
 
-To construct the model I used Keras, which is a very flexible and powerful library for machine learning. Although most of the tutorials and examples using Keras are based on python, it is possible to use the library in R. To do that you first have to install it in a three steps process:
+To construct the model I used Keras, which is a very flexible and powerful library for machine learning. Although most of the tutorials and examples using Keras are based on python, it is possible to use the library in R. The first time you use Keras you have to install the library:
 <pre><code>
 devtools::install_github("rstudio/keras")
 library(keras)
 install_keras()
 </code></pre>
-These commands install Keras and TensorFlow, which is the core of Keras. Once Keras is installed it is possible to load it as the rest of the R libraries <code>library(keras)</code>
+These commands will install Keras and TensorFlow, which is the core of Keras. Once Keras is installed it is possible to load it as the rest of the R libraries <code>library(keras)</code>
 
+With Keras it is possible to create recursive models in which some layers are reused or models with several inputs/output but the most simple and common type of models are the sequential models. In a sequential model the data flows through the different layers to end up in the otuput. 
+
+My face recogniztion model is a sequential model in which the data extracted from the images is transformed through the different layers to be matched in the last layer with the dependent variable while the weights are tuned to minimize the *loss function*.
+
+<pre><code>#Model 
+model <-keras_model_sequential()</code></pre>
+
+The use of the *pipe operator %>%* is extremely useful to add the different layers that conform the model:
+<pre><code>model %>%
+  #CNN part
+  layer_conv_2d(filter=32,kernel_size=c(3,3),padding="same",input_shape=c(92,112,1) ) %>%  
+  layer_activation("relu") %>%  
+  layer_conv_2d(filter=32 ,kernel_size=c(3,3))  %>%  
+  layer_activation("relu") %>%
+  layer_max_pooling_2d(pool_size = c(2,2)) %>% </code></pre>
+ 
+In the CNN part, the data enters into a 2D convolutional layer with 32 filters of 3x3 size. In this layer the shape of the data is also defined input_shape=c(width, height, channels). A common activation function in CNNs is [ReLU](https://en.wikipedia.org/wiki/Rectifier_(neural_networks)). Then the data from the first CNN is processed by a second CNN to find patterns of a higher order. Finally, a *max pooling* layer is added for regularization. In this layer it occurs a downsampling of the data that also prevents overfitting. The pool size is 2x2, that means that the matrix is aggregated in a 2 by 2 manner and the maximum value of the 4 pixels is selected:
+![MaxPool](/images/MaxPool.png)
+
+
+ <pre><code>#Neural net part 
+  layer_flatten() %>% 
+  layer_dense(1024) %>%
+  layer_activation("relu") %>% 
+  layer_dense(128) %>% 
+  layer_activation("relu") %>% 
+  layer_dropout(0.3) %>% 
+  layer_dense(40) %>% 
+  layer_activation("softmax")</code></pre>
 
 
 
