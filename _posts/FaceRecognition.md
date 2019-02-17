@@ -199,12 +199,17 @@ For the optimization, I am using the Adam optimizer which is one of the *state-o
 {: style="text-align: justify"}
 
 There is one last step before training the model which is to do *one-hot-encoding* of the dependent variable. 
+*One-hot-encoding* is an alternative way of representing the dependent variable in opposition to the *Label-encoding*, which is the traditional way of representing it.
+{: style="text-align: justify"}
 
+![OHE](/images/OHE.png)
+
+The <code>to_categorical()</code> function from Keras can do the job:
 <pre><code>y_train <- to_categorical(y_train)
 y_test <- to_categorical(y_test)</code></pre>
 
 
-Finally it is time to train the model:
+Finally, it is time to train the model:
 
 <pre><code>history<-model %>% fit(x_train, y_train,
               batch_size=10,
@@ -214,22 +219,26 @@ Finally it is time to train the model:
               view_metrics=TRUE,
               shuffle=TRUE)</code></pre>
 
-The important parameters are the batch size which is the number that samples that are processed before the model is updated and the number of epochs which is the number of times that the model goes through the entire dataset. I started setting both to 10. 
+The important parameters here are the *batch size* which is the number that samples that are processed before the model is updated and the *number of epochs* which is the number of times that the model goes through the entire dataset. I started setting both to 10.
+{: style="text-align: justify"}
 
-After 10 minutes of training in my slow computer (i5-4200U/4Gb) the model achieves a 92.5% prediction accuracy which considering that the model only had 9 samples to train and it only run through the whole dataset 10 times it's pretty good. The model only failed predicting 3 faces; moreover, by looking at the shape of the training curve it is possible to predict that more epochs would lead to better predictions.
+After 10 minutes of training in my slow computer (*i5-4200U/4Gb*) the model achieves a 92.5% prediction accuracy which considering that the model only had 9 samples to train and it only run through the whole dataset 10 times it's pretty good. The model only failed predicting 3 faces; moreover, by looking at the shape of the training curve it is possible to predict that more epochs would lead to better predictions.
+{: style="text-align: justify"}
 
 ![Loss](/images/RPlotLoss.png)
 
-An amazing feature of Keras/TensorFlow is the possibility of using *TensorBoard* which is a kind of front-end for TensorFlow with a lot of information presented in a beautiful way
+Another amazing feature of Keras/TensorFlow is the possibility of using *TensorBoard* which is a kind of front-end for TensorFlow with a lot of information presented in a beautiful way.
+{: style="text-align: justify"}
 
 ![TensorBoard](/images/TensorBoard.png)
 
 ## Conclusions.
-
-In this post we have seen a very basic example of image recognition and classification in R using Keras. Using this a playground it is possible to implement more advanced models to solve complex classification tasks. 
+In this post, we have seen a very basic example of image recognition and classification in R using Keras. Using this playground it is possible to implement more advanced models to solve complex classification tasks. 
 I hope you enjoy it as much as I did. 
+{: style="text-align: justify"}
+[Code download](/MachineLearning/FacialRecognition.R)
 
-## Bibliography and Sources of Inspiration
+## Bibliography and Sources of Inspiration.
 [Keras for R](https://keras.rstudio.com/)
 [How to implement Deep Learning in R using Keras and Tensorflow](https://towardsdatascience.com/how-to-implement-deep-learning-in-r-using-keras-and-tensorflow-82d135ae4889)
 
