@@ -120,6 +120,7 @@ The use of the *pipe operator %>%* is extremely useful to add the different laye
 In the CNN part, the data enters into a 2D convolutional layer with 32 filters of 3x3 size. In this layer the shape of the data is also defined input_shape=c(width, height, channels). A common activation function in CNNs is [ReLU](https://en.wikipedia.org/wiki/Rectifier_(neural_networks)). Then the data from the first CNN is processed by a second CNN to find patterns of a higher order. Finally, a *max pooling* layer is added for regularization. In this layer it occurs a downsampling of the data that also prevents overfitting. The pool size is 2x2, that means that the matrix is aggregated in a 2 by 2 manner and the maximum value of the 4 pixels is selected:
 ![MaxPool](/images/MaxPool.png)
 
+Let'see now the neural network section.
 
  <pre><code>#Neural net part 
   layer_flatten() %>% 
@@ -131,5 +132,42 @@ In the CNN part, the data enters into a 2D convolutional layer with 32 filters o
   layer_dense(40) %>% 
   layer_activation("softmax")</code></pre>
 
+First the data from the CNN is flattened meaning that the array is reshaped into a vector with only one dimension. Then the data is sent through two *fully-connected* layers of 1024 and 128 neurons with ReLU as activation function. Next, a regularization layer is added to drop out 30% of the neurons. Finally a the output layer with the same number of units as elements to classify (40 in this case) is added, the activation function of this layer is softmax, that means that for each prediction the probability of belonging to each one of the 40 classes is calculated. 
+
+It is possible to visualize the model using <code>summary(model)</code>
+
+<pre><code>____________________________________________________________________________________________________________________________________
+Layer (type)                                               Output Shape                                         Param #             
+====================================================================================================================================
+conv2d_3 (Conv2D)                                          (None, 92, 112, 32)                                  320                 
+____________________________________________________________________________________________________________________________________
+activation_6 (Activation)                                  (None, 92, 112, 32)                                  0                   
+____________________________________________________________________________________________________________________________________
+conv2d_4 (Conv2D)                                          (None, 90, 110, 32)                                  9248                
+____________________________________________________________________________________________________________________________________
+activation_7 (Activation)                                  (None, 90, 110, 32)                                  0                   
+____________________________________________________________________________________________________________________________________
+max_pooling2d_2 (MaxPooling2D)                             (None, 45, 55, 32)                                   0                   
+____________________________________________________________________________________________________________________________________
+flatten_2 (Flatten)                                        (None, 79200)                                        0                   
+____________________________________________________________________________________________________________________________________
+dense_4 (Dense)                                            (None, 1024)                                         81101824            
+____________________________________________________________________________________________________________________________________
+activation_8 (Activation)                                  (None, 1024)                                         0                   
+____________________________________________________________________________________________________________________________________
+dense_5 (Dense)                                            (None, 128)                                          131200              
+____________________________________________________________________________________________________________________________________
+activation_9 (Activation)                                  (None, 128)                                          0                   
+____________________________________________________________________________________________________________________________________
+dropout_2 (Dropout)                                        (None, 128)                                          0                   
+____________________________________________________________________________________________________________________________________
+dense_6 (Dense)                                            (None, 40)                                           5160                
+____________________________________________________________________________________________________________________________________
+activation_10 (Activation)                                 (None, 40)                                           0                   
+====================================================================================================================================
+Total params: 81,247,752
+Trainable params: 81,247,752
+Non-trainable params: 0
+____________________________________________________________________________________________________________________________________</code></pre>
 
 
