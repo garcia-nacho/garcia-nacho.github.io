@@ -74,4 +74,25 @@ By inspecting the array it is possible to see that all the grey values have alre
 This code reconstruct the first image stored in the array (df[1,,,]) to produce this plot:
 ![Face1](/images/Face1.png)
 
-It seems that the data is loaded in the array upside down, but we don't really care since this inversion is common to all the images in the array.
+It seems that the data is loaded upside down in the array, but I don't really care since this inversion is common to all the images in the array.
+
+Next, I wanted to prepare the dependent variable to match it with each image. To do that I extracted the number of the subject from the name of the file:
+
+<pre><code>Y <- gsub(" .*","",files)
+Y<- gsub("s","",Y)</code></pre>
+
+and the last step before constructing the model is to divide the dataset in training and testing. I decided to use 9 images from each subject for the training proccess and the remaing image for testing purposes. The number in the sequence of pictures is the same for all subjects and it is randomly defined.  
+
+<pre><code>#Training and test datasets
+TestSeq<-(c(1:40)*10)+round(runif(1, min = 1, max = 10))-10
+
+x_test <- df[TestSeq,,,1]
+y_test <- Y[TestSeq]  
+x_train <- df[-TestSeq,,,1]
+y_train <- Y[-TestSeq]</code></pre>
+
+### Constructing the model.
+
+To construct the model I used Keras, which is a very flexible and powerful library for machine learning. Although most of the 
+
+
