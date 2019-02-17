@@ -171,3 +171,9 @@ Non-trainable params: 0
 ____________________________________________________________________________________________________________________________________</code></pre>
 
 
+The next step is to compile the model with the optimization parameters and the loss function.
+
+<pre><code>opt<-optimizer_adam( lr= 0.0001 , decay = 1e-6 )
+compile(model,optimizer = opt, loss = 'categorical_crossentropy' )</code></pre>
+
+For the optimization I am using the Adam optimizer which is one of the state of the art algorithms for weight tuning commonly used in image classification. The loss function is the cross entropy. ![Here](https://machinelearningmastery.com/adam-optimization-algorithm-for-deep-learning/) you can read more about the Adam optimizer and ![here](https://towardsdatascience.com/understanding-binary-cross-entropy-log-loss-a-visual-explanation-a3ac6025181a) an interesting reading where the author explains the cross entropy. 
