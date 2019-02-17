@@ -52,14 +52,14 @@ files<-list.files(Path)
 setwd(Path)
 
 df.temp <- load.image(files[1])
-df.temp<-as.matrix(df.temp)
+df.temp <- as.matrix(df.temp)
 
 df<-array(data = 0, dim = c(length(files),nrow(df.temp),ncol(df.temp),1))
 
 for (i in 2:length(files)) {
   df.temp <- load.image(files[i])
-  df.temp<-as.matrix(df.temp)
-  df[i,,,1]<-df.temp
+  df.temp <- as.matrix(df.temp)
+  df[i,,,1] <- df.temp
    }</code></pre>
 
 First, we need the *imager* library and the path where the images are located. Next, in order to make the script working idependently the number size of the images, the first image in the folder is loaded, transformed into a matrix and acommodated in an array with 4 dimensions: Number of images, hight, width and 1 (since the images are b/w one channel is enough the describe the colour depth. Finally, all the images are sequentially loaded into the array with a *for()* loop.
@@ -79,7 +79,7 @@ It seems that the data is loaded upside down in the array, but I don't really ca
 Next, I wanted to prepare the dependent variable to match it with each image. To do that I extracted the number of the subject from the name of the file:
 
 <pre><code>Y <- gsub(" .*","",files)
-Y<- gsub("s","",Y)</code></pre>
+Y <- gsub("s","",Y)</code></pre>
 
 and the last step before constructing the model is to divide the dataset in training and testing. I decided to use 9 images from each subject for the training proccess and the remaing image for testing purposes. The number in the sequence of pictures is the same for all subjects and it is randomly defined.  
 
@@ -93,6 +93,14 @@ y_train <- Y[-TestSeq]</code></pre>
 
 ### Constructing the model.
 
-To construct the model I used Keras, which is a very flexible and powerful library for machine learning. Although most of the 
+To construct the model I used Keras, which is a very flexible and powerful library for machine learning. Although most of the tutorials and examples using Keras are based on python, it is possible to use the library in R. To do that you first have to install it in a three steps process:
+<pre><code>
+devtools::install_github("rstudio/keras")
+library(keras)
+install_keras()
+</code></pre>
+These commands install Keras and TensorFlow, which is the core of Keras. Once Keras is installed it is possible to load it as the rest of the R libraries <code>library(keras)</code>
+
+
 
 
