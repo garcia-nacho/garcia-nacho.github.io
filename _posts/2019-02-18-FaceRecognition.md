@@ -1,7 +1,7 @@
 ---
 layout: post
 title:  "Face Recognition in R using Keras"
-date: '2019-01-27 19:19:00'
+date: '2019-02-18 19:25:00'
 ---
 
 ### Introduction.
