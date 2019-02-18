@@ -57,7 +57,8 @@ setwd(Path)
 df.temp <- load.image(files[1])
 df.temp <- as.matrix(df.temp)
 
-df<-array(data = 0, dim = c(length(files),nrow(df.temp),ncol(df.temp),1))
+df<-array(data = 0,
+          dim = c(length(files),nrow(df.temp),ncol(df.temp),1))
 
 for (i in 2:length(files)) {
   df.temp <- load.image(files[i])
@@ -76,7 +77,10 @@ By inspecting the array it is possible to see that all the grey values have alre
 <pre><code>image(df[1,,,],
         useRaster = TRUE,
         axes=FALSE,
-        col = gray.colors(256, start = 0, end = 1, gamma = 2.2, alpha = NULL))</code></pre>
+        col = gray.colors(256, start = 0,
+        end = 1,
+        gamma = 2.2,
+        alpha = NULL))</code></pre>
 
 This code reconstructs the first image stored in the array (df[1,,,]) to produce this *plot*:   
 ![Face1](/images/Face1.png)
