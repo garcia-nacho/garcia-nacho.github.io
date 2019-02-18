@@ -76,7 +76,7 @@ By inspecting the array it is possible to see that all the grey values have alre
 <pre><code>image(df[1,,,],
         useRaster = TRUE,
         axes=FALSE,
-        col = gray.colors(256, start = 0, end = 1, gamma = 2.2, alpha = NULL))</pre></code>
+        col = gray.colors(256, start = 0, end = 1, gamma = 2.2, alpha = NULL))</code></pre>
 
 This code reconstructs the first image stored in the array (df[1,,,]) to produce this *plot*:   
 ![Face1](/images/Face1.png)
