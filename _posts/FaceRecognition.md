@@ -11,16 +11,16 @@ The ability to recognize a face is one of those hard-encoded capacities in our b
 {: style="text-align: justify"}
 <!--more-->
 
-Despite all this, training a computer to reconize a face is an extremely complex task because faces are indeed very simmilar, all faces follow the same patterns, they have two eyes, a nose and a mouth in the same area. What makes faces recognizable are the details, but how can we train a machine to find these details? 
+Despite this apparent simplicity, training a computer to recognize a face is an extremely complex task because faces are indeed very similar, with all faces following the same patterns: they have two eyes, two ears, a nose and a mouth in the same areas. What makes faces recognizable are the details, but how can we train a machine to find these details? 
 Easy, using convolutional neural networks (CNN).
 {: style="text-align: justify"}
 
 ### CNNs.
-CNNs are special types of neural nets in which the data is processed by one or several convolutional layers before being fed into the *classical* neural network part. 
-A convolutional layer processes each value of the data differently depending on the neighboring data. If we are talking of images, the processed of each pixel of the image depends on the surrounding pixels and the rules applied, those rules are what we call filters. 
+CNNs are special types of neural nets in which the data is processed by one or several convolutional layers before being fed into a *classical* neural network. 
+A convolutional layer processes each value of the input differently, depending on the neighboring data. If we are talking of images, the processed value for each pixel of the image depends on the surrounding pixels and the rules to process them are what we call filters. 
 {: style="text-align: justify"}
 
-The good thing about convolutional layers is that they have the property of being very good at finding patterns.
+One good thing about convolutional layers is that they have the property of being very good at finding patterns.
 Let's see a very basic but intuitive example of how CNNs work using an image of 36 pixels and a bit-depth of 2. One of the few shapes that it is possible to draw in such a rudimentary system is a diagonal line. There are two possible diagonal lines, ascending and descending and it is possible to devise a filter to find only the descending diagonals in the pictures ignoring the ascending ones:
 {: style="text-align: justify"}
 
