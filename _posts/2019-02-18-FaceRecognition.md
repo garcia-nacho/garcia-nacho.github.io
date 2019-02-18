@@ -160,7 +160,7 @@ Finally, an output layer with the same number of units as elements to classify (
 
 Once the model is created it is possible to visualize it using <code>summary(model)</code>
 
-<pre><code>_____________________________________________________
+<pre><code>________________________________________________________________
 Layer (type)                   Output Shape          Param #             
 ================================================================
 conv2d_3 (Conv2D)             (None, 92, 112, 32)      320                 
@@ -192,7 +192,8 @@ activation_10 (Activation)    (None, 40)               0
 Total params: 81,247,752
 Trainable params: 81,247,752
 Non-trainable params: 0
-_________________________________________________________________</code></pre>
+_________________________________________________________________
+</code></pre>
 
 
 The next step is to compile the model with the *optimization parameters* and the *loss function*:
@@ -201,12 +202,12 @@ The next step is to compile the model with the *optimization parameters* and the
 <pre><code>opt<-optimizer_adam( lr= 0.0001 , decay = 1e-6 )
 compile(model,optimizer = opt, loss = 'categorical_crossentropy' )</code></pre>
 
-For the optimization, I am using the Adam optimizer which is one of the *state-of-the-art* algorithms for weight tuning commonly used in image classification. The loss function here is the *cross-entropy*. 
+For the optimization, I am using the Adam optimizer which is one of the *state-of-the-art* algorithms for weight tuning commonly used in image classification. The loss function here will be the *cross-entropy*. 
 [Here](https://machinelearningmastery.com/adam-optimization-algorithm-for-deep-learning/) you can read more about the Adam optimizer and [here](https://towardsdatascience.com/understanding-binary-cross-entropy-log-loss-a-visual-explanation-a3ac6025181a) you can read an interesting post where the author explains very well the cross-entropy. 
 {: style="text-align: justify"}
 
 There is one last step before training the model which is to do *one-hot-encoding* of the dependent variable. 
-*One-hot-encoding* is an alternative way of representing the dependent variable in opposition to the *Label-encoding*, which is the traditional way of showing it.
+*One-hot-encoding* is an alternative way of representing the dependent variable in opposition to the *label-encoding*, which is the traditional way of showing it:
 {: style="text-align: justify"}
 
 ![OHE](/images/OHE.png)
@@ -228,24 +229,24 @@ It is finally time to train the model:
 The important parameters here are the *batch size* which is the number of samples that are processed before the model is updated and the *number of epochs* which is the number of times that the entire dataset goes through the model. I set both to 10 as an starting point.
 {: style="text-align: justify"}
 
-After 10 minutes of training in my slow computer (*i5-4200U/4Gb*) the model achieves an impressive 92.5% prediction accuracy, it only misclassified 3 faces. This is an awesome score, considering that the model had only 9 samples to train on and it only had run through the whole dataset 10 times. Moreover, by looking at the shape of the training curve it is possible to anticipate that more epochs would lead to better predictions.
+After 10 minutes of training in my slow computer (*i5-4200U/4Gb*) the model achieves an impressive 92.5% prediction accuracy, with only 3 faces misclassified. This is an awesome score, considering that the model had only 9 samples to train on and it only had run through the whole dataset 10 times. Moreover, by looking at the shape of the training curve it is possible to anticipate that more epochs would lead to better predictions.
 {: style="text-align: justify"}
 
 ![Loss](/images/RPlotLoss.png)
 
-Another amazing feature of Keras/TensorFlow is the possibility of using *TensorBoard* which is a kind of front-end for TensorFlow, which shows a lot of information presented in a beautiful way.
+Another amazing feature of Keras/TensorFlow is the possibility of using *TensorBoard*, a kind of *front-end* for TensorFlow, which shows a lot of information presented in a beautiful way.
 {: style="text-align: justify"}
 
 ![TensorBoard](/images/TensorBoard.png)
 
 ## Conclusions.
-In this post, we have seen a very basic example of image recognition and classification in R with Keras. Using this playground it is possible to implement more advanced models to solve more complex image-classification tasks. 
+In this post, we have seen a very basic example of image recognition and classification in R with Keras. Using this playground it is possible to implement advanced models to solve more complex image-classification tasks. 
 I hope you enjoy it as much as I did. 
 {: style="text-align: justify"}
 As always you can download the code of this post [Here](https://github.com/garcia-nacho/MachineLearning/blob/master/FacialRecognition.R)
 
 ## Bibliography and Sources of Inspiration.
-[Keras for R](https://keras.rstudio.com/)</br>
+[Keras for R](https://keras.rstudio.com/)<br>
 [How to implement Deep Learning in R using Keras and Tensorflow](https://towardsdatascience.com/how-to-implement-deep-learning-in-r-using-keras-and-tensorflow-82d135ae4889)
 
 
