@@ -117,7 +117,7 @@ install_keras()
 These commands will install Keras and TensorFlow, which is the core of Keras. Once Keras has been installed it is possible to load it like the rest of the R libraries with <code>library(keras)</code>
 {: style="text-align: justify"}
 
-With Keras, it is possible to create recursive models in which some layers are reused or models with several inputs/output but the most simple and common type of models are the sequential models. In a sequential model, the data flows through the different layers to end up in the output layer where it is *compared* with the dependent variable during the training.  
+With Keras it is possible to create recursive models in which some layers are reused or models with several inputs/output but the most simple and common type of models are the sequential models. In a sequential model, the data flows through the different layers to end up in the output layer where it is *compared* with the dependent variable during the training.  
 {: style="text-align: justify"}
 This face recognition model is a sequential model in which the data extracted from the images is transformed through the different layers to be compared in the last layer with the dependent variable to tune the weights of the model in order to minimize the *loss function*.
 {: style="text-align: justify"}
