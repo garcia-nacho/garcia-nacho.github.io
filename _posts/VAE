@@ -1,0 +1,15 @@
+---
+layout: post
+title:  "Creating (and troubleshooting) VAE in R"
+date: '2019-02-18 19:25:00'
+---
+
+### Introduction.
+Of all machine-learning models I personally find autoencoders fascinating. Autoencoders are a special type of unsupervised
+models formed by two sub-models an *encoder* and a *decoder*, between the encoder and the decoder there is an internal layer
+which is usully the layer with fewer dimentions of the model and after training will contain a *latent space* for the input.
+Encoder and decoder have an inverted shape and the *latent space* is the axis of symmetry of the model.
+
+
+{: style="text-align: justify"}
+<!--more-->
