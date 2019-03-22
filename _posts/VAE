@@ -5,11 +5,18 @@ date: '2019-02-18 19:25:00'
 ---
 
 ### Introduction.
-Of all machine-learning models I personally find autoencoders fascinating. Autoencoders are a special type of unsupervised
+Of all machine-learning models I personally find autoencoders (AE) really fascinating. AE are a special type of unsupervised
 models formed by two sub-models an *encoder* and a *decoder*, between the encoder and the decoder there is an internal layer
 which is usully the layer with fewer dimentions of the model and after training will contain a *latent space* for the input.
 Encoder and decoder have an inverted shape and the *latent space* is the axis of symmetry of the model.
-
-
+![Shape](/images/Autoencoder_structure.png)
 {: style="text-align: justify"}
 <!--more-->
+
+Alternatively to the typical supervised models, AE are not trained to generate a depdendent variable, they 
+are trained so the origingal data is regenerated after going through the model. This special way of training the model gives the autoenconders their most relevant characteristic: AE encode the data into the a small *latent space*. Due to this capability AE can be used to reduce dimensionality of the data, to fiter out noise of the data, to find outlyers and what I think is more interesting to generate new data throught the so called variationl autoencoders (VAE).
+
+VAE can learn the hidden characteristics of any given data and use that knowledge (stored in the latent space) to generate novel inedit data. For example, we can train a VAE with thousands of pictures of human faces and the model will generate novel pictures of faces by sampling the *latent space* learned from the training data sending it through the decoder sub-model.
+
+### VAE and music generation.
+There are many posts and literature about VAE generating faces, hand-written numbers or pictures of cats; however, the use of VAE to generate music is less common in the literature. I am personally interested in VAE generating music becase it is a good way to  
