@@ -19,4 +19,13 @@ are trained so the origingal data is regenerated after going through the model. 
 VAE can learn the hidden characteristics of any given data and use that knowledge (stored in the latent space) to generate novel inedit data. For example, we can train a VAE with thousands of pictures of human faces and the model will generate novel pictures of faces by sampling the *latent space* learned from the training data sending it through the decoder sub-model.
 
 ### VAE and music generation.
-There are many posts and literature about VAE generating faces, hand-written numbers or pictures of cats; however, the use of VAE to generate music is less common in the literature. I am personally interested in VAE generating music becase it is a good way to  
+On the internet, there are many posts and literature about VAE generating faces, hand-written digits or pictures of cats; however, the use of VAE to generate music is less commonly found and this is what I will try to implement in this post (or series of posts).
+Because of a project at work I am personally interested in VAEs and using VAE to generate music becase is a perfect way to learn how to design, optimize and troubleshoot these type of models.   
+
+During this post I will try to recreate a national anthem based of 135 anthems.
+
+Before the construction of any model it is possible to anticipate that the task will be very difficult for one reason, the sample size. We have only 135 samples; however, machine learning models usually require several thousands of samples during the training process. In this post, I will describe some other challenges that I have found and how I solved them or propossed strategies to solve them.
+
+# Data format and data loading.
+
+To  
