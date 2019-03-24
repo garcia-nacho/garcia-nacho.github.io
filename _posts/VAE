@@ -27,7 +27,44 @@ During this post I will try to recreate a national anthem based of 135 anthems.
 Before the construction of any model it is possible to anticipate that the task will be very difficult for one reason, the sample size. We have only 135 samples; however, machine learning models usually require several thousands of samples during the training process. In this post, I will describe some other challenges that I have found and how I solved them or propossed strategies to solve them.
 
 # Data format and data loading.
+In this project I am going to use MIDI files which basically encode the score of a musical piece. MIDI files were very popular at the beginning of the internet when the bandwith was so low that transferring a single .mp3 file could take 15-30 minutes; unfortunately, nowadays they are only used by musicians in some contexts so the popularity of the format has dropped and not even the common internet browsers can reproduce it.      
+![Trend](/images/trendmidi.png)
 
-In this project I am going to use MIDI files 
 
-<audio src="http://xahmusic.org/ClassicalMusic_dir/midi/bach/wtc/b1/bach_wtc1_f04.mid" controls></audio>
+There is a lot of information encoded in a MIDI file to tell the MIDI player how to reproduce the music and the most interesting are parameters encoded are the *global time*, which is the time when the different events occur. The *events*, which are the notes to play (encoded as numbers from 1 to 128), the *duration of the event* referred to the global time, the *channel* which is the instrument executing those events and the *track* which usually correspond to the instrument although it is possible to fine several tracks per channel (eg. channel: Piano, track1: left-hand, track2: right-hand). 
+
+The first thing that we have to do is to extract all those parameters and tweak them into a ML friendly format, something not as trivial as it might look.
+
+You can download all the midi files used in this post are [here](/images/NationalAnthems.zip)
+To load the files in R I am going to use the package *TuneR*   
+
+<pre><code>
+library(tuneR)
+
+#Data loading
+path<-"/home/nacho/Downloads/Midi/NationalAnthems/"
+files<-list.files(path)
+setwd(path)
+
+df<-list()
+pb <- txtProgressBar(min = 1, max = length(files), initial = 1) 
+for (i in 1:length(files)) {
+  setTxtProgressBar(pb,i)
+  read<-readMidi(files[i])
+  df[[i]]<-getMidiNotes(read)
+}
+</code></pre>
+
+By doing this I store all the filenames into the <code>file</code> variable and then we load them one by one into the list <code>df</code> I used two functions of the TuneR library, <code>readMidi</code> and <code>getMidiNotes</code>. readMidi produces a more raw file that is tranformed into a very friendly format by getMidiNotes.
+
+This is how a dataframe produced by getMidiNotes looks like:
+<pre><code>
+     time length track channel note notename velocity
+1       0   1186     2       0   63      d#'       97
+2    1196    241     2       0   62       d'       91
+3    1442    223     2       0   63      d#'      109
+</code></pre>
+
+
+
+https://cran.r-project.org/web/packages/tuneR/tuneR.pdf
