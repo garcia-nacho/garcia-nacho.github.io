@@ -55,7 +55,7 @@ for (i in 1:length(files)) {
 }
 </code></pre>
 
-By doing this I store all the filenames into the <code>file</code> variable and then we load them one by one into the list <code>df</code> I used two functions of the TuneR library, <code>readMidi</code> and <code>getMidiNotes</code>. readMidi produces a more raw file that is tranformed into a very friendly format by getMidiNotes.
+By doing this I store all the filenames into the <code>file</code> variable and then we load them one by one into the list <code>df</code> I used two functions of the TuneR library, <code>readMidi</code> and <code>getMidiNotes</code>. readMidi produces a more raw file that is tranformed into a very friendly format using the getMidiNotes function.
 
 This is how a dataframe produced by getMidiNotes looks like:
 <pre><code>
@@ -65,6 +65,6 @@ This is how a dataframe produced by getMidiNotes looks like:
 3    1442    223     2       0   63      d#'      109
 </code></pre>
 
-
+Next, we need to decide about the format of the data. Although, the optimal format 
 
 https://cran.r-project.org/web/packages/tuneR/tuneR.pdf
