@@ -70,6 +70,14 @@ Next, we need to decide about the format of the data. Although the optimal forma
 Pianola roll plot for the Brunei nathional anthem:
 ![Brunei](/images/brunei.png)
 
-So I need to find a less sparse way to represent the data in order to feed the model. 
+So I need to find a less sparse way to represent the data in order to feed the model. I decided to use the data in a similar format to the output of getMidiNotes. I constructed an array with 4 dimensions.
+
+<code><pre>df.array <- array(data=0, dim=c(length(df),Notes.N,3, channels))</pre></code>
+
+The first dimension will contain the different anthems, the second the number of notes, the third one will cotain the note, the duration of the note and the starting time for the note, finally, the last dimension will account for the different tracks. You probably have the same *feeling* about it that I had, it is way too artificial, on top of that the duration of the note is not exactly the same as the figure represented in the score, during this project I learnt that a trick used in the midi files to be able to represent the same figure played too times in the score is to slightly cut the lenght of the first one in order to make the small silence to distinguish the two pulses. And that leads me to another problem, the quantization of the file. We can think in quantization as the granularity of the file, that makes two identical figures to have different lenght in different files with different quantization. 
+
+With all this said I think that it is *very unlikely for this type of representation to work*, but I continue with it because **the goal is the journey not the destination**
+
+Here is the code to fill the array 
 
 https://cran.r-project.org/web/packages/tuneR/tuneR.pdf
