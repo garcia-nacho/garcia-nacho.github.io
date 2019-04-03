@@ -70,6 +70,6 @@ Next, we need to decide about the format of the data. Although the optimal forma
 Pianola roll plot for the Brunei nathional anthem:
 ![Brunei](/images/brunei.png)
 
-So I need to find more optimal ways to present the data to the model.
+So I need to find a less sparse way to represent the data in order to feed the model. 
 
 https://cran.r-project.org/web/packages/tuneR/tuneR.pdf
