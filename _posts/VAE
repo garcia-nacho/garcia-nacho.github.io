@@ -120,6 +120,22 @@ for (i in 1:length(df)) {
 
 }
 </pre></code>
-The channels, notes and times are padded with 0s
+The channels, notes and times are padded with 0s.
+
+Once the array is ready we need to create the model, in this post I am going to use Keras and again I am going to use the VAE described in the Rstudio webpage devoted to Keras as an starting point:
+
+<code><pre>
+#Keras model VAE
+
+#Parameters
+filters <- 36
+l.rate= 0.0001
+decay = 1e-6 
+latent_dim <- 2
+epsilon_std <- 1.0
+dropout.1 <- 0.2
+dropout.2 <-0.2
+intermediate_dim <- 128
+</pre></code>
 
 https://cran.r-project.org/web/packages/tuneR/tuneR.pdf
