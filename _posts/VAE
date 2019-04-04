@@ -74,10 +74,52 @@ So I need to find a less sparse way to represent the data in order to feed the m
 
 <code><pre>df.array <- array(data=0, dim=c(length(df),Notes.N,3, channels))</pre></code>
 
-The first dimension will contain the different anthems, the second the number of notes, the third one will cotain the note, the duration of the note and the starting time for the note, finally, the last dimension will account for the different tracks. You probably have the same *feeling* about it that I had, it is way too artificial, on top of that the duration of the note is not exactly the same as the figure represented in the score, during this project I learnt that a trick used in the midi files to be able to represent the same figure played too times in the score is to slightly cut the lenght of the first one in order to make the small silence to distinguish the two pulses. And that leads me to another problem, the quantization of the file. We can think in quantization as the granularity of the file, that makes two identical figures to have different lenght in different files with different quantization. 
+The first dimension will contain the different anthems, the second the number of notes, the third one will cotain the note, the duration of the note and the starting time for the note, finally, the last dimension will account for the different tracks. The size of the second dimension was decided based on the histogram of the number of notes per track per anthem:
 
-With all this said I think that it is *very unlikely for this type of representation to work*, but I continue with it because **the goal is the journey not the destination**
+<code><pre>
+#Check maximum element per track
+t4<-0
+for (i in 1:length(df)){
+  tracks<-unique(df[[i]]$track)
+  for (j in 1:length(tracks)) {
+  t4 <- c(t4, length(df[[i]]$time[df[[i]]$track==tracks[j]]))  
+  }
+  
+}
+t4<-t4[-1]
+hist(t4, breaks = 60, main="Number of Notes", xlab = "Notes per Track")
 
-Here is the code to fill the array 
+![NotesN](/images/numberofnotes.png)
+</pre></code>
+
+<code><pre>Notes.N<-150</pre></code>
+
+
+
+
+
+You probably have the same *feeling* about it that I had, it is way too artificial, on top of that the duration of the note is not exactly the same as the figure represented in the score, during this project I learnt that a trick used in the midi files to be able to represent the same figure played too times in the score is to slightly cut the lenght of the first one in order to make the small silence to distinguish the two pulses. And that leads me to another problem, the quantization of the file. We can think in quantization as the granularity of the file, that makes two identical figures to have different lenght in different files with different quantization. 
+
+With all this said I think that it is *very unlikely for this type of representation to work*, but I continue with it because **the goal is the journey not the destination** and anyhow it is possible that the model can capture the patterns and the non-linearities of the scores.
+
+Here is the code to fill in the array: 
+<code><pre>
+#Array filling
+for (i in 1:length(df)) {
+  tracks<-unique(df[[i]]$track)
+  for (j in 1:min(length(tracks),channels)) {
+    
+    dummy.note<-df[[i]]$note[df[[i]]$track==tracks[j]]
+    dummy.time<-df[[i]]$time[df[[i]]$track==tracks[j]]+1 #+1 to make starting time at 1
+    dummy.length<-df[[i]]$length[df[[i]]$track==tracks[j]]
+    
+    df.array[i,1:min(length(dummy.note),Notes.N),1,j]<-dummy.note[1:min(length(dummy.note),Notes.N)]
+    df.array[i,1:min(length(dummy.length),Notes.N),2,j]<-dummy.length[1:min(length(dummy.length),Notes.N)]
+    df.array[i,1:min(length(dummy.time),Notes.N),3,j]<-dummy.time[1:min(length(dummy.time),Notes.N)]
+  }
+
+}
+</pre></code>
+The channels, notes and times are padded with 0s
 
 https://cran.r-project.org/web/packages/tuneR/tuneR.pdf
