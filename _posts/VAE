@@ -123,10 +123,8 @@ for (i in 1:length(df)) {
 The channels, notes and times are padded with 0s.
 
 Once the array is ready we need to create the model, in this post I am going to use Keras and again I am going to use the VAE described in the Rstudio webpage devoted to Keras as an starting point:
-
+Parameters in case of tuning 
 <code><pre>
-#Keras model VAE
-
 #Parameters
 filters <- 36
 l.rate= 0.0001
@@ -135,7 +133,57 @@ latent_dim <- 2
 epsilon_std <- 1.0
 dropout.1 <- 0.2
 dropout.2 <-0.2
-intermediate_dim <- 128
+intermediate_dim <- 256
+batch_size <- 10
+epoch <- 100
 </pre></code>
+
+
+<code><pre>
+#### Model
+dimensions<-dim(df.array)
+dimensions<-dimensions[-1]
+
+Input <- layer_input(shape = dimensions)
+
+Notes<- Input %>% 
+  layer_conv_2d(filters=20, kernel_size=c(5,1), activation='relu', padding='same',strides=1,data_format='channels_last')%>% 
+  layer_conv_2d(filters=40, kernel_size=c(5,1), activation='relu', padding='same',strides=1,data_format='channels_last')%>%
+  layer_conv_2d(filters=80, kernel_size=c(5,3), activation='relu', padding='same',strides=1,data_format='channels_last')%>%
+  layer_conv_2d(filters=160, kernel_size=c(5,3), activation='relu', padding='same',strides=1,data_format='channels_last')%>%
+  layer_flatten()
+</pre></code>
+
+The first part of the model tries to find patterns in the input by using convolutions, the first two layers tries to find patterns in a 5x1 way that means that it tries to find patterns in five events independently in for each dimension (note, length and time). The other two layers combines all dimensions to find patterns that migth be relating them.  
+
+Next, there is a fully-connected layer with 256 units connecting the 72000 values comming from the flattering of the convolutions and send them to create the latent space.
+
+<code><pre>
+hidden <- Notes %>% layer_dense( units = intermediate_dim, activation = "relu")
+
+z_mean <- hidden %>% layer_dense( units = latent_dim)
+z_log_var <- hidden %>% layer_dense( units = latent_dim)
+</pre></code>
+
+Then, the sampling function from the latent space is created.
+
+<code><pre>
+sampling <- function(args) {
+  z_mean <- args[, 1:(latent_dim)]
+  z_log_var <- args[, (latent_dim + 1):(2 * latent_dim)]
+  
+  epsilon <- k_random_normal(
+    shape = c(k_shape(z_mean)[[1]]),
+    mean = 0.,
+    stddev = epsilon_std
+  )
+  z_mean + k_exp(z_log_var) * epsilon
+}
+
+z <- layer_concatenate(list(z_mean, z_log_var)) %>% layer_lambda(sampling)
+</pre></code>
+
+
+
 
 https://cran.r-project.org/web/packages/tuneR/tuneR.pdf
