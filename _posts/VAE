@@ -94,10 +94,6 @@ hist(t4, breaks = 60, main="Number of Notes", xlab = "Notes per Track")
 
 <code><pre>Notes.N<-150</pre></code>
 
-
-
-
-
 You probably have the same *feeling* about it that I had, it is way too artificial, on top of that the duration of the note is not exactly the same as the figure represented in the score, during this project I learnt that a trick used in the midi files to be able to represent the same figure played too times in the score is to slightly cut the lenght of the first one in order to make the small silence to distinguish the two pulses. And that leads me to another problem, the quantization of the file. We can think in quantization as the granularity of the file, that makes two identical figures to have different lenght in different files with different quantization. 
 
 With all this said I think that it is *very unlikely for this type of representation to work*, but I continue with it because **the goal is the journey not the destination** and anyhow it is possible that the model can capture the patterns and the non-linearities of the scores.
@@ -126,11 +122,13 @@ Once the array is ready we need to create the model, in this post I am going to 
 Parameters in case of tuning 
 <code><pre>
 #Parameters
+epsilon_std <- 1.0
 filters <- 36
 latent_dim <- 2
 intermediate_dim <- 256
 batch_size <- 10
 epoch <- 100
+
 </pre></code>
 
 
@@ -141,12 +139,13 @@ dimensions<-dimensions[-1]
 
 Input <- layer_input(shape = dimensions)
 
-Notes<- Input %>% 
-  layer_conv_2d(filters=20, kernel_size=c(5,1), activation='relu', padding='same',strides=1,data_format='channels_last')%>% 
-  layer_conv_2d(filters=40, kernel_size=c(5,1), activation='relu', padding='same',strides=1,data_format='channels_last')%>%
-  layer_conv_2d(filters=80, kernel_size=c(5,3), activation='relu', padding='same',strides=1,data_format='channels_last')%>%
-  layer_conv_2d(filters=160, kernel_size=c(5,3), activation='relu', padding='same',strides=1,data_format='channels_last')%>%
+Notes<- Input %>%
+  layer_conv_2d(filters=filters, kernel_size=c(5,1), activation='relu', padding='same',strides=1,data_format='channels_last')%>% 
+  layer_conv_2d(filters=filters*2, kernel_size=c(5,1), activation='relu', padding='same',strides=1,data_format='channels_last')%>%
+  layer_conv_2d(filters=filters*4, kernel_size=c(5,3), activation='relu', padding='same',strides=1,data_format='channels_last')%>%
+  layer_conv_2d(filters=filters*8, kernel_size=c(5,3), activation='relu', padding='same',strides=1,data_format='channels_last')%>%
   layer_flatten()
+
 </pre></code>
 
 The first part of the model tries to find patterns in the input by using convolutions, the first two layers tries to find patterns in a 5x1 way that means that it tries to find patterns in five events independently in for each dimension (note, length and time). The other two layers combines all dimensions to find patterns that migth be relating them.  
@@ -178,7 +177,30 @@ sampling <- function(args) {
 z <- layer_concatenate(list(z_mean, z_log_var)) %>% layer_lambda(sampling)
 </pre></code>
 
+Next, the decoder part is created. 
 
+<code><pre>
+
+output_shape <- c(10, dimensions)  
+
+Output<- z %>%
+  layer_dense(units = intermediate_dim, activation = "sigmoid") %>%
+  layer_dense(units = prod(150,3,filters*8), activation = "relu") %>%
+  layer_reshape(target_shape = c(150,3,filters*8)) %>%
+  layer_conv_2d_transpose(filters=filters*8, kernel_size=c(5,3), activation='relu', padding='same',strides=1,data_format='channels_last')%>%
+  layer_conv_2d_transpose(filters=filters*4, kernel_size=c(5,3), activation='relu', padding='same',strides=1,data_format='channels_last')%>%
+  layer_conv_2d_transpose(filters=filters*2, kernel_size=c(5,1), activation='relu', padding='same',strides=1,data_format='channels_last')%>%
+  layer_conv_2d_transpose(filters=9, kernel_size=c(5,1), activation='sigmoid', padding='same',strides=1,data_format='channels_last')
+
+</code></pre>
+
+The decoder section must contain the same layers that the encoder and they have to be inverted, beeing the latent space the axis of symetry.
+
+Now we can create the model
+
+<code><pre>vae <- keras_model(Input, Output)</pre></code>
+
+To compile the model we need a loss function, in the case of VAE we are going to create a custom loss-function
 
 
 https://cran.r-project.org/web/packages/tuneR/tuneR.pdf
