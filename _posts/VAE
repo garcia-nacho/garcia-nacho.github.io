@@ -127,12 +127,7 @@ Parameters in case of tuning
 <code><pre>
 #Parameters
 filters <- 36
-l.rate= 0.0001
-decay = 1e-6 
 latent_dim <- 2
-epsilon_std <- 1.0
-dropout.1 <- 0.2
-dropout.2 <-0.2
 intermediate_dim <- 256
 batch_size <- 10
 epoch <- 100
