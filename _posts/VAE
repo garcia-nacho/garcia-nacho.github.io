@@ -237,6 +237,10 @@ history<-vae %>% fit(x= xtrain,
 tensorboard("logs/VAE_test")
 </pre></code>
 
+![loss](/images/lossVAE.png)
+
+
+
 bibliography:
 
 https://towardsdatascience.com/intuitively-understanding-variational-autoencoders-1bfe67eb5daf
