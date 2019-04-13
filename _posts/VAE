@@ -200,7 +200,37 @@ Now we can create the model
 
 <code><pre>vae <- keras_model(Input, Output)</pre></code>
 
-To compile the model we need a loss function, in the case of VAE we are going to create a custom loss-function
+To compile the model we need a loss function and in the case of VAE we need to define a custom loss-function. The loss function in VAE must minimize two elements: 
+1. The difference between the input and the output, to be sure that the model recreated the input as accurate as possible. We can achieve that by minimizing the mean square error between input and output.
+2. The difference between elements in the latent space aggregating them around the center of the latent space, the reason for this is to prevent gaps between different groups of elements because the model wouldn't know how to interpret those empty regions of the latent space, giving aberrant generations. Again, keep in mind that in our case we only have a element (anthem) per group (contry). This regularization parameter can be written as a Kullbac-Leiber divergence term to be minimized.
+The weight of both elements into the loss function is controlled by two paramters so we can tune it further.
+
+<code><pre>
+Reg_factor <- 0.5
+Loss_factor<-5
+
+# Custom loss function
+vae_loss <- function(x, x_decoded_mean_squash) {
+  
+  x <- k_flatten(x)
+  
+  x_decoded_mean_squash <- k_flatten(x_decoded_mean_squash)
+  
+  xent_loss <- Loss_factor*loss_mean_squared_error(x, x_decoded_mean_squash)
+  
+  kl_loss <- -Reg_factor * k_mean(1 + z_log_var - k_square(z_mean) - k_exp(z_log_var), axis = -1L)
+  
+  k_mean(xent_loss + kl_loss)
+}
+</pre></code>
+
+bibliography:
+
+https://towardsdatascience.com/intuitively-understanding-variational-autoencoders-1bfe67eb5daf
+https://www.countbayesie.com/blog/2017/5/9/kullback-leibler-divergence-explained
+https://github.com/rstudio/keras/blob/master/vignettes/examples/variational_autoencoder.R
+
+
 
 
 https://cran.r-project.org/web/packages/tuneR/tuneR.pdf
