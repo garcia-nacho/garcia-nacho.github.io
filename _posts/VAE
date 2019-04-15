@@ -109,7 +109,6 @@ for (i in 1:length(df)) {
     df.array[i,1:min(length(dummy.length),Notes.N),2,j]<-dummy.length[1:min(length(dummy.length),Notes.N)]
     df.array[i,1:min(length(dummy.time),Notes.N),3,j]<-dummy.time[1:min(length(dummy.time),Notes.N)]
   }
-
 }
 </code></pre>
 The channels, notes and times are padded with 0s. Note that there are whole channels padded with zeroes in some anthems.{: style="text-align: justify"} 
@@ -117,18 +116,17 @@ The channels, notes and times are padded with 0s. Note that there are whole chan
 Once the array is ready, we need to define the model, in this post, I am going to use Keras and I am going to use the VAE described in the Rstudio webpage devoted to Keras as a starting point:{: style="text-align: justify"} 
 
 Parameters for tuning: 
-<code><pre>
-#Parameters
+<pre><code>#Parameters
 epsilon_std <- 1.0
 filters <- 36
 latent_dim <- 2
 intermediate_dim <- 256
 batch_size <- 10
 epoch <- 100
-</pre></code>
+</code></pre>
 
 and the model:
-<code><pre>
+<pre><code>
 #### Model
 dimensions<-dim(df.array)
 dimensions<-dimensions[-1]
@@ -141,20 +139,20 @@ Notes<- Input %>%
   layer_conv_2d(filters=filters*4, kernel_size=c(5,3), activation='relu', padding='same',strides=1,data_format='channels_last')%>%
   layer_conv_2d(filters=filters*8, kernel_size=c(5,3), activation='relu', padding='same',strides=1,data_format='channels_last')%>%
   layer_flatten()
-</pre></code>
+</code></pre>
 
 This part of the model tries to find patterns in the input by using convolutions; the first two layers try to find patterns in a 5x1 way that means that it tries to find patterns in five events independently in for each dimension (note, length and time). The other two layers combine all dimensions to find patterns that might be relating them.{: style="text-align: justify"}.
 
 Next, there are several fully-connected layers with 256, 256/2 and 256/4 units connecting the 72000 values coming from the flattering of the convolutions and send them to create the latent space of two dimensions.{: style="text-align: justify"}
 
-<code><pre>
+<pre><code>
 hidden <- Notes %>% layer_dense( units = intermediate_dim, activation = "sigmoid") %>% 
           layer_dense( units = round(intermediate_dim/2), activation = "sigmoid") %>% 
           layer_dense( units = round(intermediate_dim/4), activation = "sigmoid")
 
 z_mean <- hidden %>% layer_dense( units = latent_dim)
 z_log_var <- hidden %>% layer_dense( units = latent_dim)
-</pre></code>
+</code></pre>
 
 Then, the sampling function from the latent space is created.
 
@@ -174,35 +172,36 @@ sampling <- function(args) {
 z <- layer_concatenate(list(z_mean, z_log_var)) %>% layer_lambda(sampling)
 </pre></code>
 
-Next, the decoder part is created. 
+Next, the decoder. 
 
 <code><pre>
-
 output_shape <- c(10, dimensions)  
 
 Output<- z %>%
+  layer_dense( units = round(intermediate_dim/4), activation = "sigmoid") %>% 
+  layer_dense( units = round(intermediate_dim/2), activation = "sigmoid") %>%
   layer_dense(units = intermediate_dim, activation = "sigmoid") %>%
   layer_dense(units = prod(150,3,filters*8), activation = "relu") %>%
   layer_reshape(target_shape = c(150,3,filters*8)) %>%
   layer_conv_2d_transpose(filters=filters*8, kernel_size=c(5,3), activation='relu', padding='same',strides=1,data_format='channels_last')%>%
   layer_conv_2d_transpose(filters=filters*4, kernel_size=c(5,3), activation='relu', padding='same',strides=1,data_format='channels_last')%>%
   layer_conv_2d_transpose(filters=filters*2, kernel_size=c(5,1), activation='relu', padding='same',strides=1,data_format='channels_last')%>%
-  layer_conv_2d_transpose(filters=9, kernel_size=c(5,1), activation='sigmoid', padding='same',strides=1,data_format='channels_last')
-
+  layer_conv_2d_transpose(filters=9, kernel_size=c(5,1), activation='relu', padding='same',strides=1,data_format='channels_last')
 </code></pre>
 
-The decoder section must contain the same layers that the encoder and they have to be inverted, beeing the latent space the axis of symetry.
+The decoder section must contain the same layers that the encoder and they have to be inverted, beeing the latent space the axis of symetry.{: style="text-align: justify"}
 
-Now we can create the model
+Now we can create the model:{: style="text-align: justify"}
 
 <code><pre>vae <- keras_model(Input, Output)</pre></code>
 
-To compile the model we need a loss function and in the case of VAE we need to define a custom loss-function. The loss function in VAE must minimize two elements: 
-1. The difference between the input and the output, to be sure that the model recreated the input as accurate as possible. We can achieve that by minimizing the *mean square logarithmic error* (MSLE) between input and output. 
-2. The difference between elements in the latent space aggregating them around the center of the latent space, the reason for this is to prevent gaps between different groups of elements because the model wouldn't know how to interpret those empty regions of the latent space, giving aberrant generations. Again, keep in mind that in our case we only have a element (anthem) per group (contry). This regularization parameter can be written as a Kullbac-Leiber divergence (KL) term to be minimized.
-Note that I used MSLE instead MSE because the values that we are approximating are not normalized and produced by the RELU function so a loss function using MSE is way higher than the KL so the KL would be missrepresented during the training. Additionally, I have included two parameters to fine tune the weight of both elements in the loss function so it would be possible to use MSE by setting a very small Loss_factor 
+To compile the model we need a loss function and in the case of VAE, we need to define a custom loss-function. The loss function in VAE must minimize two elements: 
+1. The difference between the input and the output, to be sure that the model recreates the input as accurate as possible. We can achieve that by minimizing the *mean square logarithmic error* (MSLE) between input and output. 
+2. The difference between elements in the latent space to aggregate them around the center of the latent space (0,0). The reason for this is to prevent gaps between different groups of elements because the model wouldn't know how to interpret those empty regions of the latent space, giving aberrant generations. Again, keep in mind that in our case we only have an element (anthem) per group (country). This regularization parameter can be written as a Kullbac-Leiber divergence (KL) term to be minimized.{: style="text-align: justify"}
 
-<code><pre>
+Note that I have used MSLE instead MSE because the values to approximate are not normalized and produced by a RELU function (which can produce any value larger than zero as output) so the first term of loss function using MSE is way higher than the KL so the KL would be misrepresented during the training. Additionally, I have included two parameters to fine tune the weight of both terms inside the loss function so it would be possible to use MSE by setting a very small <code>Loss_factor</code>.{: style="text-align: justify"} 
+
+<pre><code>
 Reg_factor <- 0.5
 Loss_factor<-1
 
@@ -217,33 +216,43 @@ vae_loss <- function(x, x_decoded_mean_squash) {
   
   k_mean(xent_loss + kl_loss)
 }
-</pre></code>
+</code></pre>
 
-Now we can create the training and test sets and train the model to see what happens...
+Now we can compile the model, create the training and test sets and train the model to see what happens...{: style="text-align: justify"} 
 
-<code><pre>
+<pre><code>
+vae %>% compile(optimizer = "rmsprop", loss = vae_loss)
+summary(vae) #For inspection
+
 val<- sample(dim(df.array)[1], 10)
 xval<- df.array[val,,,]
 xtrain<-df.array[-val,,,]
 
 reset_states(vae) #To test different models
 
+date<-as.character(date())
+logs<-gsub(" ","_",date)
+logs<-gsub(":",".",logs)
+logs<-paste("logs/",logs,sep = "")
+
 history<-vae %>% fit(x= xtrain,
                      y=xtrain,
                      batch_size=batch_size,
                      epoch=epoch,
                      validation_data = list(xval, xval),
-                     callbacks = callback_tensorboard("logs/VAE_test"),
+                     callbacks = callback_tensorboard(logs),
                      view_metrics=FALSE,
                      shuffle=TRUE)
 
-tensorboard("logs/VAE_test")
-</pre></code>
+tensorboard(logs)
+</code></pre>
+
+I have created a unique identifier to be able to track every experiment in the tensorboard without mixing them up.{: style="text-align: justify"} 
 
 ![loss](/images/lossVAE.png)
 
 ### Validation
-Based on the training curves it seems that the training went ok; however, the only way to fully appreciate the performance of the model is trying to reconstruct one of the anthems and see how similar is to the original one.
+Based on the training curves it seems that the training went ok; however, the only way to fully appreciate the performance of the model is trying to reconstruct one of the anthems and see how similar is to the original one. In this case we are going to recreate the first anthem (Afghanistan){: style="text-align: justify"} 
 
 <code><pre>
  #Regeneration of sample #1
@@ -267,8 +276,10 @@ Based on the training curves it seems that the training went ok; however, the on
   ggplot(to.plot)+
     geom_line(aes(x=Time,y=Note, colour=as.character(Channel)))+
     theme_minimal()
-
 </pre></code>
+
+Ohhh... it looks strange, and very different from the original 
+
 
 ### Conclusions 
 
