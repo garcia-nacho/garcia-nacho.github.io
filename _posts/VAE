@@ -53,9 +53,9 @@ for (i in 1:length(files)) {
 }
 </code></pre>
 
-This part of the code stores all the filenames into the <code>file</code> variable and then it loads the anthems one by one into a list (<code>df</code>) I have used two functions of the *TuneR* library, <code>readMidi</code> and <code>getMidiNotes</code>. readMidi produces a more raw file that is tranformed into a very friendly format using the getMidiNotes function.{: style="text-align: justify"} 
+This part of the code stores all the filenames into the <code>file</code> variable and then it loads the anthems one by one into a list (<code>df</code>) I have used two functions of the *TuneR* library, <code>readMidi</code> and <code>getMidiNotes</code>. <code>readMidi</code> produces a raw file that it is tranformed into a more friendly format using the <code>getMidiNotes</code> function.{: style="text-align: justify"} 
 
-This is how a dataframe produced by getMidiNotes looks like:
+This is how a dataframe produced by <code>getMidiNotes</code> looks like:
 <pre><code>
      time length track channel note notename velocity
 1       0   1186     2       0   63      d#'       97
