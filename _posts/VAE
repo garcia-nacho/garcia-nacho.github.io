@@ -5,35 +5,32 @@ date: '2019-02-18 19:25:00'
 ---
 
 ### Introduction.
-Of all machine-learning models I personally find autoencoders (AE) really fascinating. AE are a special type of unsupervised
-models formed by two sub-models an *encoder* and a *decoder*, between the encoder and the decoder there is an internal layer
-which is usully the layer with fewer dimentions of the model and after training will contain a *latent space* for the input.
-Encoder and decoder have an inverted shape and the *latent space* is the axis of symmetry of the model.
+Of all machine-learning models, I personally find autoencoders (AE) really fascinating. AE are a special type of unsupervised models formed by two sub-models an *encoder* and a *decoder*, between the encoder and the decoder there is an internal layer
+which is the layer with fewer dimensions of the model and after training will contain a *latent space* of the input.
 ![Shape](/images/Autoencoder_structure.png)
+Encoder and decoder have an inverted shape and the *latent space* is the axis of symmetry of the model.
 {: style="text-align: justify"}
 <!--more-->
 
-Alternatively to the typical supervised models, AE are not trained to generate a depdendent variable, they 
-are trained so the origingal data is regenerated after going through the model. This special way of training the model gives the autoenconders their most relevant characteristic: AE encode the data into the a small *latent space*. Due to this capability AE can be used to reduce dimensionality of the data, to fiter out noise of the data, to find outlyers and what I think is more interesting to generate new data throught the so called variationl autoencoders (VAE).
+Alternatively to the typical supervised models, AE are not trained to generate a dependent variable, they are trained so the original data is regenerated after going through the model. This special way of training the model gives the autoencoders their most relevant characteristic: AE encode the data into a small *latent space*. Due to this capability, AE can be used to reduce the dimensionality of the data, to filter out the noise in the data, to find anomalies and, what I think is more interesting, to generate new data through the so-called variational autoencoders (VAE).
+{: style="text-align: justify"}
 
-VAE can learn the hidden characteristics of any given data and use that knowledge (stored in the latent space) to generate novel inedit data. For example, we can train a VAE with thousands of pictures of human faces and the model will generate novel pictures of faces by sampling the *latent space* learned from the training data sending it through the decoder sub-model.
+VAE can learn the hidden characteristics of any given data and use that *knowledge* (stored in the latent space) to generate novel data. For example, we can train a VAE with thousands of pictures of human faces and the model will generate new pictures of faces just by sampling the *latent space* learned from the training data.{: style="text-align: justify"}
 
 ### VAE and music generation.
-On the internet, there are many posts and literature about VAE generating faces, hand-written digits or pictures of cats; however, the use of VAE to generate music is less commonly found and this is what I will try to implement in this post (or series of posts).
-Because of a project at work I am personally interested in VAEs and using VAE to generate music becase is a perfect way to learn how to design, optimize and troubleshoot these type of models.   
+On the internet, there are many posts and literature about VAE generating faces, hand-written digits or pictures of cats; however, the use of VAE to generate music is less commonly found and this is what I will try to implement in this post.{: style="text-align: justify"}   
 
-During this post I will try to recreate a national anthem based of 135 anthems.
+In this post I will describe an attempt to generate a novel national anthem based on 135 anthems.
 
-Before the construction of any model it is possible to anticipate that the task will be very difficult for one reason, the sample size. We have only 135 samples; however, machine learning models usually require several thousands of samples during the training process. In this post, I will describe some other challenges that I have found and how I solved them or propossed strategies to solve them.
+Before the construction of any model, it is possible to anticipate that the task will be very difficult just for one reason: the sample size. We have only 135 samples; however, machine learning models usually require several thousands of samples during the training process. So if you are reading the post expecting an amazing result I have to disappoint you, there won't be any new anthem in the end... But who cares, *"the journey is the destination"*.{: style="text-align: justify"}
 
-# Data format and data loading.
-In this project I am going to use MIDI files which basically encode the score of a musical piece. MIDI files were very popular at the beginning of the internet when the bandwith was so low that transferring a single .mp3 file could take 15-30 minutes; unfortunately, nowadays they are only used by musicians in some contexts so the popularity of the format has dropped and not even the common internet browsers can reproduce it.      
+### Data format and data loading.
+For this project, I am going to use MIDI files which basically encode the score of a musical piece. MIDI files were very popular at the beginning of the internet when the bandwidth was so low that transferring a single .mp3 file could take 15-30 minutes; however, nowadays they are only used by musicians in some contexts, so the popularity of the format has dropped and not even the common internet browsers can reproduce it.{: style="text-align: justify"}      
 ![Trend](/images/trendmidi.png)
 
+There is a lot of information encoded in a MIDI file to tell the MIDI player how to reproduce the music. The most interesting parameters encoded are the *global time*, which is the time when the different events occur. The *events*, which are the notes to play (encoded as numbers from 1 to 128), the *duration of the event* referred to the global time, the *channel* which is the instrument executing those events and the *track* which usually correspond to the instrument although it is possible to find several tracks per channel (eg. channel: Piano, track1: left-hand, track2: right-hand).{: style="text-align: justify"} 
 
-There is a lot of information encoded in a MIDI file to tell the MIDI player how to reproduce the music and the most interesting are parameters encoded are the *global time*, which is the time when the different events occur. The *events*, which are the notes to play (encoded as numbers from 1 to 128), the *duration of the event* referred to the global time, the *channel* which is the instrument executing those events and the *track* which usually correspond to the instrument although it is possible to fine several tracks per channel (eg. channel: Piano, track1: left-hand, track2: right-hand). 
-
-The first thing that we have to do is to extract all those parameters and tweak them into a ML friendly format, something not as trivial as it might look.
+The first thing that we have to do is to extract all those parameters and tweak them into a ML friendly format, something not as trivial as it might look.{: style="text-align: justify"} 
 
 You can download all the midi files used in this post are [here](/images/NationalAnthems.zip)
 To load the files in R I am going to use the package *TuneR*   
