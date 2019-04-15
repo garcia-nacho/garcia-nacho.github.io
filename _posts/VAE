@@ -246,11 +246,11 @@ tensorboard("logs/VAE_test")
 ![loss](/images/lossVAE.png)
 
 ### Validation
-Based on the training curves it seems that the training was correct; however, the only way to fully appreciate the performance of the model is to 
+Based on the training curves it seems that the training went ok; however, the only way to fully appreciate the performance of the model is trying to reconstruct one of the anthems and see how similar is to the original one.
 
 <code><pre>
  #Regeneration of sample #1
-  Samp1.gen <- predict(vae, array(df.array[3,,,], dim = c(1,150,3,9)), batch_size = 10)
+  Samp1.gen <- predict(vae, array(df.array[1,,,], dim = c(1,150,3,9)), batch_size = 10)
   
       Samp1.gen[1,,1,] <- round(Samp1.gen[1,,1,])
       Samp1.gen[1,,2,] <- round(Samp1.gen[1,,2,])
