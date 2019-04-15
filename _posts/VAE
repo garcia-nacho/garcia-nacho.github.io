@@ -22,7 +22,7 @@ On the internet, there are many posts and literature about VAE generating faces,
 
 In this post I will describe an attempt to generate a novel national anthem based on 135 anthems.
 
-Before the construction of any model, it is possible to anticipate that the task will be very difficult just for one reason: the sample size. We have only 135 samples; however, machine learning models usually require several thousands of samples during the training process. So if you are reading the post expecting an amazing result I have to disappoint you, there won't be any new anthem in the end... But who cares, *"the journey is the destination"*.{: style="text-align: justify"}
+Before the construction of any model, it is possible to anticipate that the task will be very difficult just for one reason: the sample size. We have only 135 samples; however, machine learning models usually require several thousands of samples during the training process. So if you are reading the post expecting an amazing result I have to disappoint you, there won't be any new anthem in the end... But who cares, *" the journey is the destination"*.{: style="text-align: justify"}
 
 ### Data format and data loading.
 For this project, I am going to use MIDI files which basically encode the score of a musical piece. MIDI files were very popular at the beginning of the internet when the bandwidth was so low that transferring a single .mp3 file could take 15-30 minutes; however, nowadays they are only used by musicians in some contexts, so the popularity of the format has dropped and not even the common internet browsers can reproduce it.{: style="text-align: justify"}      
@@ -53,7 +53,7 @@ for (i in 1:length(files)) {
 }
 </code></pre>
 
-This part of the code stores all the filenames into the <code>file</code> variable and then it loads the anthems one by one into a list (<code>df</code>) I have used two functions of the *TuneR* library, <code>readMidi</code> and <code>getMidiNotes</code>. <code>readMidi</code> produces a raw file that it is tranformed into a more friendly format using the <code>getMidiNotes</code> function:{: style="text-align: justify"} 
+This part of the code stores all the filenames into the <code>file</code> variable and then it loads the anthems one by one into a list (<code>df</code>). I have used two functions of the *TuneR* library, <code>readMidi</code> and <code>getMidiNotes</code>. <code>readMidi</code> produces a raw file that it is tranformed into a more friendly format using the <code>getMidiNotes</code> function:{: style="text-align: justify"} 
 <pre><code>
      time length track channel note notename velocity
 1       0   1186     2       0   63      d#'       97
@@ -61,19 +61,19 @@ This part of the code stores all the filenames into the <code>file</code> variab
 3    1442    223     2       0   63      d#'      109
 </code></pre>
 
-Next, we need to decide about the format of the data. Although the optimal format it is the one that looks like a *pianola roll* (x= time, y= note, z= channel), to acomodate the 135 anthems would require a huge and very sparse array of 135 by 100.000 by 128 by 12 which I would require several Gb just to fit it into memory.
+Next, we need to decide the format of the data. Although the optimal format it is the one that looks like a *pianola roll* (x= time, y= note, z= channel), to accommodate the 135 anthems would require a huge and very sparse array of 135 by 100.000 by 128 by 12 which I would require few Gb just to fit it into memory. Unfortunately, I don't have enough RAM (it would require 16Gb while I currently only have 4Gb).{: style="text-align: justify"} 
 
-Pianola roll plot for the Brunei nathional anthem:
 ![Brunei](/images/brunei.png)
+*Pianola roll plot* for the Brunei nathional anthem.
 
-So I need to find a less sparse way to represent the data in order to feed the model. I decided to use the data in a similar format to the output of getMidiNotes. I constructed an array with 4 dimensions.
+So I need to find a less sparse way to represent the data in order to feed the model. I decided to use the data in a similar format to the output of getMidiNotes. I constructed an array with 4 dimensions.{: style="text-align: justify"} 
 
 <code><pre>df.array <- array(data=0, dim=c(length(df),Notes.N,3, channels))</pre></code>
 
-The first dimension will contain the different anthems, the second the number of notes, the third one will cotain the note, the duration of the note and the starting time for the note, finally, the last dimension will account for the different tracks. The size of the second dimension was decided based on the histogram of the number of notes per track per anthem:
+The first dimension will contain the different anthems, the second the number of notes, the third one will contain the note, the duration of the note and the starting time for that note; finally, the last dimension will account for the different tracks. The size of the second dimension was decided based on the histogram of the number of notes per track per anthem:{: style="text-align: justify"} 
 
-<code><pre>
-#Check maximum element per track
+<pre><code>
+#Check maximum number of elements per track
 t4<-0
 for (i in 1:length(df)){
   tracks<-unique(df[[i]]$track)
@@ -86,16 +86,16 @@ t4<-t4[-1]
 hist(t4, breaks = 60, main="Number of Notes", xlab = "Notes per Track")
 
 ![NotesN](/images/numberofnotes.png)
-</pre></code>
+</code></pre>
 
-<code><pre>Notes.N<-150</pre></code>
+<pre><code>Notes.N<-150</code></pre>
 
-You probably have the same *feeling* about it that I had, it is way too artificial, on top of that the duration of the note is not exactly the same as the figure represented in the score, during this project I learnt that a trick used in the midi files to be able to represent the same figure played too times in the score is to slightly cut the lenght of the first one in order to make the small silence to distinguish the two pulses. And that leads me to another problem, the quantization of the file. We can think in quantization as the granularity of the file, that makes two identical figures to have different lenght in different files with different quantization. 
+You probably have the same *feeling* about it that I had: *"it is not going to work because it is way too artificial (especially the third dimension)"*. Additionally, the duration of the note is not exactly the same as the figure represented in the score. During this project, I learned that a trick used in the midi files to be able to represent the same figure when it is played two consecutive times in the score is to slightly cut the length of the first one in order to make the small silence to distinguish the two pulses. All that leads to another problem, the quantization of the file. We can think in quantization as the granularity of the file, that makes two identical figures to have different length in different files with different quantization. I checked and not all the files were quantized equally, so the same note with the same duration has different values in two different files.{: style="text-align: justify"} 
 
-With all this said I think that it is *very unlikely for this type of representation to work*, but I continue with it because **the goal is the journey not the destination** and anyhow it is possible that the model can capture the patterns and the non-linearities of the scores.
+With all this said I was pretty sure that the model wouldn't work, but I continue with it because again, *the goal is the journey not the destination* and who knows, it is possible that the model could capture the patterns and the non-linearities of the scores, it is impossible to know until we try.{: style="text-align: justify"} 
 
 Here is the code to fill in the array: 
-<code><pre>
+<pre><code>
 #Array filling
 for (i in 1:length(df)) {
   tracks<-unique(df[[i]]$track)
@@ -111,11 +111,12 @@ for (i in 1:length(df)) {
   }
 
 }
-</pre></code>
-The channels, notes and times are padded with 0s.
+</code></pre>
+The channels, notes and times are padded with 0s. Note that there are whole channels padded with zeroes in some anthems.{: style="text-align: justify"} 
 
-Once the array is ready we need to create the model, in this post I am going to use Keras and again I am going to use the VAE described in the Rstudio webpage devoted to Keras as an starting point:
-Parameters in case of tuning 
+Once the array is ready, we need to define the model, in this post, I am going to use Keras and I am going to use the VAE described in the Rstudio webpage devoted to Keras as a starting point:{: style="text-align: justify"} 
+
+Parameters for tuning: 
 <code><pre>
 #Parameters
 epsilon_std <- 1.0
@@ -124,10 +125,9 @@ latent_dim <- 2
 intermediate_dim <- 256
 batch_size <- 10
 epoch <- 100
-
 </pre></code>
 
-
+and the model:
 <code><pre>
 #### Model
 dimensions<-dim(df.array)
@@ -141,15 +141,16 @@ Notes<- Input %>%
   layer_conv_2d(filters=filters*4, kernel_size=c(5,3), activation='relu', padding='same',strides=1,data_format='channels_last')%>%
   layer_conv_2d(filters=filters*8, kernel_size=c(5,3), activation='relu', padding='same',strides=1,data_format='channels_last')%>%
   layer_flatten()
-
 </pre></code>
 
-The first part of the model tries to find patterns in the input by using convolutions, the first two layers tries to find patterns in a 5x1 way that means that it tries to find patterns in five events independently in for each dimension (note, length and time). The other two layers combines all dimensions to find patterns that migth be relating them.  
+This part of the model tries to find patterns in the input by using convolutions; the first two layers try to find patterns in a 5x1 way that means that it tries to find patterns in five events independently in for each dimension (note, length and time). The other two layers combine all dimensions to find patterns that might be relating them.{: style="text-align: justify"}.
 
-Next, there is a fully-connected layer with 256 units connecting the 72000 values comming from the flattering of the convolutions and send them to create the latent space.
+Next, there are several fully-connected layers with 256, 256/2 and 256/4 units connecting the 72000 values coming from the flattering of the convolutions and send them to create the latent space of two dimensions.{: style="text-align: justify"}
 
 <code><pre>
-hidden <- Notes %>% layer_dense( units = intermediate_dim, activation = "relu")
+hidden <- Notes %>% layer_dense( units = intermediate_dim, activation = "sigmoid") %>% 
+          layer_dense( units = round(intermediate_dim/2), activation = "sigmoid") %>% 
+          layer_dense( units = round(intermediate_dim/4), activation = "sigmoid")
 
 z_mean <- hidden %>% layer_dense( units = latent_dim)
 z_log_var <- hidden %>% layer_dense( units = latent_dim)
