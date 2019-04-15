@@ -33,7 +33,8 @@ There is a lot of information encoded in a MIDI file to tell the MIDI player how
 The first thing that we have to do is to extract all those parameters and tweak them into a ML friendly format, something not as trivial as it might look.{: style="text-align: justify"} 
 
 You can download all the midi files used in this post are [here](/images/NationalAnthems.zip)
-To load the files in R I am going to use the package *TuneR*   
+
+To load the files in R I am going to use the package *[TuneR](https://cran.r-project.org/web/packages/tuneR/tuneR.pdf)* which is a very useful library to work with audio files.   
 
 <pre><code>
 library(tuneR)
@@ -52,7 +53,7 @@ for (i in 1:length(files)) {
 }
 </code></pre>
 
-By doing this I store all the filenames into the <code>file</code> variable and then we load them one by one into the list <code>df</code> I used two functions of the TuneR library, <code>readMidi</code> and <code>getMidiNotes</code>. readMidi produces a more raw file that is tranformed into a very friendly format using the getMidiNotes function.
+This part of the code stores all the filenames into the <code>file</code> variable and then it loads the anthems one by one into a list (<code>df</code>) I have used two functions of the *TuneR* library, <code>readMidi</code> and <code>getMidiNotes</code>. readMidi produces a more raw file that is tranformed into a very friendly format using the getMidiNotes function.{: style="text-align: justify"} 
 
 This is how a dataframe produced by getMidiNotes looks like:
 <pre><code>
@@ -282,4 +283,3 @@ https://github.com/rstudio/keras/blob/master/vignettes/examples/variational_auto
 
 
 
-https://cran.r-project.org/web/packages/tuneR/tuneR.pdf
