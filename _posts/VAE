@@ -197,7 +197,7 @@ Now we can create the model:{: style="text-align: justify"}
 
 To compile the model we need a loss function and in the case of VAE, we need to define a custom loss-function. The loss function in VAE must minimize two elements: 
 1. The difference between the input and the output, to be sure that the model recreates the input as accurate as possible. We can achieve that by minimizing the *mean square logarithmic error* (MSLE) between input and output. 
-2. The difference between elements in the latent space to aggregate them around the center of the latent space (0,0). The reason for this is to prevent gaps between different groups of elements because the model wouldn't know how to interpret those empty regions of the latent space, giving aberrant generations. Again, keep in mind that in our case we only have an element (anthem) per group (country). This regularization parameter can be written as a Kullbac-Leiber divergence (KL) term to be minimized.{: style="text-align: justify"}
+2. The difference between elements in the latent space to aggregate them around the center of the latent space (0,0). The reason for this is to prevent gaps between different groups of elements because the model wouldn't know how to interpret those empty regions of the latent space, giving aberrant generations. Again, keep in mind that in our case we only have an element (anthem) per group (country). This regularization parameter can be written as a Kullbac-Leibler divergence (KL) term to be minimized.{: style="text-align: justify"}
 
 Note that I have used MSLE instead MSE because the values to approximate are not normalized and produced by a RELU function (which can produce any value larger than zero as output) so the first term of loss function using MSE is way higher than the KL so the KL would be misrepresented during the training. Additionally, I have included two parameters to fine tune the weight of both terms inside the loss function so it would be possible to use MSE by setting a very small <code>Loss_factor</code>.{: style="text-align: justify"} 
 
@@ -254,7 +254,7 @@ I have created a unique identifier to be able to track every experiment in the t
 ### Validation
 Based on the training curves it seems that the training went ok; however, the only way to fully appreciate the performance of the model is trying to reconstruct one of the anthems and see how similar is to the original one. In this case we are going to recreate the first anthem (Afghanistan){: style="text-align: justify"} 
 
-<code><pre>
+<pre><code>
  #Regeneration of sample #1
   Samp1.gen <- predict(vae, array(df.array[1,,,], dim = c(1,150,3,9)), batch_size = 10)
   
@@ -276,20 +276,38 @@ Based on the training curves it seems that the training went ok; however, the on
   ggplot(to.plot)+
     geom_line(aes(x=Time,y=Note, colour=as.character(Channel)))+
     theme_minimal()
-</pre></code>
+</code></pre>
+[recreated](/images/recreated1.png)
+The recreation of the anthem looks very different from the original:{: style="text-align: justify"}  
 
-Ohhh... it looks strange, and very different from the original 
+<pre><code>
+ggplot(df[[1]])+
+  geom_line(aes(x=time,y=note, colour=as.character(track)))+
+  theme_minimal()</code></pre>
+
+[original](/images/1original.png)
+
+All that means that our model couldn't find any hidden pattern common to all anthems or more precisely to the way I represented the anthems. So any further investigation of the model (data generation or inferecences from the latent space) are useless.{: style="text-align: justify"}  
 
 
-### Conclusions 
+At this time I decided not to continue with further tuning of the model but to change to a more simple dataset with a higher number of examples. But that will come in coming posts.{: style="text-align: justify"}
 
+### Conclusions. 
+In this post we have seen what is a VAE and how to implement it in R. We have also seen how important is to choose a proper way to represent the data, wrong representations will make impossible for any model to learn any pattern at all. 
+However, there are many tips in the post that I hope you find useful, such as how to create a custom loss-function or the use or Relu functions in the output to try to approximate non-normalized data.{: style="text-align: justify"}
 
-bibliography:
+I hope you are not dissapointed by the negative results described in this post because at end...{: style="text-align: justify"}
 
-https://towardsdatascience.com/intuitively-understanding-variational-autoencoders-1bfe67eb5daf
-https://www.countbayesie.com/blog/2017/5/9/kullback-leibler-divergence-explained
-https://github.com/rstudio/keras/blob/master/vignettes/examples/variational_autoencoder.R
+*“...Negative results are just what I want. They’re just as valuable to me as positive results. I can never find the thing that does the job best until I find the ones that don’t.”*{: style="text-align: justify"}
+*Thomas A. Edison*
 
+Stay tune to find how to create music using VAE in R. ;)
+[meme](/images/meme.jpg)
 
+### Sources of inspiration.
+
+[About VAEs](https://towardsdatascience.com/intuitively-understanding-variational-autoencoders-1bfe67eb5daf)
+[Kullback-Leibler divergence](https://www.countbayesie.com/blog/2017/5/9/kullback-leibler-divergence-explained)
+[VAEs in R](https://github.com/rstudio/keras/blob/master/vignettes/examples/variational_autoencoder.R)
 
 
