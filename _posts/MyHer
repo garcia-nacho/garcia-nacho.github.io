@@ -5,8 +5,23 @@ date: '2019-05-17 21:11:00'
 ---
 
 ### Introduction.
-Few months ago my wife told me she wanted to do one of those popular genetic tests that look for you ancestors so you can know where they were from or find distant cousins around the world. Despite I advised her against it because of things like this: *[DNA testing signs a $300 million deal with a drug giant](https://nordic.businessinsider.com/dna-testing-delete-your-data-23andme-ancestry-2018-7?r=US&IR=T)*, she insisted so I bought her a kit.
-Last week she received the results and she felt dissappointed: just a few percentages relating her genes with some populations. Nothing else. 
+Few months ago my wife told me she wanted to do one of those fancy genetic tests that look for your ancestors so you can know where they were from or find distant cousins around the world. Despite I advised her against it because of things like this: *[DNA testing signs a $300 million deal with a drug giant](https://nordic.businessinsider.com/dna-testing-delete-your-data-23andme-ancestry-2018-7?r=US&IR=T)*, she insisted so I bought her a kit.
+Last week she received the results and she felt dissappointed: just a few percentages relating her genes with some populations. I was really curious about how those percentages were calculated and what they really mean so I started analyzing the raw data that MyHeritage provide corresponding to more than 600000 single nucleotide polymorphisms (SNPs) and in this post I explain you how to extract the maximum from them, not only to find the closer populations according to your genes but to find if you have some predisposition to suffer from some disseases or even how to perform a paternity test if you have your kid's data.  
 {: style="text-align: justify"}
 <!--more-->
-Whe she told me, I was really curious about those percetages. How are they calculated? What does it mean? There is no clear information about it
+
+### Genetical background.
+Let's start with the beggining: *What the hell is a SNP? and why you should care about them.*
+
+
+### Statistical background.
+
+### Analysis of populations.
+
+### Analysis of diseases. 
+
+### Paternity test.
+
+### Conclusions.
+
+### Sources of inspiration
