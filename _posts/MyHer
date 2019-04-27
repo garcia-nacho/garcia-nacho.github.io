@@ -18,6 +18,16 @@ Let's start with the beggining: *What the hell is a SNP? and why you should care
 
 ### Analysis of populations.
 
+## Rename of data to merge
+
+nacho@Skadi:~/MyHerr/SNPS/snps2$ rename 's/_17289/-set_6/' *
+
+merger
+for file in ???-*.txt; do
+  cat "$file" >>"${file%_*}.txt"
+done
+
+
 ### Analysis of diseases. 
 
 ### Paternity test.
