@@ -25,7 +25,56 @@ Moreover, it is possible to track down the geographical origin of your ancestors
 
 ### Statistical background.
 
-There are several statistical ways to analyze a set of SNPs but the bayesian analysis is a very simple but robust wat if doing it. Bayes 
+There are several statistical ways to analyze a set of SNPs but the bayesian analysis is a very simple but robust wat if doing it. The bayesian analyses rely on the Bayes' theorem: 
+
+ $$P(A|B) = {P(B|A)· P(A) \over P(B)}$$
+ 
+ Where 
+ 
+ P(A|B) is the conditional probability of A occurring given the fact B 
+ i.e: The probability of being European if you have certain SNP
+ 
+ P(B|A) is the conditional probability of B occurring given the fact A
+ i.e. The probability of having certain SNP among the european population
+ 
+ p(B) is the probability of B occurring
+ i.e. The probability of being European
+ 
+ p(A) is the probability of A occurring
+ i.e The probability of havin certain SNP
+ 
+But in this case we don't have only one SNP, we have more than 600000 so it is possible to combine them to have a stronger prediction, lets see how the Bayes' theorem works for multiple events (i.e. SNPs)
+
+ $$P(A|B \bigcap C) = {P(B \bigcap C|A)· P(A) \over P(B \bigcap C)}$$
+
+However there are a couple of problems, we dont know the firs element of the numerator and the denominator so we need to precalculate them. When two events are not ligated: 
+
+ $$P {P(B \bigcap C|A) =  P(B|A)·P(C|A)}$$
+
+and both P(B|A) and P(C|A) are known. Regarding the ligation of SNPs, we have to consider that the SNPs very close in the genome are ligated, meaning that they are if you inherit one is very likely that you inherit others from your the same progrenitor, howevere we have a lot of SNPs, many more than we need so this is not going to be a problem. 
+
+Calculating the denominator is a bit more complicated, however we know that:
+
+ $$P(A|B \bigcap C) = {P(B \bigcap C|A)· P(A) \over P(B \bigcap C)}$$
+ 
+ $$P(\sim A|B \bigcap C) = {P(B \bigcap C| \sim A)· P(\sim A) \over P(B \bigcap C)}$$
+ 
+Where $$P(\sim A|B \bigcap C)$$ is the probability of not occurring A when B and C are occurring since both probabilities are complementary:  
+
+$$P(A|B \bigcap C) + P(\sim A|B \bigcap C) = 1}$$
+
+We can calculate the denominator:
+
+
+The whole equation looks like this
+
+and this is the general formula:
+
+
+Source
+
+
+
 
 
 ### Analysis of populations.
@@ -35,8 +84,10 @@ There are several statistical ways to analyze a set of SNPs but the bayesian ana
 nacho@Skadi:~/MyHerr/SNPS/snps2$ rename 's/_17289/-set_6/' *
 
 merger
-for file in ???-*.txt; do
-  cat "$file" >>"${file%_*}.txt"
+for file in  ???-*. C
+  cat "$file" . C
+  cat >>"${file%_*}.txt" . C
+  cat
 done
 
 
