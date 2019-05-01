@@ -12,9 +12,21 @@ Last week she received the results and she felt dissappointed: just a few percen
 
 ### Genetical background.
 Let's start with the beggining: *What the hell is a SNP? and why you should care about them.*
+We could say that the genome is the blueprint of life and the genes the instructions to build every single living organism meaning that means that different organisms have different blueprints but how different they are? It looks obvious that the more simmilar two organisms are the more similar their genomes will look. If we look at human beings the differences between us are very subtle. Most of the genes are exactly the same among the whole human populations, and the ones that are different, differ only in a tiny proportion. The mininal different between two genes is what we call a SNP and all the SNPs in our genomes are what makes us unique for bad or for good. Unfortunately, the vast majority of human SNPs are unkown, however everyday science describe more and more SNPs, relating them with diseases or phenotipic traits. 
+More technically, we could say that a SNP is a position in the genome and that the possition has one reference code and one or more variants which can be linked with a phenotypes. Moreover, we have two copies of every SNP in the genome, one from your father and one from your mother so it is possible to have three combinations:
+Reference-Reference
+Reference-Variant of Variant-Reference (Which are the same)
+Variant-Variant
+And the three possible combinations can have different traits increasing the complexity even more. 
 
+#Picture SNPs
+
+Moreover, it is possible to track down the geographical origin of your ancestors because of the inherability of SNPs. Your SNPs at some point belonged to people from one or more places and different subpopulations have different probabilities for different probabities for the reference and the variants so using statistics it is possible to find out how likely is that your ancestors came from one place.  
 
 ### Statistical background.
+
+There are several statistical ways to analyze a set of SNPs but the bayesian analysis is a very simple but robust wat if doing it. Bayes 
+
 
 ### Analysis of populations.
 
