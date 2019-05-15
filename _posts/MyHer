@@ -1,11 +1,11 @@
 ---
 layout: post
-title:  "Bayesian analysis of MyHeritage results"
+title:  "Bayesian analysis of MyHeritage results (and why it doesn't work)"
 date: '2019-05-17 21:11:00'
 ---
 
 ### Introduction.
-Few months ago my wife told me she wanted to do one of those fancy genetic tests that look for your ancestors so you can know where they were from or find distant cousins around the world. Despite I advised her against it because of things like this: *[DNA testing signs a $300 million deal with a drug giant](https://nordic.businessinsider.com/dna-testing-delete-your-data-23andme-ancestry-2018-7?r=US&IR=T)*, she insisted so I bought her a kit.
+Few months ago my wife told me that she wanted to do one of those fancy genetic tests that look for your ancestors, so you can know where they were from or find distant cousins around the world. Despite I advised her against it because of things like this: *[DNA testing signs a $300 million deal with a drug giant](https://nordic.businessinsider.com/dna-testing-delete-your-data-23andme-ancestry-2018-7?r=US&IR=T)*, she insisted so I bought her a kit.
 Last week she received the results and she felt dissappointed: just a few percentages relating her genes with some populations. I was really curious about how those percentages were calculated and what they really mean so I started analyzing the raw data that MyHeritage provide corresponding to more than 600000 single nucleotide polymorphisms (SNPs) and in this post I explain you how to extract the maximum from them, not only to find the closer populations according to your genes but to find if you have some predisposition to suffer from some disseases or even how to perform a paternity test if you have your kid's data.  
 {: style="text-align: justify"}
 <!--more-->
@@ -19,13 +19,21 @@ Reference-Variant of Variant-Reference (Which are the same)
 Variant-Variant
 And the three possible combinations can have different traits increasing the complexity even more. 
 
-#Picture SNPs
+![SNP](/images/Dna-SNP.svg.png)
 
-Moreover, it is possible to track down the geographical origin of your ancestors because of the inherability of SNPs. Your SNPs at some point belonged to people from one or more places and different subpopulations have different probabilities for different probabities for the reference and the variants so using statistics it is possible to find out how likely is that your ancestors came from one place.  
+Moreover, it is possible to track down the geographical origin of your ancestors because of the inherability of SNPs. *Your* SNPs at some point were carried by people from different places and since different populations have different probabilities to have variants using statistics it is possible to find out how likely is that your ancestors came from one place.  
 
 ### Statistical background.
 
-There are several statistical ways to analyze a set of SNPs but the bayesian analysis is a very simple but robust wat if doing it. The bayesian analyses rely on the Bayes' theorem: 
+There are several statistical approaches to analyze SNPs
+
+The frequentist way and the bayesian way. In the frequentist way it would be possible to find SNPs highly enriched in each population and determine how many of those are in the sample. However, finding typical SNPs for all populations is not easy and it requires some assumptions like how much frequent a SNP has to be in a population compared with the rest of the populations to be considered typical in a particular population? Additionally, some SNPs might be more frequent in a population than in the rest by a large proportion but still very unlikely to happen (e.g. the SNP rs117425567 has a frequency among the African population of 0.0008% and among the rest of 
+
+To solve these issues 
+
+
+
+The bayesian analyses rely on the Bayes' theorem: 
 
  $$P(A|B) = {P(B|A)· P(A) \over P(B)}$$
  
