@@ -28,15 +28,11 @@ And each combination can have different traits, increasing the complexity of the
 
 ### How does the test work, then?.
 
-Now we know what SNPs are, but how can they help us to find our ancestors?. T
-
-
-Considering the inherability of the SNPs it it is possible to track down the geographical origin of your ancestors because they are quite stable in time, meaning that *Your* SNPs at some point in hte past were carried by your ancestors, and they   
-
-
-Moreover, because of the inherability of SNPs.  from different places and since different populations have different probabilities to have variants using statistics it is possible to find out how likely is that your ancestors came from one place.  
+Now we know what SNPs are, but how can they help us to find our ancestors?. To asnwer this question we need to talk about another characteristic of the DNA, the DNA is very very stable so it is very rare for mutations to happen and SNPs are just mutations over the "reference" genome that happened several thousands of years ago. As the human populations in the world were small and disperse at that time it is possible to associated certain SNPs with certain ancient populations which can be aggregated in five branches: African, European, American, South-Asian and East-Asian. For each SNPs the percentage of individuals in each population varies. For instance, the reference nucleotide for the SNP rs10000008 located in the chromosome 4 position 172776204 is a C and the variant is a T, the frequency of the variant among the African population is 28.52% while the frequency among the European population is just 1.59%, that means that if you have a T it is more likely that you are African than European.  
 
 ### Statistical background.
+
+Now that we know how the SNPs can help us to track our origines back we need some statistical background to analyze the data and draw some conclusions. 
 
 There are several statistical approaches to analyze SNPs
 
