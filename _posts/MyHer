@@ -1,27 +1,40 @@
 ---
 layout: post
-title:  "Bayesian analysis of MyHeritage results (and why it doesn't work)"
+title:  "Bayesian vs Frequentist Analyses of MyHeritage Results (and why it doesn't work)"
 date: '2019-05-17 21:11:00'
 ---
 
 ### Introduction.
-Few months ago my wife told me that she wanted to do one of those fancy genetic tests that look for your ancestors, so you can know where they were from or find distant cousins around the world. Despite I advised her against it because of things like this: *[DNA testing signs a $300 million deal with a drug giant](https://nordic.businessinsider.com/dna-testing-delete-your-data-23andme-ancestry-2018-7?r=US&IR=T)*, she insisted so I bought her a kit.
-Last week she received the results and she felt dissappointed: just a few percentages relating her genes with some populations. I was really curious about how those percentages were calculated and what they really mean so I started analyzing the raw data that MyHeritage provide corresponding to more than 600000 single nucleotide polymorphisms (SNPs) and in this post I explain you how to extract the maximum from them, not only to find the closer populations according to your genes but to find if you have some predisposition to suffer from some disseases or even how to perform a paternity test if you have your kid's data.  
+Few months ago my wife told me that she wanted to do one of those fancy genetic tests that look for your ancestors, so you can know where they were from or even find distant cousins around the world. Despite I advised her against it because of things like this: *[DNA testing signs a $300 million deal with a drug giant](https://nordic.businessinsider.com/dna-testing-delete-your-data-23andme-ancestry-2018-7?r=US&IR=T)*. She insisted and I bought her a kit from MyHeritage.
+Few weeks ago she received the results and she imediatly felt dissappointed: just few percentages relating her genes with some populations around the globe, that was all!!!. 
+Firstly, I was really curious about how those percentages were calculated and what they really mean so I started analyzing the raw data that MyHeritage provided a .csv file with the sequence of more than 600000 single nucleotide polymorphisms (SNPs). 600K SNPs to provide only few percentages?? Are we crazy?! There is obviosly much more that you can extract from that huge amount of information about your self and in this post I will give you some examples and guidelines for you to sequezee the maximum out of it. I will show you not only to find the closer populations according to your genes but to find if you have some predisposition to suffer from some disseases.  
 {: style="text-align: justify"}
 <!--more-->
 
 ### Genetical background.
-Let's start with the beggining: *What the hell is a SNP? and why you should care about them.*
-We could say that the genome is the blueprint of life and the genes the instructions to build every single living organism meaning that means that different organisms have different blueprints but how different they are? It looks obvious that the more simmilar two organisms are the more similar their genomes will look. If we look at human beings the differences between us are very subtle. Most of the genes are exactly the same among the whole human populations, and the ones that are different, differ only in a tiny proportion. The mininal different between two genes is what we call a SNP and all the SNPs in our genomes are what makes us unique for bad or for good. Unfortunately, the vast majority of human SNPs are unkown, however everyday science describe more and more SNPs, relating them with diseases or phenotipic traits. 
-More technically, we could say that a SNP is a position in the genome and that the possition has one reference code and one or more variants which can be linked with a phenotypes. Moreover, we have two copies of every SNP in the genome, one from your father and one from your mother so it is possible to have three combinations:
+Let's start from the beggining: *What the hell is a SNP? and why you should care about them.*
+We could say that the genome is the blueprint of life and the genes the instructions to build every single living organism, that means that different organisms must have different blueprints, right? But the question is how different they are? You have probably heard many times things like "humans share 85% of their DNA sequence with mice", so if our blueprints and mice's ones are 85% similar, how different are the DNA sequence between two humans? If we look at human beings the differences between us are very subtle. Most of the genes are exactly the same among the all human populations (and some Neanderthal), and the ones that are different, differ only in a tiny proportion. And here is where SNPs come in, one SNP is mininal possible difference between two genes in two individuals, so the sum of all the SNPs in our genomes is what makes us unique for bad or for good. Unfortunately, the vast majority of human SNPs are unkown, however everyday science describe more and more SNPs, relating them with diseases or phenotipic traits so probably in few years we will have the description of all the effects for every single SNP in the genome.
+
+If you want a more technical definition, we could say that a SNP is one position in one nucleotide of the 6.4·10^9 nucleotides that we have in our genomes and that that nucleotide has one "reference" value (A,T,G or C) and one or more variant values which can be linked or not with certain phenotypes. To make things even more complex we need to consider that we humans are diploids, that means that we carry two copies of every SNP in the genome: one from your father and one from your mother so it is possible to have three combinations for each SNP:
 Reference-Reference
-Reference-Variant of Variant-Reference (Which are the same)
+Reference-Variant or Variant-Reference
 Variant-Variant
-And the three possible combinations can have different traits increasing the complexity even more. 
+
+And each combination can have different traits, increasing the complexity of the story even more. 
+
+**Note: If you are a male all the SNPs in your X chromosome come from you mother and all the SNPs in the Y chromosome from your father.**
 
 ![SNP](/images/Dna-SNP.svg.png)
 
-Moreover, it is possible to track down the geographical origin of your ancestors because of the inherability of SNPs. *Your* SNPs at some point were carried by people from different places and since different populations have different probabilities to have variants using statistics it is possible to find out how likely is that your ancestors came from one place.  
+### How does the test work, then?.
+
+Now we know what SNPs are, but how can they help us to find our ancestors?. T
+
+
+Considering the inherability of the SNPs it it is possible to track down the geographical origin of your ancestors because they are quite stable in time, meaning that *Your* SNPs at some point in hte past were carried by your ancestors, and they   
+
+
+Moreover, because of the inherability of SNPs.  from different places and since different populations have different probabilities to have variants using statistics it is possible to find out how likely is that your ancestors came from one place.  
 
 ### Statistical background.
 
