@@ -101,44 +101,45 @@ Bayesian analyses rely on the Bayes' theorem:
  
  Well... We have used only one SNP to calculate the probability of having certain ethnicity, what are the rest of SNPs for then??!
 
-To get things more interesting we could try to combine all possible SNPs to give a more accurate probablilty; hoiw
- 
- 
-But in this case we don't have only one SNP, we have more than 600000 so it is possible to combine them to have a stronger prediction, lets see how the Bayes' theorem works for multiple events (i.e. SNPs)
+To get things more interesting we could try to combine all possible SNPs to give a more accurate probablilty; however here is when both strategies fail...
 
- $$P(A|B \bigcap C) = {P(B \bigcap C|A)· P(A) \over P(B \bigcap C)}$$
+**The frequentist failure:** 
+To calculate the combined probability you can think that the multiplication of frequencies for all SNPs would do the trick, but it obviosly doesn't the value gets smaller and smaller as it is multiplied by numbers lower than cero. That is because the real frequency of the combination of both is unknown and impossible to calculate it with the data that we have.
 
-However there are a couple of problems, we dont know the firs element of the numerator and the denominator so we need to precalculate them. When two events are not ligated: 
+**The bayesian failure:**
+To calculate the combined probability using the bayes' theorem we need to expand the formula like this:
 
- $$P {P(B \bigcap C|A) =  P(B|A)·P(C|A)}$$
+ $$P(A|B \cap C) = {P(B \cap C|A)· P(A) \over P(B \cap C)}$$
 
-and both P(B|A) and P(C|A) are known. Regarding the ligation of SNPs, we have to consider that the SNPs very close in the genome are ligated, meaning that they are if you inherit one is very likely that you inherit others from your the same progrenitor, howevere we have a lot of SNPs, many more than we need so this is not going to be a problem. 
+However there are a couple of problems: we dont know the first element of the numerator and the denominator so we need to precalculate them. When two events are not ligated: 
+
+ $$P {P(B \cap C|A) =  P(B|A)·P(C|A)}$$
+
+Now, both P(B|A) and P(C|A) are known. 
 
 Calculating the denominator is a bit more complicated, however we know that:
 
- $$P(A|B \bigcap C) = {P(B \bigcap C|A)· P(A) \over P(B \bigcap C)}$$
+ $$P(A|B \cap C) = {P(B \cap C|A)· P(A) \over P(B \cap C)}$$
  
  $$P(\sim A|B \bigcap C) = {P(B \bigcap C| \sim A)· P(\sim A) \over P(B \bigcap C)}$$
  
-Where $$P(\sim A|B \bigcap C)$$ is the probability of not occurring A when B and C are occurring since both probabilities are complementary:  
+Where $$P(\sim A|B \cap C)$$ is the probability of not occurring A when B and C are occurring because both probabilities are complementary:  
 
 $$P(A|B \bigcap C) + P(\sim A|B \bigcap C) = 1}$$
 
-We can calculate the denominator:
+We can substitute the denominator and the whole thing looks like this:
+
+Where we have all the information.
+
+In this case again we have a similar problem as in the frequentist approach, the numerator gets smaller and smaller with each SNP added, however in theory it shouldn't be a problem because the denominator decreases in a similar range. However, in terms of computability it becomes impracticable after few hundreds of SNPs, even a machine can't calculate such small number.
+
+Anyway hundreds of SNPs have to be better for an accurate probability, right? Let's compute it using R...
+
+### Analysis of populations using Bayes' theorem in R
+
+First we need to perform some operations outside R. We need to get all the data that we need from an external server and to process it a little bit outside R.
 
 
-The whole equation looks like this
-
-and this is the general formula:
-
-
-Source
-
-
-
-
-
-### Analysis of populations.
 
 ## Rename of data to merge
 
