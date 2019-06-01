@@ -30,11 +30,23 @@ And each combination can have different traits, increasing the complexity of the
 
 Now we know what SNPs are, but how can they help us to find our ancestors?. To asnwer this question we need to talk about another characteristic of the DNA, the DNA is very very stable so it is very rare for mutations to happen and SNPs are just mutations over the "reference" genome that happened several thousands of years ago. As the human populations in the world were small and disperse at that time it is possible to associated certain SNPs with certain ancient populations which can be aggregated in five branches: African, European, American, South-Asian and East-Asian. For each SNPs the percentage of individuals in each population varies. For instance, the reference nucleotide for the SNP rs10000008 located in the chromosome 4 position 172776204 is a C and the variant is a T, the frequency of the variant among the African population is 28.52% while the frequency among the European population is just 1.59%, that means that if you have a T it is more likely that you are African than European.  
 
-### Statistical background.
+### Statistical framework.
 
-Now that we know how the SNPs can help us to track our origines down, we need some statistical background to perform and draw some conclusions. 
+Now that we know how the SNPs can help us to track our origines down; however, we don't know how the percentages provided by MyHeritage were obtained and what they really mean. Are they the probabilities of her belonging to each one of those populations? Are they the percentage of her DNA associated certain ethnicities? Are they something else? I don't know and I am sure they are not going to disclose it. So we will need to perform our own analysis and compare our results with the report, but before that we need to establish a statistical framework for the analyses. 
 
-There are several statistical approaches to analyze SNPs but in this post I am going to analyze and compare the frequentist way and the bayesian way. In the frequentist way it would be possible to find SNPs highly enriched in each population and determine how many of those are in the sample. However, finding typical SNPs for all populations is not easy and it requires some assumptions like how much frequent a SNP has to be in a population compared with the rest of the populations to be considered typical in a particular population? Additionally, some SNPs might be more frequent in a population than in the rest by a large proportion but still very unlikely to happen (e.g. the SNP rs117425567 has a frequency among the African population of 0.0008% and among the europeans of 0.0014, it is much more abundant among the africans but the percentages are so low that it is very unlikely that we find it in our sample either) 
+There are several statistical approaches to analyze SNPs but in this post I am going to analyze and compare the frequentist and the bayesian strategies and to do so we are going to use our favourite SNP the rs10000008, the list of all frequencies associated with the variant form (T) are these:
+
+AFR: 28.52%
+EUR: 1.59%
+SAS: 3.99%
+EAS: 1.49%
+AMR: 2.16%
+
+So lets say that someone has an SNP with two TT... It is obvious that it 
+
+
+
+In the frequentist way it would be possible to find SNPs highly enriched in each population and determine how many of those are in the sample. However, finding typical SNPs for all populations is not easy and it requires some assumptions like how much frequent a SNP has to be in a population compared with the rest of the populations to be considered typical in a particular population? Additionally, some SNPs might be more frequent in a population than in the rest by a large proportion but still very unlikely to happen (e.g. the SNP rs117425567 has a frequency among the African population of 0.0008% and among the europeans of 0.0014, it is much more abundant among the africans but the percentages are so low that it is very unlikely that we find it in our sample either) 
 
 To solve these issues 
 
