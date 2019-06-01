@@ -139,6 +139,28 @@ Anyway hundreds of SNPs have to be better for an accurate probability, right? Le
 
 First we need to perform some operations outside R. We need to get all the data that we need from an external server and to process it a little bit outside R.
 
+The external server that we are going to use is [www.snp.nexus.org](www.snp.nexus.org), there you can just send a list of SNPs and obtain back several files containing 
+
+
+
+
+#Generation of files for www.snp-nexus.org containing 100K SNPS
+n.files <- round(nrow(df)/100000) + 1
+
+for (i in 1:n.files){
+  start<-((i-1)*100000)+1
+  end<- min(i* 100000,nrow(df))
+  dummy<-as.data.frame(rep("dbsnp", end-start+1))
+  dummy$rsid<-df[start:end,1]
+
+  write.table(dummy, file = paste("/home/nacho/MyHerr/SNPS_DB",i,".txt",sep = ""),
+              col.names=FALSE,
+              quote = FALSE,
+              row.names = FALSE,
+              sep = "\t")
+}
+
+
 
 
 ## Rename of data to merge
