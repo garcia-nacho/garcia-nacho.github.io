@@ -17,7 +17,7 @@ We could say that the genome is the blueprint of life and the genes the instruct
 
 If you want a more technical definition, we could say that a SNP is one position in one nucleotide of the 6.4·10^9 nucleotides that we have in our genomes and that that nucleotide has one "reference" value (A,T,G or C) and one or more variant values which can be linked or not with certain phenotypes. To make things even more complex we need to consider that we humans are diploids, that means that we carry two copies of every SNP in the genome: one from your father and one from your mother so it is possible to have three combinations for each SNP:
 Reference-Reference
-Reference-Variant or Variant-Reference
+Reference-Variant or Variant-Reference (A priori it is imposible to distinguish both of them in the results)
 Variant-Variant
 
 And each combination can have different traits, increasing the complexity of the story even more. 
@@ -45,34 +45,64 @@ AMR: 2.16%
 
 So lets say that someone has an SNP with two TT... It is obvious that it is more likely for that person to be african, but how likely? Let's see what the frequenstist and bayesian analyses say.
 
-First of all, the frequencies are provided by the 1000genomes consortium and they only provide  we only have the probability of 
+First of all, the frequencies provided by the [1000genomes consortium](http://www.internationalgenome.org/) only account for the overall probability of having a variant (T), regardless the two copies of the SNP so we need to transform those probabilities into the probablities of having the three possible genotypes (CC,TC,TT) and to do that we use these formulas:
 
+ $$P {P(rs10000008=TT /cap ETH=AFR) = (rs10000008_AFR_Freq)^2 }$$
+ $$P {P(rs10000008=CC /cap ETH=AFR) = (1-rs10000008_AFR_Freq)^2 }$$
+ $$P {P(rs10000008=TC OR rs10000008=CT /cap ETH=AFR) = 2 ·rs10000008_AFR_Freq· (1-rs10000008_AFR_Freq)}$$
 
+That gives us thes probabilities for CC:
 
+AFR: 8.1%
+EUR: 0.025%
+SAS: 0.159%
+EAS: 0.022%
+AMR: 0.047%
 
-In the frequentist way it would be possible to find SNPs highly enriched in each population and determine how many of those are in the sample. However, finding typical SNPs for all populations is not easy and it requires some assumptions like how much frequent a SNP has to be in a population compared with the rest of the populations to be considered typical in a particular population? Additionally, some SNPs might be more frequent in a population than in the rest by a large proportion but still very unlikely to happen (e.g. the SNP rs117425567 has a frequency among the African population of 0.0008% and among the europeans of 0.0014, it is much more abundant among the africans but the percentages are so low that it is very unlikely that we find it in our sample either) 
+So if we relativize the probabilities to add 100% (because we are 100% sure -in theory) that the genotype is CC) we have the result:
 
-To solve these issues 
+AFR: 96.97%
+EUR: 0.30%
+SAS: 1.9%
+EAS: 0.26%
+AMR: 0.56%
 
+So the frequentist analysis tells us that if someone have a CC in the SNP rs10000008 his or her chances of being African are around 97% 
 
+Note: To have a better accuracy we have to account for the sizes of the populations by multiplying those percentages by the ratio of the total population with that ethnicity.
 
-The bayesian analyses rely on the Bayes' theorem: 
+Let's see now what the bayesian analysis tells us:
+
+Bayesian analyses rely on the Bayes' theorem: 
 
  $$P(A|B) = {P(B|A)· P(A) \over P(B)}$$
  
- Where 
+ If we apply this to our situation we have that
  
  P(A|B) is the conditional probability of A occurring given the fact B 
- i.e: The probability of being European if you have certain SNP
+ i.e: The probability of being African if you have certain variant (rs10000008=CC)
  
  P(B|A) is the conditional probability of B occurring given the fact A
- i.e. The probability of having certain SNP among the european population
+ i.e. The probability of rs10000008=CC among the African population
  
  p(B) is the probability of B occurring
- i.e. The probability of being European
+ i.e. The probability of being African
  
  p(A) is the probability of A occurring
- i.e The probability of havin certain SNP
+ i.e The overall probability of having certain variant (rs10000008=CC)
+ 
+ Let's try to plug in the data that we know:
+ P(A|B) =
+ P(B|A) =
+ P(A) =
+ P(B) =
+ 
+ So we have a probablity of 
+ 
+ Well... We have used only one SNP to calculate the probability of having certain ethnicity, what are the rest of SNPs for then??!
+
+To get things more interesting we could try to combine all possible SNPs to give a more accurate probablilty; hoiw
+ 
  
 But in this case we don't have only one SNP, we have more than 600000 so it is possible to combine them to have a stronger prediction, lets see how the Bayes' theorem works for multiple events (i.e. SNPs)
 
