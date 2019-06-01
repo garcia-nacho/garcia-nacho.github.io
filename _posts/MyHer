@@ -29,6 +29,7 @@ And each combination can have different traits, increasing the complexity of the
 ### How does the test work, then?.
 
 Now we know what SNPs are, but how can they help us to find our ancestors?. To asnwer this question we need to talk about another characteristic of the DNA, the DNA is very very stable so it is very rare for mutations to happen and SNPs are just mutations over the "reference" genome that happened several thousands of years ago. As the human populations in the world were small and disperse at that time it is possible to associated certain SNPs with certain ancient populations which can be aggregated in five branches: African, European, American, South-Asian and East-Asian. For each SNPs the percentage of individuals in each population varies. For instance, the reference nucleotide for the SNP rs10000008 located in the chromosome 4 position 172776204 is a C and the variant is a T, the frequency of the variant among the African population is 28.52% while the frequency among the European population is just 1.59%, that means that if you have a T it is more likely that you are African than European.  
+![1000genomes](/figures/1000genomes.png)
 
 ### Statistical framework.
 
@@ -42,7 +43,10 @@ SAS: 3.99%
 EAS: 1.49%
 AMR: 2.16%
 
-So lets say that someone has an SNP with two TT... It is obvious that it 
+So lets say that someone has an SNP with two TT... It is obvious that it is more likely for that person to be african, but how likely? Let's see what the frequenstist and bayesian analyses say.
+
+First of all, the frequencies are provided by the 1000genomes consortium and they only provide  we only have the probability of 
+
 
 
 
