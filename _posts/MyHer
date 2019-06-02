@@ -86,18 +86,23 @@ Bayesian analyses rely on the Bayes' theorem:
  i.e. The probability of rs10000008=CC among the African population
  
  p(B) is the probability of B occurring
- i.e. The probability of being African
- 
- p(A) is the probability of A occurring
  i.e The overall probability of having certain variant (rs10000008=CC)
  
- Let's try to plug in the data that we know:
- P(A|B) =
- P(B|A) =
- P(A) =
- P(B) =
+ p(A) is the probability of A occurring
+ i.e. The probability of being African 
  
- So we have a probablity of 
+ Before pluging the data that we know, let's define the distribution of populations around the globe:
+AFR: 17%
+EUR: 10%
+SAS: 31%
+AMR: 15%
+EAS: 27%
+ 
+ P(B|A) = 8.1%
+ P(B) = 1.44% (The ponderated percentage for the variant)
+ P(A) = 17% (Let's assume that we don't have any prior information about the person so he could belong to any ethnicity and therefore the probability of being African is based on the overall African population around the globe)
+
+ So we have a P(A|B) = 95.63% which is pretty close to the result obtained using the frequentist approach.
  
  Well... We have used only one SNP to calculate the probability of having certain ethnicity, what are the rest of SNPs for then??!
 
@@ -111,27 +116,30 @@ To calculate the combined probability using the bayes' theorem we need to expand
 
  $$P(A|B \cap C) = {P(B \cap C|A)· P(A) \over P(B \cap C)}$$
 
-However there are a couple of problems: we dont know the first element of the numerator and the denominator so we need to precalculate them. When two events are not ligated: 
+However there are a couple of problems: we dont know the first element of the numerator and the denominator so we need to precalculate them. 
+When two events are not ligated we can assume this:
 
  $$P {P(B \cap C|A) =  P(B|A)·P(C|A)}$$
 
-Now, both P(B|A) and P(C|A) are known. 
+And both P(B|A) and P(C|A) are known. 
 
 Calculating the denominator is a bit more complicated, however we know that:
 
  $$P(A|B \cap C) = {P(B \cap C|A)· P(A) \over P(B \cap C)}$$
  
- $$P(\sim A|B \bigcap C) = {P(B \bigcap C| \sim A)· P(\sim A) \over P(B \bigcap C)}$$
+ $$P(\sim A|B \cap C) = {P(B \cap C| \sim A)· P(\sim A) \over P(B \cap C)}$$
  
-Where $$P(\sim A|B \cap C)$$ is the probability of not occurring A when B and C are occurring because both probabilities are complementary:  
+Where $$P(\sim A|B \cap C)$$ is the probability of not occurring A when B and C are occurring. As both probabilities are complementaries we can say that:  
 
-$$P(A|B \bigcap C) + P(\sim A|B \bigcap C) = 1}$$
+$$P(A|B \cap C) + P(\sim A|B \cap C) = 1}$$
 
-We can substitute the denominator and the whole thing looks like this:
+Obtaining P(B \cap C) that we can substitute to end up with a final equation:
 
-Where we have all the information.
+ $$P(A|B \cap C) = {P(B|A)·P(C|A)·P(A) \over P(B|A)·P(C|A)·P(A) + P(B| \sim A)·P(C| \sim A)·P(\sim A) }$$
 
-In this case again we have a similar problem as in the frequentist approach, the numerator gets smaller and smaller with each SNP added, however in theory it shouldn't be a problem because the denominator decreases in a similar range. However, in terms of computability it becomes impracticable after few hundreds of SNPs, even a machine can't calculate such small number.
+For which we have all the information.
+
+In this case again we face a similar problem as in the frequentist approach, the numerator gets smaller and smaller with each SNP added, however in theory it shouldn't be a problem because the denominator decreases in a similar range. However, in terms of computability it becomes impracticable after few hundreds of SNPs, even a machine can't calculate such small number.
 
 Anyway hundreds of SNPs have to be better for an accurate probability, right? Let's compute it using R...
 
@@ -139,10 +147,13 @@ Anyway hundreds of SNPs have to be better for an accurate probability, right? Le
 
 First we need to perform some operations outside R. We need to get all the data that we need from an external server and to process it a little bit outside R.
 
-The external server that we are going to use is [www.snp.nexus.org](www.snp.nexus.org), there you can just send a list of SNPs and obtain back several files containing 
+The external server that we are going to use is [www.snp.nexus.org](www.snp-nexus.org), there you can just send a list of SNPs and obtain back several files containing information regarding them; unfortunately they only allow up to 100K SNPs per query, so we have to split our more than 600K SNPs into 7 files using R
 
+First we load the raw data provided by MyHeritage and based on the number of SNPs we generate the files cotaining 100K SNPs each.
 
-
+<pre><code>
+#data loading skipping the first 12 rows because they are comments in the file
+df <- read.csv("/home/nacho/MyHerr/MyHeritage_raw_dna_data.csv", sep = ",", skip = 12)
 
 #Generation of files for www.snp-nexus.org containing 100K SNPS
 n.files <- round(nrow(df)/100000) + 1
@@ -158,21 +169,82 @@ for (i in 1:n.files){
               quote = FALSE,
               row.names = FALSE,
               sep = "\t")
-}
+}</code></pre>
 
+Then we upload them one by one into the server. The query takes around 14hours to be processed so it is a good idea to provide the email in the online form so you can receive an email when the data is ready.
 
+There are many fields that you can ask for in the request under the tab GRCh37/hg19. I suggest you to include at least these:
 
+Population Data: ALL
+Phenotype & Disease Association: ALL
+Non-coding Scoring: ALL
 
-## Rename of data to merge
+![snpnexus1.png](/images/snpnexus1.png)
 
-nacho@Skadi:~/MyHerr/SNPS/snps2$ rename 's/_17289/-set_6/' *
+Once you have the zipped files in your computer it is time to prepare them, first we need to rename them accordingly with the <code>rename</code> from the terminal to have the names of the files with the same structure. This is a bit tedious going folder by folder but once you have them ready it is very easy to merge them together into a big file that we can load in R. See this example of how my folder looks like:   
 
-merger
-for file in  ???-*. C
+![filesMH.png](/images/filesMH.png)
+
+Once you have them you can create a script in bash to merge all the files with the same structure together:
+
+<pre><code>for file in  ???-*. C
   cat "$file" . C
   cat >>"${file%_*}.txt" . C
   cat
-done
+done</code></pre>
+
+Note: There are many many ways of doing this process, here I'm just describing the strategy that I used without going into too much detail.
+
+Once the files are ready we can start importing them into R:
+<#Populations loading 
+path <- "/home/nacho/MyHerr/data/populations/"
+files<-list.files(path)
+setwd(path)
+
+pop<-list()
+
+pb <- txtProgressBar(min = 1, max = length(files), initial = 1) 
+for (i in 1:length(files)) {
+  setTxtProgressBar(pb,i)
+  pop[[i]]<-read.csv(paste(path,files[i],sep = ""), sep = "\t")
+}
+
+#Subset populations 
+files <- gsub("-.*","",files)
+
+#1000genomes
+code1000genomes<-c("afr", "eur", "sas", "amr", "eas")
+pop1000genomes<-pop[which(files %in% code1000genomes)]
+pop<-pop[-which(files %in% code1000genomes)]
+
+#EAC
+codeEAC<-c("AFR", "AMR", "OTH", "EAS", "FIN", "NFE", "SAS")
+popEAC<-pop[which(files %in% codeEAC)]
+pop<-pop[-which(files %in% codeEAC)]
+</code></pre>
+
+Note that in order to distinguish the different datasets I have created two variables code1000genomes and codeEAC, so all the files cotaining the ethnicity codes for each data set are loaded together into the same dataframe. If you have changed the names of your files you will have to adjust code1000genomes and codeEAC accordingly. The last dataset (HapMap) is loaded just by removing the 1000genomes and EAC datasets from the list named <code>pop</code> 
+
+Now let's assing the priors for each population and how they are distributed worldwide
+<pre><code>
+
+##### 1000genomes analysis 
+#Merge data with sample 
+priors1000genomes<- c(0.17, #afr
+                      0.1, #eur
+                      0.31, #sas
+                      0.15, #amr
+                      0.27 #eas
+                      )
+                      
+                      </code></pre>
+                      
+ Now we can clean the data removing duplicated elements, removing elements that were not provided by snp-nexus.org 
+
+
+
+
+
 
 
 ### Analysis of diseases. 
