@@ -149,7 +149,7 @@ First we need to perform some operations outside R. We need to get all the data 
 
 The external server that we are going to use is [www.snp.nexus.org](www.snp-nexus.org), there you can just send a list of SNPs and obtain back several files containing information regarding them; unfortunately they only allow up to 100K SNPs per query, so we have to split our more than 600K SNPs into 7 files using R
 
-First we load the raw data provided by MyHeritage and based on the number of SNPs we generate the files cotaining 100K SNPs each.
+First, we load the raw data provided by MyHeritage and based on the number of SNPs we generate the files cotaining 100K SNPs each.
 
 <pre><code>
 #data loading skipping the first 12 rows because they are comments in the file
@@ -231,20 +231,110 @@ Now let's assing the priors for each population and how they are distributed wor
 ##### 1000genomes analysis 
 #Merge data with sample 
 priors1000genomes<- c(0.17, #afr
-                      0.1, #eur
-                      0.31, #sas
                       0.15, #amr
-                      0.27 #eas
+                      0.27, #eas
+                      0.1,  #eur
+                      0.31  #sas
                       )
                       
                       </code></pre>
                       
- Now we can clean the data removing duplicated elements, removing elements that were not provided by snp-nexus.org 
+ Now we can clean the data removing duplicated elements, removing SNPs in our results that were not available at snp-nexus.org:
+ 
+ <pre><code>#Check that all of them are equal
+rsid<-pop1000genomes[[1]]$SNP
+for (i in 2:length(code1000genomes)) {
+  rsid<-Reduce(intersect, list(pop1000genomes[[i]]$SNP, rsid ))  
+}
+rsid<- Reduce(intersect, list(df$RSID, rsid ))
 
+df1000g<-subset(df, df$RSID %in% rsid )
+df1000g<- df1000g[,c(1,4)]</code></pre>
 
+Then we replace the frequencies equal to 0 and 1 by 0.00005 and 0.99995 because, the 1000genomes dataset is based in few samples so it is very likely that those absolute values are not real and that in the whole population there are some individuals carrying those variant, indeed 0.00005 is a very conservative estimation. If we assume that the 2504 samples in the 1000genomes project are evenly distributed, that gives us around 500 individuals per ethnicity. If the probability of a variant among the European population (the less represented worlwide speaking) is 0.00005 that means there are 37070 individuals with the variant, if we sample the population 500 times the probability of not getting any individual with the variant, and therefore assuming that the frequency is 0, is higher than 98%. We also need to do that because bayes' doesn't likes zeroes, if we include a probability equal to zero in our computations the overall probability is equal to zero.
 
+<pre><code>
+  for (i in 1:length(code1000genomes)) {
+    pop1000genomes[[i]]<-subset(pop1000genomes[[i]], pop1000genomes[[i]]$SNP %in% rsid)
+    #changes zeros and ones
+    pop1000genomes[[i]]$Frequency<-as.numeric(as.character(pop1000genomes[[i]]$Frequency))
+    pop1000genomes[[i]]$Frequency[pop1000genomes[[i]]$Frequency==0]<-0.00005
+    pop1000genomes[[i]]$Frequency[pop1000genomes[[i]]$Frequency==1]<-0.99995
+    pop1000genomes[[i]]<-pop1000genomes[[i]][order(pop1000genomes[[i]]$SNP),]  
+    }</code></pre>
 
+We finish cleaning the data and creating new variables to account for the pcombined frequencies of the event in the rest of the popuplations (marked as *Rest* in the code).
 
+<pre><code>
+for (i in 1:length(code1000genomes)) {
+  pop1000genomes[[i]][,c(2,3,7)]<-NULL
+  
+  colnames(pop1000genomes[[i]])<-paste(colnames(pop1000genomes[[i]]), code1000genomes[i], sep = "-")
+  colnames(pop1000genomes[[i]])<- gsub("SNP-.*", "RSID", colnames(pop1000genomes[[i]]))
+  
+  #merging #Population size 5000
+  if (i==1) df1000g <- merge( pop1000genomes[[i]],df1000g, by="RSID")
+  if (i>1) df1000g <- cbind(df1000g,pop1000genomes[[i]] )
+
+  list<- c(1:length(code1000genomes))
+  list <- list[-i]
+  
+  Rest <- 0
+  RestAlt1N<-0
+  RestRef<-0
+  
+  for (h in 1:length(list)) {
+#Modify rests
+    Rest <- ((as.numeric(as.character(pop1000genomes[[list[h]]]$Frequency))^2) * priors1000genomes[[list[h]]]) + Rest
+    
+    RestAlt1N <- ((2*as.numeric(as.character(pop1000genomes[[list[h]]]$Frequency))-
+                   2*as.numeric(as.character(pop1000genomes[[list[h]]]$Frequency))^2) * 
+                   priors1000genomes[[list[h]]]) + RestAlt1N
+    
+    RestRef <- (1-2*as.numeric(as.character(pop1000genomes[[list[h]]]$Frequency))+
+                  as.numeric(as.character(pop1000genomes[[list[h]]]$Frequency))^2) *
+                  priors1000genomes[[list[h]]] + RestRef
+  }
+  
+  df1000g$last<-Rest
+  colnames(df1000g)[ncol(df1000g)] <- paste("Rest.2N.Alt",code1000genomes[i], sep = "-")
+  df1000g$last<-RestAlt1N
+  colnames(df1000g)[ncol(df1000g)] <- paste("Rest.1N.Alt",code1000genomes[i], sep = "-")
+  df1000g$last<-RestRef
+  colnames(df1000g)[ncol(df1000g)] <- paste("Rest.2N.Ref",code1000genomes[i], sep = "-")
+
+  }
+
+df1000g <- df1000g[complete.cases(df1000g),]</code></pre>
+
+More data cleaning to remove those variant which contains insertions/deletions (indels) or those that non detected in the array (--)
+
+<pre><code>
+#remove non-detected SNPs
+df1000g <- subset(df1000g,df1000g$RESULT!="--")
+#remove indels
+df1000g<-df1000g[which(nchar(as.character(df1000g$`Ref_Allele-afr`))==1),]
+df1000g<-df1000g[which(nchar(as.character(df1000g$`Alt_Allele-afr`))==1),]
+df1000g<-df1000g[which(nchar(as.character(df1000g$`Alt_Allele-eur`))==1),]
+df1000g<-df1000g[which(nchar(as.character(df1000g$`Alt_Allele-sas`))==1),]
+df1000g<-df1000g[which(nchar(as.character(df1000g$`Alt_Allele-amr`))==1),]
+df1000g<-df1000g[which(nchar(as.character(df1000g$`Alt_Allele-eas`))==1),]
+</code></pre>
+
+We account for the diploids:
+<pre><code>
+df1000g$Ref.2N <- paste(df1000g$`Ref_Allele-afr`, df1000g$`Ref_Allele-afr`, sep = "")
+</code></pre>
+
+And calculated some probabilities (only showed the calculations for the African population, you can find the complete script here)
+
+<pre><code>
+#AFR
+df1000g$Alt.1NA.afr <- paste(df1000g$`Ref_Allele-afr`, df1000g$`Alt_Allele-afr`, sep = "")
+df1000g$Alt.1NB.afr <- paste( df1000g$`Alt_Allele-afr`, df1000g$`Ref_Allele-afr`, sep = "")
+df1000g$Alt.2N.afr<-  paste(df1000g$`Alt_Allele-afr`, df1000g$`Alt_Allele-afr`, sep = "")
+df1000g$Ref.2N.afr.Frq <- (1+ df1000g$`Frequency-afr`^ 2 - 2*df1000g$`Frequency-afr`)
+df1000g$Alt.2N.afr.Frq <- df1000g$`Frequency-afr`^ 2</code></pre>
 
 
 ### Analysis of diseases. 
