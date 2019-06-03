@@ -100,7 +100,7 @@ EAS: 27%
  
  P(B|A) = 8.1%
  P(B) = 1.44% (The ponderated percentage for the variant)
- P(A) = 17% (Let's assume that we don't have any prior information about the person so he could belong to any ethnicity and therefore the probability of being African is based on the overall African population around the globe)
+ P(A) = 17% (Let's assume that we don't have any prior information about the person so he or she could belong to any ethnicity and therefore the probability of being African is based on the overall African population around the globe)
 
  So we have a P(A|B) = 95.63% which is pretty close to the result obtained using the frequentist approach.
  
@@ -175,9 +175,9 @@ Then we upload them one by one into the server. The query takes around 14hours t
 
 There are many fields that you can ask for in the request under the tab GRCh37/hg19. I suggest you to include at least these:
 
-Population Data: ALL
-Phenotype & Disease Association: ALL
-Non-coding Scoring: ALL
+Population Data: **ALL**
+Phenotype & Disease Association: **ALL**
+Non-coding Scoring: **ALL**
 
 ![snpnexus1.png](/images/snpnexus1.png)
 
