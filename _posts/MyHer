@@ -336,6 +336,78 @@ df1000g$Alt.2N.afr<-  paste(df1000g$`Alt_Allele-afr`, df1000g$`Alt_Allele-afr`, 
 df1000g$Ref.2N.afr.Frq <- (1+ df1000g$`Frequency-afr`^ 2 - 2*df1000g$`Frequency-afr`)
 df1000g$Alt.2N.afr.Frq <- df1000g$`Frequency-afr`^ 2</code></pre>
 
+Then we subset the dataset to separate the SNPs into heterozygous, homozygous reference and homozygous variant.
+
+<pre><code>
+#AFR subsetting and calculation
+df.afr.Ref.2N<- subset(df1000g[,c(1,4,5:8,37:42)], df1000g$RESULT==df1000g$Ref.2N)
+df.afr.Alt.1N<- subset(df1000g[,c(1,4,5:8,37:42)], df1000g$RESULT==df1000g$Alt.1NA.afr |
+df1000g$RESULT==df1000g$Alt.1NB.afr)  
+df.afr.Alt.2N <- subset(df1000g[,c(1,4,5:8,37:42)], df1000g$RESULT==df1000g$Alt.2N.afr)
+</pre></code>
+
+Then we specify the priors again (I did it in this way for testing purposes but at the end it stayed in the code, it should be very easy to recall the previous function and remap the values of the vector <code>priors1000genomes</code> into the new variables) and the numer of SNPs to test.
+
+<pre><code>
+#Probability calculator
+afr.priors <- 0.1
+eur.priors <- 0.1
+sas.priors<-0.3
+amr.priors<-0.2
+eas.priors<-0.3
+
+N.elements<-150
+#Probability calculator
+</code></pre>
+
+Next, we create a matrix to compute the probabilities and select the SNPs randomly
+
+<pre></code>
+
+stats<- as.data.frame(array(data = NA, dim = c(N.elements,6)))
+colnames(stats)<-c("N",code1000genomes)
+rnd<-round(runif(1, min = N.elements, max = 50000))
+  </code></pre>
+
+Finally sequentially we fill the matrix with the probabilities and the number of SNPs analyzed.
+
+<pre><code>
+for(n in 1:N.elements){
+  stats$N[n]<-n*3
+
+  #EUR
+  num.eur<-eur.priors*
+  prod(df.eur.Ref.2N$Ref.2N.eur.Frq[1:n+rnd])*
+  prod(2*df.eur.Alt.1N$`Frequency-eur`[1:n+rnd] - 2*df.eur.Alt.1N$`Frequency-eur`[1:n+rnd]^2)*
+  prod(df.eur.Alt.2N$Alt.2N.eur.Frq[1:n+rnd])
+
+den.eur<-num.eur+
+  ((1-eur.priors)*
+     prod(df.eur.Ref.2N$`Rest.2N.Ref-eur`[1:n+rnd])*
+     prod(df.eur.Alt.1N$`Rest.1N.Alt-eur`[1:n+rnd])*
+     prod(df.eur.Alt.2N$`Rest.2N.Alt-eur`[1:n+rnd]))
+
+prob.eur<- num.eur/den.eur
+
+..........
+..........
+
+stats$afr[n]<-prob.afr
+stats$eur[n]<-prob.eur
+stats$sas[n]<-prob.sas
+stats$eas[n]<-prob.eas
+stats$amr[n]<-prob.amr
+
+</code></pre>
+
+And plot the results in triplicates
+Test1
+
+Test2
+
+Test3
+
+
 
 ### Analysis of diseases. 
 
