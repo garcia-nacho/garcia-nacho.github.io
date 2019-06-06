@@ -400,19 +400,68 @@ stats$amr[n]<-prob.amr
 
 </code></pre>
 
-And plot the results in triplicates
-Test1
+Plot the results
+![bayes1](/images/bayes1.png)
 
-Test2
+Totally unexpected results, all probabilities collapse to zero after few SNPs. As the 150 SNP to analyze are random I run it again. 
 
-Test3
+![bayes1](/images/bayes2.png)
+
+Similar results, probabilities collapse after few SNPs but with a different profile. This is clearly not the way to go because of the unpredictibility.
+
+### Machine-learning framework.
+
+Since pure statistical approaches are unable to solve the usage of all SNPs to provide aa response regarding the ethnicity of a sample I have deccided to implement a ML-based unsupervised clustering approach which take into account the values for all SNP.
+
+The idea is very simple, since we know the probabilities associated with each variant for every ehtnicity it should be possible to simulate the genotype of individuals for all SNPs. Then using unsupervised clustering we can find out where our sample clusters.
+
+First, we need to create the samples of N individuales for every population:
+
+<pre><code>library("cluster")
+library("factoextra")
+library("magrittr")
+
+SampleSize<-20</code></pre>
+
+We then create a list with number of SNPs that we want to use and a matrix cotaining the different individuals in rows being the fist one our sample.
+The genotype is encoded as 0: Homozygous reference, 1: Heterozygous and 2: Homozygous variant
+
+<pre><code>
+RelevantSNP<-sample(as.character(df1000g$RSID),size = 4000, replace = FALSE)
+
+population<-as.data.frame(matrix(data = NA, nrow = (SampleSize*5)+1, ncol = length(RelevantSNP) ))
+
+dfpop<-subset(df1000g, df1000g$RSID %in% RelevantSNP)
+
+dfpop$ploidy<-1
+dfpop$ploidy[which(dfpop$RESULT==dfpop$Ref.2N)]<-0
+dfpop$ploidy[which(dfpop$RESULT==dfpop$Alt.2N.afr)]<-2
+population[1,]<-dfpop$ploidy
+rownames(population)[1]<-"Sample"
+</code></pre>
+
+Then iteratively we create simulate the genotypes for each population like this:
+
+<pre><code>pb <- txtProgressBar(min = 1, max = SampleSize*nrow(dfpop), initial = 1) 
+count<-0
+
+ #AFR generation
+for (i in 2:(SampleSize+1)) {
+  dfpop$dummy<-0
+  for (h in 1:nrow(dfpop)) {
+    count<-count+1
+    setTxtProgressBar(pb,count)  
+    rnd<-runif(1,min = 0, max = 1)
+    if(rnd<dfpop$`Frequency-afr`[h]^2) dfpop$dummy[h]<-2
+    if(rnd>(dfpop$`Frequency-afr`[h]^2) & rnd<(2*dfpop$`Frequency-afr`[h]-2*dfpop$`Frequency-afr`[h]^2)) dfpop$dummy[h]<-1     
+  }
+  population[i,]<-dfpop$dummy
+  rownames(population)[i]<-paste("AFR",i,sep = "")
+
+}</code></pre>
+
+Once we have it, we cluster the whole matrix row-wise
 
 
-
-### Analysis of diseases. 
-
-### Paternity test.
-
-### Conclusions.
 
 ### Sources of inspiration
