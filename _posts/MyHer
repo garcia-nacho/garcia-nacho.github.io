@@ -460,7 +460,48 @@ for (i in 2:(SampleSize+1)) {
 
 }</code></pre>
 
-Once we have it, we cluster the whole matrix row-wise
+Once we have it, we can cluster the whole matrix row-wise:
+
+<pre><code>
+k.clust<- kmeans(population, 5)
+k.result<-k.clust$cluster
+k.result<-as.data.frame(k.result)
+</code></pre>
+
+We can use k-means and explore in which group our sample falls:
+
+![kmeans](/images/kmeans.png)
+
+As you can see our sample (as expected) clusters together with European simulated-samples.
+
+If we want something more visual we can use other clustering methods that are better for hierarchical visualizations
+
+<pre><code>
+df.clust<-  dist(population,method = "binary")
+df.clust<-hclust(df.clust,method = "ward.D2")  
+fviz_dend(df.clust, k = 5,
+          cex = 0.5, # label size         
+          color_labels_by_k = TRUE, 
+          rect = TRUE)</code></pre>
+          
+          
+![dend](/images/dendogram.png)
+
+Here we have a better view of what is going on and how different group correlate to each other, for instace we can see that the African population is the more isolated.
+
+As you can see, machine-learning strategies such as k-means perform much better than classical statistical approaches for genetic analyses, more SNPs would require longer computational times as well as larger amount of simulations but nothing a semi-decent computer can't do in few minutes, giving you more accurate results.
+
+### Ethnicity calculation by chromosome positions
+
+So far we have seen how to calculate the overall ethnicity of a person based on the results obtained from MyHeritage, however in this section we are going to split the whole genome in fragments and we are going to see if different fragments have different ethnicities. The rational behind this analysis is that regions close in the genome tend to remain intact after several generations. We could say that the more fragmented the genome is (in terms of ethnicity) the more distant in time the sample is to those ancestor/s who carried that DNA fragment because of the meiotic recombination.
+Let's say we have two pure ancestors A and B ethnically speaking, if the offspring crosses again with a pure B the DNA content of the generation after will contain smaller fragments of A.
+
+![Figure]()
+
+So let's start
+
+#First approach to a disease analysis
+
 
 
 
