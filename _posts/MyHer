@@ -496,9 +496,29 @@ As you can see, machine-learning strategies such as k-means perform much better 
 So far we have seen how to calculate the overall ethnicity of a person based on the results obtained from MyHeritage, however in this section we are going to split the whole genome in fragments and we are going to see if different fragments have different ethnicities. The rational behind this analysis is that regions close in the genome tend to remain intact after several generations. We could say that the more fragmented the genome is (in terms of ethnicity) the more distant in time the sample is to those ancestor/s who carried that DNA fragment because of the meiotic recombination.
 Let's say we have two pure ancestors A and B ethnically speaking, if the offspring crosses again with a pure B the DNA content of the generation after will contain smaller fragments of A.
 
-![Figure]()
+![Figure](/images/chr.jpg)
 
-So let's start
+To do this I am going to split the chromosomes in parts and the ethnicity of each part will be analyzed together with a score about the prediction. First I will use the unsupervised method explained before and I will compare it with a frequentist analysis.
+
+First we need to find the positions of the different SNPs in the genome and to do that we need to cross our data with any 1000genomes dataset from [www.snp.nexus.org](www.snp-nexus.org).
+
+<pre><code>
+#Load positions
+positions<-read.csv("/home/nacho/MyHerr/data/populations/afr-set.txt",sep = "\t")
+positions<-positions[,1:3]
+colnames(positions)<-c("RSID","Chr","nt")
+positions<-positions[!duplicated(positions$RSID),]
+df1000g<-subset(df1000g,df1000g$RSID %in% unique(positions$RSID))
+df1000g<-df1000g[!duplicated(df1000g$RSID),]
+positions<-subset(positions, positions$RSID %in% unique(df1000g$RSID))
+
+df1000g<-merge(df1000g,positions, by="RSID")</code></pre>
+
+Then, to *chopp* the chromosomes we need an addional file that you can find [here](/images/genome.txt.csv)
+
+![SingleCPU](/images/cpusingle.png)
+
+![MultiCPU](/images/cpucluster.png)
 
 #First approach to a disease analysis
 
