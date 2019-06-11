@@ -514,11 +514,202 @@ positions<-subset(positions, positions$RSID %in% unique(df1000g$RSID))
 
 df1000g<-merge(df1000g,positions, by="RSID")</code></pre>
 
-Then, to *chopp* the chromosomes we need an addional file that you can find [here](/images/genome.txt.csv)
+Then, to *chopp* the chromosomes we need an addional file that you can find [here](/images/genome.txt.csv). That file contains information regarding the chromosome size and the position of the [centromere](https://en.wikipedia.org/wiki/Centromere), using that information we can chop the chromosome into pieces of a particular size, stated in the varible <code>genomic.size</code>. For simplicity we also rename chromosomes X and Y to 23 and 24.
+
+<pre><code>genomic.size<-15000000
+chr<-read.csv("/home/nacho/MyHerr/genome.txt.csv", sep = "\t",header = FALSE)
+chr$chunks<-round(chr$V3/genomic.size)+1
+chr$V1<-gsub("X","23",chr$V1)
+chr$V1<-gsub("Y","24",chr$V1)</code></pre>
+
+We create some empty columns in the dataframe containing all the information that we will fill in with a loop
+
+<pre><code>
+df1000g$nt<-as.numeric(as.character(df1000g$nt))
+df1000g$Eth<-"ND"
+df1000g$withinn<-NA
+df1000g$cluster.score<-NA
+df1000g$AFR.score<-NA
+df1000g$EUR.score<-NA
+df1000g$SAS.score<-NA
+df1000g$AMR.score<-NA
+df1000g$EAS.score<-NA
+
+
+df1000g$Chr<-gsub("X","23", df1000g$Chr)
+df1000g$Chr<-gsub("Y","24", df1000g$Chr)
+df1000g$Chr<-as.numeric(df1000g$Chr)
+</code></pre>
+
+and we define the number of individuals to simulate for each set of SNPs
+
+<pre><code>SampleSize<-25 #number of individuals for the clustering</code></pre>
+
+To perform the clustering I am going to use parallel computing. Unless you do something about it, R-base performs all the task one by one using one processor (aka core) to run all the processes one after the other. However, now a days most computers and even mobile phones have more than one core, so running the code in such way is a waste of resources and time. To optimize the code we can perform what it is called parallel computer, that means that we split the whole task into smaller subtasks and we send each one of them to be processed by one core.
+
+This is what the computer does when you run this analysis without any paralelization:
 
 ![SingleCPU](/images/cpusingle.png)
 
+and this is what the computer does when you parallelize the analysis:
+
 ![MultiCPU](/images/cpucluster.png)
+
+As you can see it is much more efficient to have 10 cores working in the sampe process that 1 core doing all the task, and indeed it divides the computing time by 10.
+
+As a rule of thumb when you are doing parallel computing you always divide the larger of the tasks to perform, that usually means to replace the external loop (for/while/etc) by the paralezitating function <code>foreach()%dopar%</code>
+
+However, before performing the analysis we need to prepare the set of cores (aka cluster) that we are going to use. We load the libraries, detect the total number of cores of the machine (N) and create the cluster with N-1 cores, otherwise you couldn't use the computer while the computation is running.
+
+<pre><code>
+library(doParallel)
+library(parallel)
+library(foreach)
+cores<-detectCores()-1
+cluster.cores<-makeCluster(cores)
+registerDoParallel(cluster.cores)
+</code></pre>
+
+Then we define the parallelization loop as if it were a function, pointing to a variable (that will be a list in which each element will be the result of the computation by one core) and containing a <code>return</code> command. This is because when the computer creates the cluster it also creates a copy of the variables used in the loop, that means that the other cores don't know what is going on the other cores, so after the computation we need to wrap it up and combine the results from all the cores.
+
+In this particular case the loop split the task in chromosome, each chromosome for a core. Then, each core chops the chromosomes according the desired sampling size and compute the clusters. To get the ethnicity I calculate the mode of the ehtnicity of the simulations that cluster together with our sample of interest. To do that, we define the function <code>getmode</code> ([source of the idea](https://www.tutorialspoint.com/r/r_mean_median_mode.html)). To asses the accuracy of the prediction I have included a couple of scores in the script stated in the columns df1000g$withinn and df1000g$cluster.score. The first one accounts for the withinnes of the cluster containing the sample of interest, the lower the value the better, although there are circumstances in which higher values doesn't mean worse predictions. The second score somehow accounts for the missclasifcation of the simulations in the cluster containing the sample, a perfect classification gives a value of zero (although the scores for some missclasifications are also zero) a deviation to a positive number means that the cluster is including worng simulations and a negative number means that the cluster is not accounting for all the simulations generated. In a nutshell, it is optimal at zero and then to a negative value, because the higher the value the higher the probability of a missclasification of the sample.  
+
+<pre><code>
+getmode <- function(v) {
+  uniqv <- unique(v)
+  uniqv[which.max(tabulate(match(v, uniqv)))]
+}
+</code></pre>
+
+<pre><code>
+
+output<-foreach(i2=1:nrow(chr), .verbose = TRUE, .packages = "cluster") %dopar%{
+
+  chr.tolook<-paste("chr",i2,sep = "")
+  chunks<-chr$chunks[chr$V1==chr.tolook]  
+  #print(paste("Analyzing Chr",i2,sep=""))
+  #pb <- txtProgressBar(min = 1, max = chunks, initial = 1) 
+  for (h2 in 1:chunks) {
+    #setTxtProgressBar(pb,h2)   
+    RelevantSNP<-as.character(df1000g$RSID[df1000g$nt > (h2-1)*genomic.size & df1000g$nt < h2*genomic.size & df1000g$Chr==i2])
+    if(length(RelevantSNP)>1){
+    dfpop<-subset(df1000g, df1000g$RSID %in% RelevantSNP)
+    dfpop$ploidy<-1
+    dfpop$ploidy[which(dfpop$RESULT==dfpop$Ref2N)]<-0
+    dfpop$ploidy[which(dfpop$RESULT==dfpop$Alt2N)]<-2
+    
+    population<-as.data.frame(matrix(data = NA, nrow = (SampleSize*5)+1, ncol = length(RelevantSNP) ))
+    
+    population[1,]<-dfpop$ploidy
+    rownames(population)[1]<-"Sample"
+    
+    EthScore<-rep(NA, length(code1000genomes))
+  
+    #AFR generation
+    for (i in 2:(SampleSize+1)) {
+      dfpop$dummy<-0
+      for (h in 1:nrow(dfpop)) {
+        rnd<-runif(1,min = 0, max = 1)
+        if(rnd<dfpop$`Frequency-afr`[h]^2) dfpop$dummy[h]<-2
+        if(rnd>(dfpop$`Frequency-afr`[h]^2) & rnd<(2*dfpop$`Frequency-afr`[h]-2*dfpop$`Frequency-afr`[h]^2)) dfpop$dummy[h]<-1     
+      }
+      population[i,]<-dfpop$dummy
+      rownames(population)[i]<-paste("AFR",i,sep = "")
+      
+    }
+
+    #EUR generation
+    for (i in (SampleSize+2):(2*SampleSize+1)) {
+      dfpop$dummy<-0
+      for (h in 1:nrow(dfpop)) {
+        rnd<-runif(1,min = 0, max = 1)
+        if(rnd<dfpop$`Frequency-eur`[h]^2) dfpop$dummy[h]<-2
+        if(rnd>(dfpop$`Frequency-eur`[h]^2) & rnd<(2*dfpop$`Frequency-eur`[h]-2*dfpop$`Frequency-eur`[h]^2)) dfpop$dummy[h]<-1     
+      }
+      population[i,]<-dfpop$dummy
+      rownames(population)[i]<-paste("EUR",i,sep = "")
+      
+    }
+    
+    #AMR generation
+    for (i in (2*SampleSize+2):(3*SampleSize+1)) {
+      dfpop$dummy<-0
+      for (h in 1:nrow(dfpop)) {
+        rnd<-runif(1,min = 0, max = 1)
+        if(rnd<dfpop$`Frequency-amr`[h]^2) dfpop$dummy[h]<-2
+        if(rnd>(dfpop$`Frequency-amr`[h]^2) & rnd<(2*dfpop$`Frequency-amr`[h]-2*dfpop$`Frequency-amr`[h]^2)) dfpop$dummy[h]<-1     
+      }
+      population[i,]<-dfpop$dummy
+      rownames(population)[i]<-paste("AMR",i,sep = "")
+      
+    }
+    
+    #SAS generation
+    for (i in (3*SampleSize+2):(4*SampleSize+1)) {
+      dfpop$dummy<-0
+      for (h in 1:nrow(dfpop)) {
+        rnd<-runif(1,min = 0, max = 1)
+        if(rnd<dfpop$`Frequency-sas`[h]^2) dfpop$dummy[h]<-2
+        if(rnd>(dfpop$`Frequency-sas`[h]^2) & rnd<(2*dfpop$`Frequency-sas`[h]-2*dfpop$`Frequency-sas`[h]^2)) dfpop$dummy[h]<-1     
+      }
+      population[i,]<-dfpop$dummy
+      rownames(population)[i]<-paste("SAS",i,sep = "")
+      
+    }
+    
+    #EAS generation
+    for (i in (4*SampleSize+2):(5*SampleSize+1)) {
+      dfpop$dummy<-0
+      for (h in 1:nrow(dfpop)) {
+        rnd<-runif(1,min = 0, max = 1)
+        if(rnd<dfpop$`Frequency-eas`[h]^2) dfpop$dummy[h]<-2
+        if(rnd>(dfpop$`Frequency-eas`[h]^2) & rnd<(2*dfpop$`Frequency-eas`[h]-2*dfpop$`Frequency-eas`[h]^2)) dfpop$dummy[h]<-1     
+      }
+      population[i,]<-dfpop$dummy
+      rownames(population)[i]<-paste("EAS",i,sep = "")
+      
+    }
+    
+    k.clust<- kmeans(population, 5)
+    k.result<-k.clust$cluster
+    k.result<-as.data.frame(k.result)
+    
+    cluster<-rownames(k.result)[k.result$k.result== k.result[1,1]]
+    
+    cluster<-cluster[-1]
+    cluster<-gsub("\\d","",cluster)
+
+    df1000g$Eth[df1000g$RSID %in% RelevantSNP]<-getmode(cluster)
+    df1000g$withinn[df1000g$RSID %in% RelevantSNP] <- k.clust$withinss[as.numeric(k.clust$cluster[1])]
+    df1000g$cluster.score[df1000g$RSID %in% RelevantSNP] <- k.clust$size[k.clust$cluster[1]]-SampleSize+1
+
+    rm(cluster)
+    
+    }#If there are SNP in the region
+    
+  }#Chunks
+  
+  return(subset(df1000g[c("RSID","Eth","cluster.score","withinn")], df1000g$Chr==i2))
+  
+}#chr
+
+stopCluster(cluster.cores)
+</code></pre>
+
+Finally we wrap the output out: (this is not necesary if you state in the cluster that you want all the results *rbinded* but I prefer to do it in this way to be able to inspect the list and throubleshoot any possible error)
+
+<pre><code>
+out.1<-rbind(output[[1]],output[[2]])
+for (i in 3:length(output)){
+  out<-rbind(out.1,output[[i]])
+  }
+
+df1000g<-merge(df1000g,a, by="RSID")  
+</code></pre>
+
+Now we are ready to plot the results. For privacy reasons I'm scrambling the RSID so it looks more fragmented than it is actually is. 
+
+
 
 #First approach to a disease analysis
 
