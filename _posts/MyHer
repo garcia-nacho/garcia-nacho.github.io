@@ -707,7 +707,9 @@ for (i in 3:length(output)){
 df1000g<-merge(df1000g,a, by="RSID")  
 </code></pre>
 
-Now we are ready to plot the results. For privacy reasons I'm scrambling the RSID so it looks more fragmented than it is actually is. 
+Now we are ready to plot the results. For privacy reasons I'm scrambling the RSID so it looks more fragmented than it actually is. 
+
+Now I am going perform a similar analysis but using a frequentist approach, to do that we first need to define a *genetic score* for each ethnicity in a way that the higher the genetic score is the higher the chances of a ethnicity prediction of being correct.  
 
 
 
