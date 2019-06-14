@@ -37,9 +37,12 @@ Review](https://pdfs.semanticscholar.org/d770/877d3caffd3ddea3c466643759a1db7582
 {: style="text-align: justify"}
 
 ### Statistical framework.
-Now that we know how the SNPs can help us to track our origines down; however, we don't know how the percentages provided by MyHeritage were obtained and what they really mean. Are they the probabilities of her belonging to each one of those populations? Are they the percentage of her DNA associated certain ethnicities? Are they something else? I don't know and I am sure they are not going to disclose it. So we will need to perform our own analysis and compare our results with the report, but before that we need to establish a statistical framework for the analyses. 
+Now that we know how the SNPs can help us to track our origins down; however, we still don't know how the percentages provided by MyHeritage were obtained and what they really mean. Are they the probabilities of her belonging to each one of those populations? Are they the percentage of DNA associated certain ethnicities? Are they something else? I don't know and I am sure they are not going to disclose it. So we will need to perform our own analysis and compare our results with the report, but before doing it, we need to establish the statistical framework of the analyses. 
+{: style="text-align: justify"}
 
-There are several statistical approaches to analyze SNPs but in this post I am going to analyze and compare the frequentist and the bayesian strategies and to do so we are going to use our favourite SNP the rs10000008, the list of all frequencies associated with the variant form (T) are these:
+There are several statistical approaches to analyze SNPs and in this post, I am going to compare frequentist and Bayesian strategies and to propose alternative ML-based analysis to solve the problems associated with them.  
+To do so we are going to use again the SNP the rs10000008 and the list of all frequencies associated with the variant form (T) which are these:  
+{: style="text-align: justify"}
 
 AFR: 28.52%
 EUR: 1.59%
@@ -47,15 +50,17 @@ SAS: 3.99%
 EAS: 1.49%
 AMR: 2.16%
 
-So lets say that someone has an SNP with two TT... It is obvious that it is more likely for that person to be african, but how likely? Let's see what the frequenstist and bayesian analyses say.
+So let's say the result for a particular person is the presence of two copies of the variant form of that SNP (TT)... It is obvious that it is more likely for that person to be African, but how likely? Let's see what the frequentist and Bayesian analyses say.
 
-First of all, the frequencies provided by the [1000genomes consortium](http://www.internationalgenome.org/) only account for the overall probability of having a variant (T), regardless the two copies of the SNP so we need to transform those probabilities into the probablities of having the three possible genotypes (CC,TC,TT) and to do that we use these formulas:
+First of all, the frequencies provided by the [1000genomes consortium](http://www.internationalgenome.org/) only account for the overall probability of having a variant (T),  so we need to transform those probabilities into the probabilities of having the three possible genotypes (CC, TC, and TT) and to do that we use these formulas:
+{: style="text-align: justify"}
 
  $$P {P(rs10000008=TT /cap ETH=AFR) = (rs10000008_AFR_Freq)^2 }$$
  $$P {P(rs10000008=CC /cap ETH=AFR) = (1-rs10000008_AFR_Freq)^2 }$$
  $$P {P(rs10000008=TC OR rs10000008=CT /cap ETH=AFR) = 2 ·rs10000008_AFR_Freq· (1-rs10000008_AFR_Freq)}$$
 
-That gives us thes probabilities for CC:
+By aplying the formulas we obtain these probabilities for CC:
+{: style="text-align: justify"}
 
 AFR: 8.1%
 EUR: 0.025%
@@ -63,7 +68,8 @@ SAS: 0.159%
 EAS: 0.022%
 AMR: 0.047%
 
-So if we relativize the probabilities to add 100% (because we are 100% sure -in theory) that the genotype is CC) we have the result:
+So if we relativize the probabilities to add 100% (because we are 100% sure -in theory-) that the genotype is CC) we have the following percentages:
+{: style="text-align: justify"}
 
 AFR: 96.97%
 EUR: 0.30%
@@ -71,92 +77,118 @@ SAS: 1.9%
 EAS: 0.26%
 AMR: 0.56%
 
-So the frequentist analysis tells us that if someone have a CC in the SNP rs10000008 his or her chances of being African are around 97% 
+So the frequentist analysis tells us that if someone has a CC in the SNP rs10000008 his or her chances of being African are around 97% 
+{: style="text-align: justify"}
 
-Note: To have a better accuracy we have to account for the sizes of the populations by multiplying those percentages by the ratio of the total population with that ethnicity.
+Note: To achieve a better accuracy we have to account for the sizes of the populations by multiplying those percentages by the ratio of the total population from that ethnicity.
+{: style="text-align: justify"}
 
-Let's see now what the bayesian analysis tells us:
-
+Now, let's see now what the Bayesian analysis tells us:
+{: style="text-align: justify"}
 Bayesian analyses rely on the Bayes' theorem: 
-
+{: style="text-align: justify"}
  $$P(A|B) = {P(B|A)· P(A) \over P(B)}$$
  
- If we apply this to our situation we have that
+ Applying that formula to our situation we have that:
+ {: style="text-align: justify"}
  
  P(A|B) is the conditional probability of A occurring given the fact B 
- i.e: The probability of being African if you have certain variant (rs10000008=CC)
+ i.e: The probability of being African if you have the SNP rs10000008 equal to CC.
+  {: style="text-align: justify"}
  
  P(B|A) is the conditional probability of B occurring given the fact A
- i.e. The probability of rs10000008=CC among the African population
+ i.e. The probability of rs10000008 equal to CC among the African population
+ {: style="text-align: justify"}
  
  p(B) is the probability of B occurring
- i.e The overall probability of having certain variant (rs10000008=CC)
+ i.e The overall probability of having certain variant (rs10000008 equal to CC)
+ {: style="text-align: justify"}
  
  p(A) is the probability of A occurring
  i.e. The probability of being African 
+ {: style="text-align: justify"}
  
- Before pluging the data that we know, let's define the distribution of populations around the globe:
+Before plugging the data that we know, we have to define the distribution of populations around the globe, because we will use them as *priors* for our analysis: 
+{: style="text-align: justify"}
 AFR: 17%
 EUR: 10%
 SAS: 31%
-AMR: 15%
-EAS: 27%
- 
+MAR: 15%
+EAST: 27%
+{: style="text-align: justify"}
+What that actually means is that we don't have any preconception about the result and since the 17% percent of the world population is African we assume that the probability of being African is 17% before obtaining the result. The powerful of Bayesian analyses is that we could modify our priors. Now imagine that we are taking the sample in the middle of Kinshasa, our prior for being African would be way higher. We could say that the Bayesian analysis computes how our beliefs should change after obtaining certain evidence.
+{: style="text-align: justify"}
+  
+  
  P(B|A) = 8.1%
  P(B) = 1.44% (The ponderated percentage for the variant)
- P(A) = 17% (Let's assume that we don't have any prior information about the person so he or she could belong to any ethnicity and therefore the probability of being African is based on the overall African population around the globe)
-
- So we have a P(A|B) = 95.63% which is pretty close to the result obtained using the frequentist approach.
+ P(A) = 17% 
  
- Well... We have used only one SNP to calculate the probability of having certain ethnicity, what are the rest of SNPs for then??!
+ The calculation of P(A|B) results in 95.63% which is pretty close to the result obtained using by frequentist approach.
+ {: style="text-align: justify"}
+ 
+Well... We have used only one SNP to calculate the probability of belonging to a particular ethnic group. What are the rest of the SNPs used for then??!
+ {: style="text-align: justify"}
 
-To get things more interesting we could try to combine all possible SNPs to give a more accurate probablilty; however here is when both strategies fail...
+To make things more interesting, we could try to combine all possible SNPs to give a more accurate probability; however, here is when both strategies fail...
+ {: style="text-align: justify"}
 
 **The frequentist failure:** 
-To calculate the combined probability you can think that the multiplication of frequencies for all SNPs would do the trick, but it obviosly doesn't the value gets smaller and smaller as it is multiplied by numbers lower than cero. That is because the real frequency of the combination of both is unknown and impossible to calculate it with the data that we have.
+To calculate the combined probability one could think that the multiplication of frequencies for all SNPs would do the trick, but it obviously does not: The value gets smaller and smaller as it is multiplied by numbers lower than zero. That is because the real frequency of the combination of both is unknown and impossible to calculate it with the data that we have.
+{: style="text-align: justify"}
 
 **The bayesian failure:**
-To calculate the combined probability using the bayes' theorem we need to expand the formula like this:
+To calculate the combined probability using the Bayes' theorem we need to expand the formula like this:
+{: style="text-align: justify"}
 
  $$P(A|B \cap C) = {P(B \cap C|A)· P(A) \over P(B \cap C)}$$
 
-However there are a couple of problems: we dont know the first element of the numerator and the denominator so we need to precalculate them. 
-When two events are not ligated we can assume this:
+However, there are a couple of problems: we don't know the first element of the numerator and the denominator, so we need to pre-calculate them.
+{: style="text-align: justify"}
+
+When two events are not ligated (we will come to this later) we can assume that:
+{: style="text-align: justify"}
 
  $$P {P(B \cap C|A) =  P(B|A)·P(C|A)}$$
 
 And both P(B|A) and P(C|A) are known. 
 
-Calculating the denominator is a bit more complicated, however we know that:
+Calculating the denominator is a bit more complicated, however, we know that:
+{: style="text-align: justify"}
 
  $$P(A|B \cap C) = {P(B \cap C|A)· P(A) \over P(B \cap C)}$$
  
  $$P(\sim A|B \cap C) = {P(B \cap C| \sim A)· P(\sim A) \over P(B \cap C)}$$
  
 Where $$P(\sim A|B \cap C)$$ is the probability of not occurring A when B and C are occurring. As both probabilities are complementaries we can say that:  
-
+{: style="text-align: justify"}
 $$P(A|B \cap C) + P(\sim A|B \cap C) = 1}$$
 
-Obtaining P(B \cap C) that we can substitute to end up with a final equation:
-
+Thus we obtain P(B \cap C) that we can substitute to end up with the final equation:
+{: style="text-align: justify"}
  $$P(A|B \cap C) = {P(B|A)·P(C|A)·P(A) \over P(B|A)·P(C|A)·P(A) + P(B| \sim A)·P(C| \sim A)·P(\sim A) }$$
 
 For which we have all the information.
+{: style="text-align: justify"}
 
-In this case again we face a similar problem as in the frequentist approach, the numerator gets smaller and smaller with each SNP added, however in theory it shouldn't be a problem because the denominator decreases in a similar range. However, in terms of computability it becomes impracticable after few hundreds of SNPs, even a machine can't calculate such small number.
+In this case again we face a similar problem as in the frequentist approach, the numerator gets smaller and smaller with each SNP added, however in theory it shouldn't be a problem because the denominator decreases in a similar range. However, in terms of computability it becomes impracticable after few hundreds of SNPs because even a machine can't compute such small numbers.
+{: style="text-align: justify"}
 
-Anyway hundreds of SNPs have to be better for an accurate probability, right? Let's compute it using R...
+Anyway, using hundreds of SNPs has to be better than using just one in order to obtain an accurate probability, right? Let's compute it using R...{: style="text-align: justify"}
 
 ### Analysis of populations using Bayes' theorem in R
 
-First we need to perform some operations outside R. We need to get all the data that we need from an external server and to process it a little bit outside R.
+First, we need to perform some operations outside R since we need to get all the data that we need from a web server.
+{: style="text-align: justify"}
 
-The external server that we are going to use is [www.snp.nexus.org](www.snp-nexus.org), there you can just send a list of SNPs and obtain back several files containing information regarding them; unfortunately they only allow up to 100K SNPs per query, so we have to split our more than 600K SNPs into 7 files using R
+The server that we are going to use is [www.snp.nexus.org](www.snp-nexus.org), where you can just send a list of SNPs and obtain several files containing information regarding them back; unfortunately, they only allow up to 100K SNPs per query, so we have to split our more than 600K SNPs into 7 files using R.
+{: style="text-align: justify"}
 
-First, we load the raw data provided by MyHeritage and based on the number of SNPs we generate the files cotaining 100K SNPs each.
+First, we load the raw data provided by MyHeritage and based on the number of SNPs we generate the files cotaining up to 100K SNPs in each.
+{: style="text-align: justify"}
 
 <pre><code>
-#data loading skipping the first 12 rows because they are comments in the file
+#Data loading skipping the first 12 rows because they are comments in the file
 df <- read.csv("/home/nacho/MyHerr/MyHeritage_raw_dna_data.csv", sep = ",", skip = 12)
 
 #Generation of files for www.snp-nexus.org containing 100K SNPS
@@ -175,21 +207,26 @@ for (i in 1:n.files){
               sep = "\t")
 }</code></pre>
 
-Then we upload them one by one into the server. The query takes around 14hours to be processed so it is a good idea to provide the email in the online form so you can receive an email when the data is ready.
+Then, we upload them one by one into the server. The query takes around 14 hours to be processed, so it is a good idea to provide an email in the online form so you can receive an email when the data is ready to download.
+{: style="text-align: justify"}
 
-There are many fields that you can ask for in the request under the tab GRCh37/hg19. I suggest you to include at least these:
+In the online form, you will find that there are many fields that you can request under the tab GRCh37/hg19. I suggest you to include at least these:
+{: style="text-align: justify"}
 
 Population Data: **ALL**
 Phenotype & Disease Association: **ALL**
 Non-coding Scoring: **ALL**
+{: style="text-align: justify"}
 
 ![snpnexus1.png](/images/snpnexus1.png)
 
-Once you have the zipped files in your computer it is time to prepare them, first we need to rename them accordingly with the <code>rename</code> from the terminal to have the names of the files with the same structure. This is a bit tedious going folder by folder but once you have them ready it is very easy to merge them together into a big file that we can load in R. See this example of how my folder looks like:   
+Once you unzip the downloaded files in your computer, it is time to prepare them, first, we need to rename them accordingly with the <code>rename</code> command from the terminal to have the names of the files with the same structure. This is a bit tedious but once you have them ready, it is very easy to merge them together into a big file that we can load in R. This is how the folder in my computer looks like:   
+{: style="text-align: justify"}
 
 ![filesMH.png](/images/filesMH.png)
 
-Once you have them you can create a script in bash to merge all the files with the same structure together:
+Once you have the files ready you can create a script in bash to merge all the files with the same structure together:
+{: style="text-align: justify"}
 
 <pre><code>for file in  ???-*. C
   cat "$file" . C
@@ -197,10 +234,13 @@ Once you have them you can create a script in bash to merge all the files with t
   cat
 done</code></pre>
 
-Note: There are many many ways of doing this process, here I'm just describing the strategy that I used without going into too much detail.
+Note: There are many many ways of doing this process, here I'm just broadly describing the strategy that I used.
+{: style="text-align: justify"}
 
-Once the files are ready we can start importing them into R:
-<#Populations loading 
+Now we can start importing the files into R:
+{: style="text-align: justify"}
+
+<pre><code>#Populations loading 
 path <- "/home/nacho/MyHerr/data/populations/"
 files<-list.files(path)
 setwd(path)
@@ -227,11 +267,13 @@ popEAC<-pop[which(files %in% codeEAC)]
 pop<-pop[-which(files %in% codeEAC)]
 </code></pre>
 
-Note that in order to distinguish the different datasets I have created two variables code1000genomes and codeEAC, so all the files cotaining the ethnicity codes for each data set are loaded together into the same dataframe. If you have changed the names of your files you will have to adjust code1000genomes and codeEAC accordingly. The last dataset (HapMap) is loaded just by removing the 1000genomes and EAC datasets from the list named <code>pop</code> 
+Note that in order to distinguish the different datasets I have created two variables called <code>code1000genomes</code> and <code>codeEAC</code>, so all the files containing the ethnicity codes for each data set are loaded together into the same data frame. If you have changed the names of your files you will have to adjust <code>code1000genomes</code> and <code>codeEAC</code> accordingly. The last dataset (HapMap) is loaded just by removing the 1000genomes and EAC datasets from the list named <code>pop</code> 
+{: style="text-align: justify"}
 
-Now let's assing the priors for each population and how they are distributed worldwide
+Now let's assign the *priors* for each population and how they are distributed worldwide.
+{: style="text-align: justify"}
+
 <pre><code>
-
 ##### 1000genomes analysis 
 #Merge data with sample 
 priors1000genomes<- c(0.17, #afr
@@ -240,10 +282,10 @@ priors1000genomes<- c(0.17, #afr
                       0.1,  #eur
                       0.31  #sas
                       )
-                      
                       </code></pre>
                       
- Now we can clean the data removing duplicated elements, removing SNPs in our results that were not available at snp-nexus.org:
+Now we can clean the data by removing duplicated elements and the SNPs in our results that were not available at www.snp.nexus.org](www.snp-nexus.org):
+{: style="text-align: justify"}
  
  <pre><code>#Check that all of them are equal
 rsid<-pop1000genomes[[1]]$SNP
@@ -255,7 +297,8 @@ rsid<- Reduce(intersect, list(df$RSID, rsid ))
 df1000g<-subset(df, df$RSID %in% rsid )
 df1000g<- df1000g[,c(1,4)]</code></pre>
 
-Then we replace the frequencies equal to 0 and 1 by 0.00005 and 0.99995 because, the 1000genomes dataset is based in few samples so it is very likely that those absolute values are not real and that in the whole population there are some individuals carrying those variant, indeed 0.00005 is a very conservative estimation. If we assume that the 2504 samples in the 1000genomes project are evenly distributed, that gives us around 500 individuals per ethnicity. If the probability of a variant among the European population (the less represented worlwide speaking) is 0.00005 that means there are 37070 individuals with the variant, if we sample the population 500 times the probability of not getting any individual with the variant, and therefore assuming that the frequency is 0, is higher than 98%. We also need to do that because bayes' doesn't likes zeroes, if we include a probability equal to zero in our computations the overall probability is equal to zero.
+Then, we replace the frequencies equal to 0 and 1 by 0.00005 and 0.99995 respectively because the 1000genomes dataset is based in few samples so it is very likely that those absolute values are not real and that in the whole population there are some individuals carrying those variants, indeed 0.00005 is a very conservative estimation. If we assume that the 2504 samples of the 1000genomes project are evenly distributed, that gives us around 500 individuals per ethnicity. If the probability of a variant among the European population (the less represented worldwide speaking) is 0.00005 that means there are 37070 individuals with the variant, if we sample the population 500 times the probability of not getting any individual with the variant, and therefore assuming that the frequency is 0, is higher than 98%. We also need to do that because Bayes' doesn't like zeroes, if we set a *prior* equal to zero in our computations the overall probability will be equal to zero.
+{: style="text-align: justify"}
 
 <pre><code>
   for (i in 1:length(code1000genomes)) {
@@ -267,7 +310,8 @@ Then we replace the frequencies equal to 0 and 1 by 0.00005 and 0.99995 because,
     pop1000genomes[[i]]<-pop1000genomes[[i]][order(pop1000genomes[[i]]$SNP),]  
     }</code></pre>
 
-We finish cleaning the data and creating new variables to account for the pcombined frequencies of the event in the rest of the popuplations (marked as *Rest* in the code).
+We finish cleaning the data by creating new variables to account for the combined frequencies of the event in the rest of the populations (marked as *Rest* in the code).
+{: style="text-align: justify"}
 
 <pre><code>
 for (i in 1:length(code1000genomes)) {
@@ -288,6 +332,7 @@ for (i in 1:length(code1000genomes)) {
   RestRef<-0
   
   for (h in 1:length(list)) {
+  
 #Modify rests
     Rest <- ((as.numeric(as.character(pop1000genomes[[list[h]]]$Frequency))^2) * priors1000genomes[[list[h]]]) + Rest
     
@@ -311,7 +356,8 @@ for (i in 1:length(code1000genomes)) {
 
 df1000g <- df1000g[complete.cases(df1000g),]</code></pre>
 
-More data cleaning to remove those variant which contains insertions/deletions (indels) or those that non detected in the array (--)
+A bit more of data cleaning to remove those variant which contains insertions/deletions (indels) or those that non detected in the array (--):
+{: style="text-align: justify"}
 
 <pre><code>
 #remove non-detected SNPs
@@ -326,11 +372,14 @@ df1000g<-df1000g[which(nchar(as.character(df1000g$`Alt_Allele-eas`))==1),]
 </code></pre>
 
 We account for the diploids:
+{: style="text-align: justify"}
+
 <pre><code>
 df1000g$Ref.2N <- paste(df1000g$`Ref_Allele-afr`, df1000g$`Ref_Allele-afr`, sep = "")
 </code></pre>
 
-And calculated some probabilities (only showed the calculations for the African population, you can find the complete script here)
+And calculate some probabilities (only showed the calculations for the African population. You can find the complete script [here](https://github.com/garcia-nacho/MachineLearning/tree/master/GeneticAnalysis))
+{: style="text-align: justify"}
 
 <pre><code>
 #AFR
@@ -340,7 +389,8 @@ df1000g$Alt.2N.afr<-  paste(df1000g$`Alt_Allele-afr`, df1000g$`Alt_Allele-afr`, 
 df1000g$Ref.2N.afr.Frq <- (1+ df1000g$`Frequency-afr`^ 2 - 2*df1000g$`Frequency-afr`)
 df1000g$Alt.2N.afr.Frq <- df1000g$`Frequency-afr`^ 2</code></pre>
 
-Then we subset the dataset to separate the SNPs into heterozygous, homozygous reference and homozygous variant.
+Then, we subset the dataset to separate the SNPs into heterozygous, homozygous reference and homozygous variant.
+{: style="text-align: justify"}
 
 <pre><code>
 #AFR subsetting and calculation
