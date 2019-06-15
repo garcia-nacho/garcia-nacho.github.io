@@ -297,7 +297,7 @@ rsid<- Reduce(intersect, list(df$RSID, rsid ))
 df1000g<-subset(df, df$RSID %in% rsid )
 df1000g<- df1000g[,c(1,4)]</code></pre>
 
-Then, we replace the frequencies equal to 0 and 1 by 0.00005 and 0.99995 respectively because the 1000genomes dataset is based in few samples so it is very likely that those absolute values are not real and that in the whole population there are some individuals carrying those variants, indeed 0.00005 is a very conservative estimation. If we assume that the 2504 samples of the 1000genomes project are evenly distributed, that gives us around 500 individuals per ethnicity. If the probability of a variant among the European population (the less represented worldwide speaking) is 0.00005 that means there are 37070 individuals with the variant, if we sample the population 500 times the probability of not getting any individual with the variant, and therefore assuming that the frequency is 0, is higher than 98%. We also need to do that because Bayes' doesn't like zeroes, if we set a *prior* equal to zero in our computations the overall probability will be equal to zero.
+Then, we replace the frequencies equal to 0 and 1 by 0.00005 and 0.99995 respectively. We do it because the frequencies in 1000genomes dataset are based on "few" samples, so it is very likely that those absolute values are not real and that there are some individuals carrying those variants in the whole population; indeed, 0.00005 is a very conservative estimation. If we assume that the 2504 samples of the 1000genomes project are evenly distributed, that gives us around 500 individuals per ethnicity. If the probability of a variant among the European population (the less represented worldwide speaking) is 0.00005 that means there would be 37070 European individuals carrying the variant and if we sample the population 500 times the probability of not getting any individual with that particular variant, and therefore assume that the frequency is 0, is higher than 98%. We also need to do that because Bayes' doesn't like zeroes, if we set a *prior* equal to zero in our computations the overall probability will be equal to zero.
 {: style="text-align: justify"}
 
 <pre><code>
@@ -310,7 +310,7 @@ Then, we replace the frequencies equal to 0 and 1 by 0.00005 and 0.99995 respect
     pop1000genomes[[i]]<-pop1000genomes[[i]][order(pop1000genomes[[i]]$SNP),]  
     }</code></pre>
 
-We finish cleaning the data by creating new variables to account for the combined frequencies of the event in the rest of the populations (marked as *Rest* in the code).
+We finish cleaning the data by creating new variables to account for the combined frequencies of the events in the rest of the populations (labeled as *Rest* in the code).
 {: style="text-align: justify"}
 
 <pre><code>
@@ -356,7 +356,7 @@ for (i in 1:length(code1000genomes)) {
 
 df1000g <- df1000g[complete.cases(df1000g),]</code></pre>
 
-A bit more of data cleaning to remove those variant which contains insertions/deletions (indels) or those that non detected in the array (--):
+A bit more of data cleaning to remove those variant containing insertions/deletions (indels) and those that were not detected in the array (--):
 {: style="text-align: justify"}
 
 <pre><code>
@@ -371,14 +371,14 @@ df1000g<-df1000g[which(nchar(as.character(df1000g$`Alt_Allele-amr`))==1),]
 df1000g<-df1000g[which(nchar(as.character(df1000g$`Alt_Allele-eas`))==1),]
 </code></pre>
 
-We account for the diploids:
+We also account for the diploids:
 {: style="text-align: justify"}
 
 <pre><code>
 df1000g$Ref.2N <- paste(df1000g$`Ref_Allele-afr`, df1000g$`Ref_Allele-afr`, sep = "")
 </code></pre>
 
-And calculate some probabilities (only showed the calculations for the African population. You can find the complete script [here](https://github.com/garcia-nacho/MachineLearning/tree/master/GeneticAnalysis))
+And calculate some probabilities (For the sake of simplicity I only show the calculations for the African population, but you can find the complete script [here](https://github.com/garcia-nacho/MachineLearning/tree/master/GeneticAnalysis))
 {: style="text-align: justify"}
 
 <pre><code>
@@ -389,7 +389,7 @@ df1000g$Alt.2N.afr<-  paste(df1000g$`Alt_Allele-afr`, df1000g$`Alt_Allele-afr`, 
 df1000g$Ref.2N.afr.Frq <- (1+ df1000g$`Frequency-afr`^ 2 - 2*df1000g$`Frequency-afr`)
 df1000g$Alt.2N.afr.Frq <- df1000g$`Frequency-afr`^ 2</code></pre>
 
-Then, we subset the dataset to separate the SNPs into heterozygous, homozygous reference and homozygous variant.
+Then, we subset the dataset to separate the SNPs into heterozygous, homozygous reference and homozygous variants.
 {: style="text-align: justify"}
 
 <pre><code>
@@ -400,7 +400,8 @@ df1000g$RESULT==df1000g$Alt.1NB.afr)
 df.afr.Alt.2N <- subset(df1000g[,c(1,4,5:8,37:42)], df1000g$RESULT==df1000g$Alt.2N.afr)
 </pre></code>
 
-Then we specify the priors again (I did it in this way for testing purposes but at the end it stayed in the code, it should be very easy to recall the previous function and remap the values of the vector <code>priors1000genomes</code> into the new variables) and the numer of SNPs to test.
+and we specify the priors again and the number of SNPs to test. Note: I included the priors here again for testing purposes, alternatively, it would be very easy to recall the previous function and remap the values of the vector <code>priors1000genomes</code> into the new variables.
+{: style="text-align: justify"}
 
 <pre><code>
 #Probability calculator
@@ -414,16 +415,17 @@ N.elements<-150
 #Probability calculator
 </code></pre>
 
-Next, we create a matrix to compute the probabilities and select the SNPs randomly
+Next, we create a matrix to compute the probabilities and select the SNPs randomly.
+{: style="text-align: justify"}
 
 <pre></code>
-
 stats<- as.data.frame(array(data = NA, dim = c(N.elements,6)))
 colnames(stats)<-c("N",code1000genomes)
 rnd<-round(runif(1, min = N.elements, max = 50000))
   </code></pre>
 
-Finally sequentially we fill the matrix with the probabilities and the number of SNPs analyzed.
+Finally, we sequentially fill the matrix with the probabilities and the number of the SNPs analyzed.
+{: style="text-align: justify"}
 
 <pre><code>
 for(n in 1:N.elements){
@@ -454,22 +456,26 @@ stats$amr[n]<-prob.amr
 
 </code></pre>
 
-Plot the results
+And we plot the results:
 ![bayes1](/images/bayes1.png)
 
-Totally unexpected results, all probabilities collapse to zero after few SNPs. As the 150 SNP to analyze are random I run it again. 
+Wooow! Totally unexpected results, all probabilities collapse to zero after few SNPs. As the 150 SNP to analyze are random I run it again. 
+{: style="text-align: justify"}
 
 ![bayes1](/images/bayes2.png)
 
-Similar results, probabilities collapse after few SNPs but with a different profile. This is clearly not the way to go because of the unpredictibility.
+Same results, probabilities collapse after few SNPs but with a different profile. This is clearly not the way to go because of the unpredictibility.
+{: style="text-align: justify"}
 
 ### Machine-learning framework.
+Since pure statistical approaches seem to be unable to solve the usage of all SNPs to provide a result regarding the ethnicity of a sample I decided to implement an ML-based unsupervised clustering approach which takes into account the values of all SNP.
+{: style="text-align: justify"}
 
-Since pure statistical approaches are unable to solve the usage of all SNPs to provide aa response regarding the ethnicity of a sample I have deccided to implement a ML-based unsupervised clustering approach which take into account the values for all SNP.
+The idea is very simple. We know the probabilities associated with each variant for every ethnicity, so it should be possible to simulate the genotype of individuals for all SNPs. Then using unsupervised clustering we can find out where our sample clusters.
+{: style="text-align: justify"}
 
-The idea is very simple, since we know the probabilities associated with each variant for every ehtnicity it should be possible to simulate the genotype of individuals for all SNPs. Then using unsupervised clustering we can find out where our sample clusters.
-
-First, we need to create the samples of N individuales for every population:
+To do that we first need to simulate the results of N individuales from every population:
+{: style="text-align: justify"}
 
 <pre><code>library("cluster")
 library("factoextra")
@@ -477,8 +483,9 @@ library("magrittr")
 
 SampleSize<-20</code></pre>
 
-We then create a list with number of SNPs that we want to use and a matrix cotaining the different individuals in rows being the fist one our sample.
+Then we create a list with the number of SNPs that we want to use and a matrix containing the different individuals in rows, being the first one our sample.
 The genotype is encoded as 0: Homozygous reference, 1: Heterozygous and 2: Homozygous variant
+{: style="text-align: justify"}
 
 <pre><code>
 RelevantSNP<-sample(as.character(df1000g$RSID),size = 4000, replace = FALSE)
@@ -514,7 +521,8 @@ for (i in 2:(SampleSize+1)) {
 
 }</code></pre>
 
-Once we have it, we can cluster the whole matrix row-wise:
+Once we have it, we can cluster the whole matrix row-wise using [k-means](https://en.wikipedia.org/wiki/K-means_clustering):
+{: style="text-align: justify"}
 
 <pre><code>
 k.clust<- kmeans(population, 5)
@@ -522,13 +530,16 @@ k.result<-k.clust$cluster
 k.result<-as.data.frame(k.result)
 </code></pre>
 
-We can use k-means and explore in which group our sample falls:
+And we explore the group associated with the sample:
+{: style="text-align: justify"}
 
 ![kmeans](/images/kmeans.png)
 
-As you can see our sample (as expected) clusters together with European simulated-samples.
+As you can see the sample clusters together with European simulated-samples, something that in this case is totally expected.
+{: style="text-align: justify"}
 
-If we want something more visual we can use other clustering methods that are better for hierarchical visualizations
+If you want something more visual you can use other clustering methods that are better for hierarchical visualizations:
+{: style="text-align: justify"}
 
 <pre><code>
 df.clust<-  dist(population,method = "binary")
@@ -541,20 +552,25 @@ fviz_dend(df.clust, k = 5,
           
 ![dend](/images/dendogram.png)
 
-Here we have a better view of what is going on and how different group correlate to each other, for instace we can see that the African population is the more isolated.
+Here we have a better view of what is going on and how different groups correlate to each other, for instance, we can appreciate that the African popu1lation is more isolated (and probably the ancient).
+{: style="text-align: justify"}
 
-As you can see, machine-learning strategies such as k-means perform much better than classical statistical approaches for genetic analyses, more SNPs would require longer computational times as well as larger amount of simulations but nothing a semi-decent computer can't do in few minutes, giving you more accurate results.
+As you can see, machine-learning strategies such as k-means perform much better than classical statistical approaches for genetic analyses. Of course, more SNPs would require longer computational times as well as a larger amount of simulations but nothing a semi-decent computer can't do in a few minutes, giving you more accurate results.
+Although I don't have a formal mathematical explanation for the difference in the performance I suspect that it might be related to the dependency of the variables. The Bayesian analyses as I intentionally mentioned assumes that the values are independent. However human SNPs are usually linked, that means that some SNPs are inherited together so there is no independence. This groups of SNPs are what geneticists call [haplotypes](https://en.wikipedia.org/wiki/Haplotype).
+{: style="text-align: justify"}
 
-### Ethnicity calculation by chromosome positions
-
-So far we have seen how to calculate the overall ethnicity of a person based on the results obtained from MyHeritage, however in this section we are going to split the whole genome in fragments and we are going to see if different fragments have different ethnicities. The rational behind this analysis is that regions close in the genome tend to remain intact after several generations. We could say that the more fragmented the genome is (in terms of ethnicity) the more distant in time the sample is to those ancestor/s who carried that DNA fragment because of the meiotic recombination.
-Let's say we have two pure ancestors A and B ethnically speaking, if the offspring crosses again with a pure B the DNA content of the generation after will contain smaller fragments of A.
+### Ethnicity calculation by DNA fragments.
+So far we have seen how to calculate the overall ethnicity of a person based on the results obtained from MyHeritage; however, in this section, we are going to split the whole genome in fragments and we are going to see if different fragments have different ethnicities. The rationale behind this analysis is that regions close in the genome tend to remain intact after several generations (they are linked). We could then say that the more fragmented the genome is (in terms of ethnicity) the more distant in time the sample is to that ancestor/s who carried that DNA fragment because of the [meiotic recombination](https://cshperspectives.cshlp.org/content/7/12/a016618.full).
+Let's say that we have two pure (ethnically speaking) ancestors A and B. If the offspring crosses again with a pure B the DNA content of the generation after will contain smaller fragments of A, if the second generation crosses with B again the A fragments will be even smaller... and so on so forth.
+{: style="text-align: justify"}
 
 ![Figure](/images/chr.jpg)
 
-To do this I am going to split the chromosomes in parts and the ethnicity of each part will be analyzed together with a score about the prediction. First I will use the unsupervised method explained before and I will compare it with a frequentist analysis.
+To do this analysis I am going to split the chromosomes into parts and the ethnicity of each part will be analyzed together with a score about the prediction. First I will use the unsupervised method explained before and then I will compare it with a frequentist approach.
+{: style="text-align: justify"}
 
-First we need to find the positions of the different SNPs in the genome and to do that we need to cross our data with any 1000genomes dataset from [www.snp.nexus.org](www.snp-nexus.org).
+First of all, we need to find the positions of the different SNPs in the genome and to do that we need to cross our data with any of the 1000genomes datasets downloaded from [www.snp.nexus.org](www.snp-nexus.org).
+{: style="text-align: justify"}
 
 <pre><code>
 #Load positions
@@ -568,7 +584,8 @@ positions<-subset(positions, positions$RSID %in% unique(df1000g$RSID))
 
 df1000g<-merge(df1000g,positions, by="RSID")</code></pre>
 
-Then, to *chopp* the chromosomes we need an addional file that you can find [here](/images/genome.txt.csv). That file contains information regarding the chromosome size and the position of the [centromere](https://en.wikipedia.org/wiki/Centromere), using that information we can chop the chromosome into pieces of a particular size, stated in the varible <code>genomic.size</code>. For simplicity we also rename chromosomes X and Y to 23 and 24.
+Then, to *chop* the chromosomes we need an additional file that you can find [here](/images/genome.txt.csv). That file contains information regarding the chromosome size and the position of the [centromere](https://en.wikipedia.org/wiki/Centromere). Using that information we can divide the chromosome into pieces of a particular size, stated in the variable <code>genomic.size</code>. For simplicity, we also rename chromosomes X and Y to 23 and 24.
+{: style="text-align: justify"}
 
 <pre><code>genomic.size<-15000000
 chr<-read.csv("/home/nacho/MyHerr/genome.txt.csv", sep = "\t",header = FALSE)
@@ -576,7 +593,8 @@ chr$chunks<-round(chr$V3/genomic.size)+1
 chr$V1<-gsub("X","23",chr$V1)
 chr$V1<-gsub("Y","24",chr$V1)</code></pre>
 
-We create some empty columns in the dataframe containing all the information that we will fill in with a loop
+We create some empty columns in the data frame that will contain all the information once we fill the array with a loop.
+{: style="text-align: justify"}
 
 <pre><code>
 df1000g$nt<-as.numeric(as.character(df1000g$nt))
@@ -589,31 +607,37 @@ df1000g$SAS.score<-NA
 df1000g$AMR.score<-NA
 df1000g$EAS.score<-NA
 
-
 df1000g$Chr<-gsub("X","23", df1000g$Chr)
 df1000g$Chr<-gsub("Y","24", df1000g$Chr)
 df1000g$Chr<-as.numeric(df1000g$Chr)
 </code></pre>
 
-and we define the number of individuals to simulate for each set of SNPs
+and we define the number of individuals to be simulated for each set of SNPs
+{: style="text-align: justify"}
 
 <pre><code>SampleSize<-25 #number of individuals for the clustering</code></pre>
 
-To perform the clustering I am going to use parallel computing. Unless you do something about it, R-base performs all the task one by one using one processor (aka core) to run all the processes one after the other. However, now a days most computers and even mobile phones have more than one core, so running the code in such way is a waste of resources and time. To optimize the code we can perform what it is called parallel computer, that means that we split the whole task into smaller subtasks and we send each one of them to be processed by one core.
+To perform the clustering steps I am going to use *parallel computing*. Unless you do something about it, R-base performs all the task one by one using one processor (aka core) to run all the processes one after the other. However, nowadays most computers and even mobile phones have more than one core, so running the code in such a way is a waste of resources and time. To optimize the code we can perform what it is called *parallel computing*, that means that we split the whole computational task into smaller subtasks and we assign each one of them to be processed by one core.
+{: style="text-align: justify"}
 
-This is what the computer does when you run this analysis without any paralelization:
+This is what the computer does when you run this analysis without any parallelization:
+{: style="text-align: justify"}
 
 ![SingleCPU](/images/cpusingle.png)
 
 and this is what the computer does when you parallelize the analysis:
+{: style="text-align: justify"}
 
 ![MultiCPU](/images/cpucluster.png)
 
-As you can see it is much more efficient to have 10 cores working in the sampe process that 1 core doing all the task, and indeed it divides the computing time by 10.
+As you can see it is much more efficient to have 10 cores working in the same process that 1 core doing all the task, and indeed it divides the computing time by 10.
+{: style="text-align: justify"}
 
-As a rule of thumb when you are doing parallel computing you always divide the larger of the tasks to perform, that usually means to replace the external loop (for/while/etc) by the paralezitating function <code>foreach()%dopar%</code>
+As a rule of thumb, when you are doing parallel computing you always divide the larger tasks to be performed, that usually means to replace the external loop (for/while/etc) by the parallelizing function <code>foreach()%dopar%</code>
+{: style="text-align: justify"}
 
-However, before performing the analysis we need to prepare the set of cores (aka cluster) that we are going to use. We load the libraries, detect the total number of cores of the machine (N) and create the cluster with N-1 cores, otherwise you couldn't use the computer while the computation is running.
+However, before performing the analysis we need to prepare the set of cores (aka cluster) that we are going to use. We load the libraries, detect the total number of cores in the machine (N) and create the cluster with N-1 cores, otherwise, you couldn't use the computer while the computation is running.
+{: style="text-align: justify"}
 
 <pre><code>
 library(doParallel)
@@ -624,9 +648,10 @@ cluster.cores<-makeCluster(cores)
 registerDoParallel(cluster.cores)
 </code></pre>
 
-Then we define the parallelization loop as if it were a function, pointing to a variable (that will be a list in which each element will be the result of the computation by one core) and containing a <code>return</code> command. This is because when the computer creates the cluster it also creates a copy of the variables used in the loop, that means that the other cores don't know what is going on the other cores, so after the computation we need to wrap it up and combine the results from all the cores.
+Then, we define the parallelization loop pointing to a variable which after the computation will be of the type *list*. In each element of the list, there will be the result of the computation by one core. This is done in this way because when the computer creates the cluster it also creates a copy of the variables to be used for each core in a way that the cores don't know what is going on with the other cores, so after the computation we need to wrap it up and combine the results from all the cores.
+{: style="text-align: justify"}
 
-In this particular case the loop split the task in chromosome, each chromosome for a core. Then, each core chops the chromosomes according the desired sampling size and compute the clusters. To get the ethnicity I calculate the mode of the ehtnicity of the simulations that cluster together with our sample of interest. To do that, we define the function <code>getmode</code> ([source of the idea](https://www.tutorialspoint.com/r/r_mean_median_mode.html)). To asses the accuracy of the prediction I have included a couple of scores in the script stated in the columns df1000g$withinn and df1000g$cluster.score. The first one accounts for the withinnes of the cluster containing the sample of interest, the lower the value the better, although there are circumstances in which higher values doesn't mean worse predictions. The second score somehow accounts for the missclasifcation of the simulations in the cluster containing the sample, a perfect classification gives a value of zero (although the scores for some missclasifications are also zero) a deviation to a positive number means that the cluster is including worng simulations and a negative number means that the cluster is not accounting for all the simulations generated. In a nutshell, it is optimal at zero and then to a negative value, because the higher the value the higher the probability of a missclasification of the sample.  
+In this particular case, the loop splits the task in chromosomes: each chromosome for a core. Then, each core *chops* the chromosome according to the desired sampling size and compute the clusters. We obtain the ethnicity by calculating the mode of the ethnicity of the simulations that cluster together with our sample of interest; in other words, if most of the simulations that cluster together with our sample are European we assign the European ethnicity to that DNA fragment.  We compute the median with the function:<code>getmode</code> ([source of the idea](https://www.tutorialspoint.com/r/r_mean_median_mode.html)). 
 
 <pre><code>
 getmode <- function(v) {
@@ -635,8 +660,10 @@ getmode <- function(v) {
 }
 </code></pre>
 
-<pre><code>
+To assess the accuracy of the prediction, I have included a couple of scores in the script stated in the columns <code>df1000g$withinn</code> and <code>df1000g$cluster.score</code>. The first one accounts for the *withinnes* of the cluster containing the sample of interest, the lower the value the better, although there are circumstances in which larger values don't mean worse predictions. The second score somehow accounts for the misclassification of the simulations in the cluster containing the sample, a perfect classification gives a value of zero (although some misclassifications have a score equal to zero) a deviation to a positive number means that the cluster is including incorrect simulations and a negative number means that the cluster is not accounting for all the simulations generated for a particular ethnicity. In a nutshell, it is optimal at zero and then a negative value is preferred because the higher the value the higher the probability of misclassification of the sample.
+{: style="text-align: justify"}
 
+<pre><code>
 output<-foreach(i2=1:nrow(chr), .verbose = TRUE, .packages = "cluster") %dopar%{
 
   chr.tolook<-paste("chr",i2,sep = "")
@@ -750,7 +777,8 @@ output<-foreach(i2=1:nrow(chr), .verbose = TRUE, .packages = "cluster") %dopar%{
 stopCluster(cluster.cores)
 </code></pre>
 
-Finally we wrap the output out: (this is not necesary if you state in the cluster that you want all the results *rbinded* but I prefer to do it in this way to be able to inspect the list and throubleshoot any possible error)
+Finally, we wrap the output out. Note: this is not necessary if you stated in the cluster that you want all the results *rbinded* but I prefer to do it in this way to be able to inspect the list and troubleshoot any possible error (since you can't inspect any modification in the variables after they are assigned to the cluster it is difficult to trace back errors occurring in the cluster)
+{: style="text-align: justify"}
 
 <pre><code>
 out<-rbind(output[[1]],output[[2]])
@@ -775,13 +803,15 @@ ggplot(subset(df1000g))+
   theme_classic()+
   theme(plot.title = element_text(hjust = 0.5))</code></pre>
 
-
- For privacy reasons I am not plotting the ethnicity by chromosome but instead I am plotting the scores for each ethnicity:
+For privacy reasons I am not plotting the ethnicity by chromosome but instead I am plotting the scores for each ethnicity:
+{: style="text-align: justify"}
  
 ![score](/images/score.png)	
 
 ![with](/images/withinn.png)
 
+
+------------------------
 Now I am going perform a analagous analysis but using a frequentist approach instead. To do that, we first need to define a *genetic score* for each ethnicity in a way that the higher the genetic score is the higher the chances of a ethnicity prediction of being correct.  
 
 I have devised a genetic score in which we calculate the difference in the probability of having certaing SNP between a population and the rest of the populations. If that mutation is more likely to happen in the selected population the value is positive and negative if it is less likely. The higher the value (positive or negative) the higher the importance of that SNP to calculate the score, so we only to add all the scores from all the SNP in the region that we are investigating and compare that total score for every population, the population with the higher positive score is the one assigned to that region.
