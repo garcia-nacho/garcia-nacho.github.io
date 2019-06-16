@@ -811,12 +811,12 @@ For privacy reasons I am not plotting the ethnicity by chromosome but instead I 
 ![with](/images/withinn.png)
 
 
-------------------------
-Now I am going perform a analagous analysis but using a frequentist approach instead. To do that, we first need to define a *genetic score* for each ethnicity in a way that the higher the genetic score is the higher the chances of a ethnicity prediction of being correct.  
-
-I have devised a genetic score in which we calculate the difference in the probability of having certaing SNP between a population and the rest of the populations. If that mutation is more likely to happen in the selected population the value is positive and negative if it is less likely. The higher the value (positive or negative) the higher the importance of that SNP to calculate the score, so we only to add all the scores from all the SNP in the region that we are investigating and compare that total score for every population, the population with the higher positive score is the one assigned to that region.
-
-I have encoded the score in this function:
+Now I am going to perform an analogous analysis but using a frequentist approach instead. To do that, we first need to define a *genetic score* for each ethnicity in a way that the higher the genetic score is the higher the chances of an ethnicity prediction to be correct.  
+{: style="text-align: justify"}
+I have devised a genetic score in which we calculate the difference in the probability of having certain SNP between a population and the rest of the populations. If that mutation is more likely to happen in the selected population the value is positive and negative if it is less likely. The higher the value (positive or negative) the higher the importance of that SNP to calculate the score, then we only have to calculate the mean of the scores for every SNP in the region that we are investigating and repeat it for every population, the population with the higher positive score is the one assigned to that region.
+{: style="text-align: justify"}
+I have encoded the genetic score into this function:
+{: style="text-align: justify"}
 
 <pre><code>
   GenScore <- function(ploidy, Freq, Rest.Freq){
@@ -837,7 +837,7 @@ I have encoded the score in this function:
     
   }</code></pre>
   
-And we use it in the script like this:
+So we only need to call it during each interation.
 
 <pre><code>
   #AFR
@@ -845,13 +845,17 @@ And we use it in the script like this:
     Rest.Freq <- dfpop$Anti.AFR
     EthScore[1]<-mean(GenScore(ploidy, Freq, Rest.Freq),na.rm = TRUE)</code></pre>
 
-After plotting the results (that I am not showing here for privacy reasons) I have found that most of the predicted regions in the chromosomes are quite simmilar; however, the unsupervised clustering approach seems to be more precise. 
-
-Here is how the plot of the *european score* looks like:
-
+After plotting the results (that I am not showing for privacy reasons) I have found that most of the predicted regions in the chromosomes are quite simmilar; however, the unsupervised clustering approach seems to be more precise. 
+{: style="text-align: justify"}
+Here is how the plot of the *European score* looks like:
+{: style="text-align: justify"}
 ![Score](/images/ScoresEur.png)
 
-Interestingly the scores in the X chromosome look higher than in the rest of the chromosomes, if we look at other ethnycities we can find that indeed the values are more extreme than in the rest of the genome, considering what the genetic score measures (differences in probabilities) that means that the differences of the probabilities between populations are higher in the chromosome X. Does this make any sense? Is it an artifact? It is difficult to tell without any other samples to compare. An hypothesis is that since half of the samples (the males) only have one copy of the chromosome X there is an alteration in the frequencies that makes the differences higher. 
+Interestingly I have found that the scores in the X chromosome look higher than in the rest of the chromosomes, if we look at other ethnicities we can find that indeed the values are more extreme than in the rest of the genome. Now, considering that the genetic score measures differences in probabilities, that could indicate that such differences are higher at chromosome X. Does this make any sense? Is it an artifact? It is difficult to tell without any other samples to compare. An hypothesis is that since half of the samples (the males) only have one copy of the chromosome X there is an alteration in the frequencies that makes the differences higher. 
+{: style="text-align: justify"}
 
-Well, I think that it is time to close this post here. I was planning to write a little bit on disseases and how you can get information about phenotypic traits based on the results from MyHeritage, but I think I will eventually write a post just dedicated to that. Additionally, I will update the scripts to use more complete studies containing more populations (e.g. HapMap). You can visit this page to get those updates.
-
+### Conclusions and future work.
+In this post, we have seen how to analyze our own genetic data provided by MyHeritage, 23andMe, Ancestry, etc... We have seen that there is much more information hidden in the raw data and we have set a framework to study such information. 
+{: style="text-align: justify"}
+In the future, I will write about how to analyze predisposition to certain diseases based on the data provided. I will also include a more complete genetic study such as HapMap in which there are many more ethnicities than in the 1000genomes. If you are looking forward to squeezing your data, stay tuned!   
+{: style="text-align: justify"}
