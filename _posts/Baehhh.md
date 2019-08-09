@@ -14,5 +14,8 @@ In this post we will see how computers can do exactly the same, recognize, store
 <!--more-->
 Image taken from [here](https://www.how-to-draw-funny-cartoons.com/cartoon-sheep.html)
 
-## VAE's again, a bit more theory
-In a previous post I already talked about [VAE's](https://garcia-nacho.github.io/VAEs/) 
+## VAE's again, a bit more of the theory.
+Although, in a previous post I already talked about [VAE's](https://garcia-nacho.github.io/VAEs/), I would like to discuss that type of models a bit more.
+VAEs models are based on the idea that it is possible to create a representation of the *inputs* called latent space and that by sampling that latent space it is possible to create new items simmilar to the ones present in the data used for training , but different from all of them. Translating this to the sheeps example it would be like when you are asked to draw a sheep, you could draw 1000 sheeps all of them different and all of them different from other pictures of sheeps just by using the idea of a sheep that it is stored in your brain. 
+
+To do that first we need to 
