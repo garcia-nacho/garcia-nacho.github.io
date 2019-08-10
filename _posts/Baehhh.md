@@ -18,4 +18,16 @@ Image taken from [here](https://www.how-to-draw-funny-cartoons.com/cartoon-sheep
 Although, in a previous post I already talked about [VAE's](https://garcia-nacho.github.io/VAEs/), I would like to discuss that type of models a bit more.
 VAEs models are based on the idea that it is possible to create a representation of the *inputs* called latent space and that by sampling that latent space it is possible to create new items simmilar to the ones present in the data used for training , but different from all of them. Translating this to the sheeps example it would be like when you are asked to draw a sheep, you could draw 1000 sheeps all of them different and all of them different from other pictures of sheeps just by using the idea of a sheep that it is stored in your brain. 
 
-To do that first we need to 
+To do something similar in a computer, we need an algorithm that can encode a set of instructions to recreate the drawing of a sheep. These sets of instructions are vectors, each indeed sets of vectors of N-dimensions, although it is very common for these vectors to have only two dimensions. The sets of all possible vectors lay in an N-dimesion space called latent space, so we can distinguish regions in the latent space, those encoding the instructions to draw a sheep and those which don't so the model needs to find these regions to make more likely that when we sample a vector from a sheep-region in the latent space the final product is a sheep. This can be seen as a probabilistic problem. 
+
+The probability of drawing a sheep P(X) depends on how likely is to draw a sheep using a particular set of instructions P(X|z) and how big is the set of sheep-encoding-instructions P(z). As we want to do find this P(Sheep) in the whole latent space. we can sum the infinite possible instructions like this:
+
+$\[P(X)=\int P(X|z) P(z) dz\]$
+
+
+
+
+
+
+
+http://anotherdatum.com/vae.html
