@@ -20,13 +20,49 @@ VAEs models are based on the idea that it is possible to create a representation
 
 To do something similar in a computer, we need an algorithm that can encode a set of instructions to recreate the drawing of a sheep. These sets of instructions are vectors, each indeed sets of vectors of N-dimensions, although it is very common for these vectors to have only two dimensions. The sets of all possible vectors lay in an N-dimesion space called latent space, so we can distinguish regions in the latent space, those encoding the instructions to draw a sheep and those which don't so the model needs to find these regions to make more likely that when we sample a vector from a sheep-region in the latent space the final product is a sheep. This can be seen as a probabilistic problem. 
 
-To increase the probability of drawing a sheep P(X) we neeed to increase two factors: The area of the latent space that belongs to a sheep-region P(z) and the probability of drawing a sheep if we select any point in that sheep-region P(X|z):
+To increase the probability of drawing a sheep P(X) we neeed to increase two factors: The probability of selecting an area of the latent space that belongs to a sheep-region P(z) and the probability of actually drawing a sheep if we select any point in that sheep-region P(X|z):
 
 $\[\[P(X)=\sum_i P(X|z_i)(z_i)\]]$
 
-And this is exactly what a VAE does: It increases the P(z) by costraining it so it approximates a normal distribution and it increases P(X|z) by reducing the mean squared error between inputs and predictions during the training. You can read more of the statistical details [here](https://papers.nips.cc/paper/6528-variational-autoencoder-for-deep-learning-of-images-labels-and-captions.pdf). This is achieved in the loss functions function which has two terms, one to maximize P(z) and another to maximazie P(X|z)
+And this is exactly what a VAE does: It increases the P(z) by costraining it and it increases P(X|z) by reducing the differences between inputs and predictions during the training. All this is achieved by using a custom loss function with two terms, one to maximize P(z) and another to maximize P(X|z). You can read more of the statistical details [here](https://papers.nips.cc/paper/6528-variational-autoencoder-for-deep-learning-of-images-labels-and-captions.pdf).
 
+## The sheep dataset.
 
+First we need to download a process the files. We are going to use a dataset of thousands of hand drawn sheep from Google's Quickdraw game dataset from [here](https://console.cloud.google.com/storage/browser/quickdraw_dataset/full/numpy_bitmap). There are several formats but we are going to use .npy one. Once you have it downloaded you need to import the .npy files into R. 
+
+The .npy are a Python-specific format so in order to load them into R you need to import the Python numpy library with the R library *reticulate* so we can import  
+
+<pre><code>
+# library(reticulate)
+# np <- import("numpy")
+# 
+# 
+# df<-np$load("/home/nacho/VAE_Faces/full_numpy_bitmap_sheep.npy")
+# df<-array(df, dim = c(dim(df)[1], 28,28))
+# df<-df/255
+# write.csv(df, "/home/nacho/VAE_Faces/datasheep.csv")
+# 
+# detach("package:reticulate", unload=TRUE)
+
+</code></pre>
+
+## The encoder
+
+## The decoder
+
+## The loss function
+
+## Training the model 
+
+## Setting up the GPU to be used by Keras in R
+
+## Exploring the latent space
+
+## KL-Anneling
+
+## Going further
+
+## Conclusions
 
 
 
