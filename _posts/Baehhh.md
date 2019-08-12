@@ -92,6 +92,7 @@ hidden <- faces %>% layer_dense( units = intermediate_dim, activation = activati
   layer_batch_normalization() %>% 
   layer_dense( units = round(intermediate_dim/4), activation = activation)</code></pre>
 
+## The latent space
 ## The decoder
 
 ## The loss function
