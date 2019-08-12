@@ -30,23 +30,67 @@ And this is exactly what a VAE does: It increases the P(z) by costraining it and
 
 First we need to download a process the files. We are going to use a dataset of thousands of hand drawn sheep from Google's Quickdraw game dataset from [here](https://console.cloud.google.com/storage/browser/quickdraw_dataset/full/numpy_bitmap). There are several formats but we are going to use .npy one. Once you have it downloaded you need to import the .npy files into R. 
 
-The .npy are a Python-specific format so in order to load them into R you need to import the Python numpy library with the R library *reticulate* so we can import  
+The .npy is a Python-specific format, so in order to load the files into R you need to import the Python numpy library first. We do that with the R library *reticulate*. Then, you have to reshape the array so it has the shape c(number-of-samples, 28, 28) -the pictures are 28x28 pixels-. The I normalize the values dividing them by 255 and I save a copy of the files in a R-friendly format. Finally it is important to unload the reticulate package otherwise Keras doesn't work.
 
 <pre><code>
-# library(reticulate)
-# np <- import("numpy")
-# 
-# 
-# df<-np$load("/home/nacho/VAE_Faces/full_numpy_bitmap_sheep.npy")
-# df<-array(df, dim = c(dim(df)[1], 28,28))
-# df<-df/255
-# write.csv(df, "/home/nacho/VAE_Faces/datasheep.csv")
-# 
-# detach("package:reticulate", unload=TRUE)
+ library(reticulate)
+ np <- import("numpy")
+  
+ df<-np$load("/home/nacho/VAE_Faces/full_numpy_bitmap_sheep.npy")
+ df<-array(df, dim = c(dim(df)[1], 28,28)) #Reshape 
+ df<-df/255 #Normalization
+ write.csv(df, "/home/nacho/VAE_Faces/datasheep.csv") #Checkpoint
+ 
+ detach("package:reticulate", unload=TRUE)</code></pre>
 
-</code></pre>
+If you have saved the files in a .csv format you don't need to run this part each time you play around with the dataset. You just load it, from the checkpoint. 
+
+<pre><code>
+library(keras)
+library(imager)
+library(ggplot2)
+
+df<-read.csv("/home/nacho/VAE_Faces/datasheep.csv")
+df<-as.matrix(df)
+df<-array(as.numeric(df[,2:785]), dim = c(nrow(df),28,28,1))</pre></code>
+
+You also have to reshape the array so it has the shape c(samples,28,28,1) -1 because there is only one channel-
 
 ## The encoder
+
+Now we can start creating the encoder part of the model which is in deed very similar to the one that I described [here](https://garcia-nacho.github.io/VAEs/) and that is indeed and adapted version of this one [here]()
+
+<pre><code>
+
+#Model
+reset_states(vae)
+filters <- 10
+intermediate_dim<-100
+latent_dim<-2
+epsilon_std <- 1
+batch_size <- 8
+epoch<-15
+activation<-"relu"
+
+dimensions<-dim(df)
+dimensions<-dimensions[-1]
+
+Input <- layer_input(shape = dimensions)
+
+faces<- Input %>%
+  layer_conv_2d(filters=filters, kernel_size=c(4,4), activation=activation, padding='same',strides=c(1,1),data_format='channels_last')%>% 
+  layer_conv_2d(filters=filters*2, kernel_size=c(4,4), activation=activation, padding='same',strides=c(1,1),data_format='channels_last')%>%
+  layer_conv_2d(filters=filters*4, kernel_size=c(4,4), activation=activation, padding='same',strides=c(1,1),data_format='channels_last')%>%
+  layer_conv_2d(filters=filters*8, kernel_size=c(4,4), activation=activation, padding='same',strides=c(1,1),data_format='channels_last')%>%
+  layer_flatten()
+
+hidden <- faces %>% layer_dense( units = intermediate_dim, activation = activation) %>% 
+  layer_dropout(0.1) %>% 
+  layer_batch_normalization() %>% 
+  layer_dense( units = round(intermediate_dim/2), activation = activation) %>% 
+  layer_dropout(0.1) %>% 
+  layer_batch_normalization() %>% 
+  layer_dense( units = round(intermediate_dim/4), activation = activation)</code></pre>
 
 ## The decoder
 
