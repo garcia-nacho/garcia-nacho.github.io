@@ -58,7 +58,7 @@ You also have to reshape the array so it has the shape c(samples,28,28,1) -1 bec
 
 ## The encoder
 
-Now we can start creating the encoder part of the model which is in deed very similar to the one that I described [here](https://garcia-nacho.github.io/VAEs/) and that is indeed and adapted version of this one [here]()
+Now we can start creating the encoder part of the model which is in deed very similar to the one that I described [here](https://garcia-nacho.github.io/VAEs/) and that is indeed and adapted version of this one [here](https://tensorflow.rstudio.com/keras/articles/examples/variational_autoencoder.html). The encoder consists in a mixture of convolutional layers connected to a neural net to capture the features of the drawings.
 
 <pre><code>
 
@@ -93,7 +93,82 @@ hidden <- faces %>% layer_dense( units = intermediate_dim, activation = activati
   layer_dense( units = round(intermediate_dim/4), activation = activation)</code></pre>
 
 ## The latent space
+
+The latent space is created using a lambda layer. Lambda layers in Keras are custom layers that are used to wrap a function. In our case we create two additional layers z_mean and z_log_var that we concatenate and transformed using the sampling function.
+
+<pre><code>
+z_mean <- hidden %>% layer_dense( units = latent_dim)
+z_log_var <- hidden %>% layer_dense( units = latent_dim)
+
+
+sampling <- function(args) {
+  z_mean <- args[, 1:(latent_dim)]
+  z_log_var <- args[, (latent_dim + 1):(2 * latent_dim)]
+  
+  epsilon <- k_random_normal(
+    shape = c(k_shape(z_mean)[[1]]),
+    mean = 0.,
+    stddev = epsilon_std
+  )
+  z_mean + k_exp(z_log_var) * epsilon
+}
+
+z <- layer_concatenate(list(z_mean, z_log_var)) %>% layer_lambda(sampling, name="LatentSpace")
+</code></pre>
+
 ## The decoder
+
+Now we need to write the decoder part of the VAE and the decoder model itself so we can sample the latent space. This part is a bit unusual if you compare with the encoder, since it doesn't contain the pipe operator <code>%>%</code>, the reason for that is that we need to initialize all layers independently to share them with their weights between the different models (Decoder, Encoder-Decoder). Another option would be to create independent models with the same arquitecture and transfer the weights from the trained Encoder-Decoder to the other model.
+
+We initialize the layers one by one and we bind them consecutiverly:
+
+<pre><code>
+#Initialization of layers
+
+Output1<- layer_dense( units = round(intermediate_dim/4), activation = activation)
+Output2<- layer_dropout(rate=0.1)
+Output3<- layer_batch_normalization()
+Output4<- layer_dense( units = round(intermediate_dim/2), activation = activation)
+Output5<- layer_dense(units = intermediate_dim, activation = activation)
+Output6<- layer_dense(units = prod(28,28,filters*8), activation = activation)
+Output7<- layer_reshape(target_shape = c(28,28,filters*8))
+Output8<- layer_conv_2d_transpose(filters=filters*8, kernel_size=c(4,4), activation=activation, padding='same',strides=c(1,1),data_format='channels_last')
+Output9<- layer_conv_2d_transpose(filters=filters*4, kernel_size=c(4,4), activation=activation, padding='same',strides=c(1,1),data_format='channels_last')
+Output10<-layer_conv_2d_transpose(filters=filters*2, kernel_size=c(4,4), activation=activation, padding='same',strides=c(1,1),data_format='channels_last')
+Output11<-layer_conv_2d_transpose(filters=filters, kernel_size=c(4,4), activation=activation, padding='same',strides=c(2,2),data_format='channels_last') 
+Output12<-layer_conv_2d(filters=1, kernel_size=c(4,4), activation="sigmoid", padding='same',strides=c(2,2),data_format='channels_last') 
+
+#Concatenation of layers for the VAE
+
+O1<-Output1(z)
+O2<-Output2(O1)
+O3<-Output3(O2)
+O4<-Output4(O3)
+O5<-Output5(O4)
+O6<-Output6(O5)
+O7<-Output7(O6)
+O8<-Output8(O7)
+O9<-Output9(O8)
+O10<-Output10(O9)
+O11<-Output11(O10)
+O12<-Output12(O11)
+
+#Concatenation of layers for the Decoder
+
+decoder_input <- layer_input(shape = latent_dim)
+O1<-Output1(decoder_input)
+O2<-Output2(O1)
+O3<-Output3(O2)
+O4<-Output4(O3)
+O5<-Output5(O4)
+O6<-Output6(O5)
+O7<-Output7(O6)
+O8<-Output8(O7)
+O9<-Output9(O8)
+O10<-Output10(O9)
+O11<-Output11(O10)
+O12<-Output12(O11)</code></pre>
+
 
 ## The loss function
 
