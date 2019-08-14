@@ -3,7 +3,8 @@ layout: post
 title:  "VAAAAAE!"
 ---
 
-*Do Androids Dream of Electric Sheep?* Let's talk about that...
+*Do Androids Dream of Electric Sheep?* 
+Let's talk about VAAAAAAAAAAAAAAAE!!! 
 
 ## Introduction
 My son's favourite animal is the sheep, he loves to bleat when he sees one. It doesn't matter if it is in a book, a video, a plastic figure or in real life.
@@ -156,21 +157,202 @@ O12<-Output12(O11)
 #Concatenation of layers for the Decoder
 
 decoder_input <- layer_input(shape = latent_dim)
-O1<-Output1(decoder_input)
-O2<-Output2(O1)
-O3<-Output3(O2)
-O4<-Output4(O3)
-O5<-Output5(O4)
-O6<-Output6(O5)
-O7<-Output7(O6)
-O8<-Output8(O7)
-O9<-Output9(O8)
-O10<-Output10(O9)
-O11<-Output11(O10)
-O12<-Output12(O11)</code></pre>
+O1D<-Output1(decoder_input)
+O2D<-Output2(O1D)
+O3D<-Output3(O2D)
+O4D<-Output4(O3D)
+O5D<-Output5(O4D)
+O6D<-Output6(O5D)
+O7D<-Output7(O6D)
+O8D<-Output8(O7D)
+O9D<-Output9(O8D)
+O10D<-Output10(O9D)
+O11D<-Output11(O10D)
+O12D<-Output12(O11D)</code></pre>
 
+Now we can create the two models and explore them:
+
+<pre><code>
+## variational autoencoder
+vae <- keras_model(Input, O12)
+summary(vae)
+
+## Decoder
+decoder<- keras_model(decoder_input, O12D)
+summary(decoder)</code></pre>
+
+
+<pre><code>
+> summary(vae)
+_________________________________________________________________________________________
+Layer (type)                 Output Shape       Param #    Connected to                  
+=========================================================================================
+input_1 (InputLayer)         (None, 28, 28, 1)  0                                        
+_________________________________________________________________________________________
+conv2d (Conv2D)              (None, 28, 28, 10) 170        input_1[0][0]                 
+_________________________________________________________________________________________
+conv2d_1 (Conv2D)            (None, 28, 28, 20) 3220       conv2d[0][0]                  
+_________________________________________________________________________________________
+conv2d_2 (Conv2D)            (None, 28, 28, 40) 12840      conv2d_1[0][0]                
+_________________________________________________________________________________________
+conv2d_3 (Conv2D)            (None, 28, 28, 80) 51280      conv2d_2[0][0]                
+_________________________________________________________________________________________
+flatten (Flatten)            (None, 62720)      0          conv2d_3[0][0]                
+_________________________________________________________________________________________
+dense (Dense)                (None, 100)        6272100    flatten[0][0]                 
+_________________________________________________________________________________________
+dropout (Dropout)            (None, 100)        0          dense[0][0]                   
+_________________________________________________________________________________________
+batch_normalization_v1 (Batc (None, 100)        400        dropout[0][0]                 
+_________________________________________________________________________________________
+dense_1 (Dense)              (None, 50)         5050       batch_normalization_v1[0][0]  
+_________________________________________________________________________________________
+dropout_1 (Dropout)          (None, 50)         0          dense_1[0][0]                 
+_________________________________________________________________________________________
+batch_normalization_v1_1 (Ba (None, 50)         200        dropout_1[0][0]               
+_________________________________________________________________________________________
+dense_2 (Dense)              (None, 25)         1275       batch_normalization_v1_1[0][0]
+_________________________________________________________________________________________
+dense_3 (Dense)              (None, 2)          52         dense_2[0][0]                 
+_________________________________________________________________________________________
+dense_4 (Dense)              (None, 2)          52         dense_2[0][0]                 
+_________________________________________________________________________________________
+concatenate (Concatenate)    (None, 4)          0          dense_3[0][0]                 
+                                                           dense_4[0][0]                 
+_________________________________________________________________________________________
+LatentSpace (Lambda)         (None, 2)          0          concatenate[0][0]             
+_________________________________________________________________________________________
+dense_5 (Dense)              (None, 25)         75         LatentSpace[0][0]             
+_________________________________________________________________________________________
+dropout_2 (Dropout)          (None, 25)         0          dense_5[2][0]                 
+_________________________________________________________________________________________
+batch_normalization_v1_2 (Ba (None, 25)         100        dropout_2[2][0]               
+_________________________________________________________________________________________
+dense_6 (Dense)              (None, 50)         1300       batch_normalization_v1_2[2][0]
+_________________________________________________________________________________________
+dense_7 (Dense)              (None, 100)        5100       dense_6[2][0]                 
+_________________________________________________________________________________________
+dense_8 (Dense)              (None, 62720)      6334720    dense_7[2][0]                 
+_________________________________________________________________________________________
+reshape (Reshape)            (None, 28, 28, 80) 0          dense_8[2][0]                 
+_________________________________________________________________________________________
+conv2d_transpose (Conv2DTran (None, 28, 28, 80) 102480     reshape[2][0]                 
+_________________________________________________________________________________________
+conv2d_transpose_1 (Conv2DTr (None, 28, 28, 40) 51240      conv2d_transpose[2][0]        
+_________________________________________________________________________________________
+conv2d_transpose_2 (Conv2DTr (None, 28, 28, 20) 12820      conv2d_transpose_1[2][0]      
+_________________________________________________________________________________________
+conv2d_transpose_3 (Conv2DTr (None, 56, 56, 10) 3210       conv2d_transpose_2[2][0]      
+_________________________________________________________________________________________
+conv2d_4 (Conv2D)            (None, 28, 28, 1)  161        conv2d_transpose_3[2][0]      
+=========================================================================================
+Total params: 12,857,845
+Trainable params: 12,857,495
+Non-trainable params: 350
+_________________________________________________________________________________________
+</code></pre>
+
+
+<pre><code>
+> summary(decoder)
+_________________________________________________________________________________________
+Layer (type)                            Output Shape                       Param #       
+=========================================================================================
+input_5 (InputLayer)                    (None, 2)                          0             
+_________________________________________________________________________________________
+dense_5 (Dense)                         (None, 25)                         75            
+_________________________________________________________________________________________
+dropout_2 (Dropout)                     (None, 25)                         0             
+_________________________________________________________________________________________
+batch_normalization_v1_2 (BatchNormaliz (None, 25)                         100           
+_________________________________________________________________________________________
+dense_6 (Dense)                         (None, 50)                         1300          
+_________________________________________________________________________________________
+dense_7 (Dense)                         (None, 100)                        5100          
+_________________________________________________________________________________________
+dense_8 (Dense)                         (None, 62720)                      6334720       
+_________________________________________________________________________________________
+reshape (Reshape)                       (None, 28, 28, 80)                 0             
+_________________________________________________________________________________________
+conv2d_transpose (Conv2DTranspose)      (None, 28, 28, 80)                 102480        
+_________________________________________________________________________________________
+conv2d_transpose_1 (Conv2DTranspose)    (None, 28, 28, 40)                 51240         
+_________________________________________________________________________________________
+conv2d_transpose_2 (Conv2DTranspose)    (None, 28, 28, 20)                 12820         
+_________________________________________________________________________________________
+conv2d_transpose_3 (Conv2DTranspose)    (None, 56, 56, 10)                 3210          
+_________________________________________________________________________________________
+conv2d_4 (Conv2D)                       (None, 28, 28, 1)                  161           
+=========================================================================================
+Total params: 6,511,206
+Trainable params: 6,511,156
+Non-trainable params: 50
+_________________________________________________________________________________________
+</code></pre>
+
+
+## KL-Anneling
+
+Now that we have the models we are ready to create a custom loss function but before we do it I would like to introduce an additional concept, the Kullback-Leibler anneling (KL-Annealing). As I mentioned previously, the loss function is defined by assembling two sub-loss functions: The mean squared error that accounts for the fidelity of the model and the Kullback-Leibler divergence that forces the distribution of samples in the latent space; however these two terms are opposing each other and if under some circumstances (e.g. noisy input, high input variance) the trained model falls into a local minima called *posterior collapse*, when this happens the model *learns* to avoid the latent space so all samples have the same values for the latent  variables. I have personally experience it when training models for generation of faces. 
+There are several solutions to prevent the posterior collapse and of them is the KL-Annealing. 
+
+The KL-Annealing consist in the introduction of a weight to control the KL divergence during the training in a way that we train the model for some epochs just using the MSE and after certain epoch we start increasing the weight of the KL divergence to reach 1 after few epochs. 
+
+Implementing KL-Annealing means that we need to modify the loss function dynamically during the training. This can be done in Keras/Tensoflow by using callbacks. The callbacks allow us to modify some parameters of the training process while it is happening. The documentation to do that in Python is pretty sparse but in R ins just negligible. So if you are interested in how to write callbacks for Keras in R keep reading.
+
+The first thing that we need to do is to create a class-like element in R using the <code>R6</code> package
+
+<pre><code>
+#Custom callback KL-Annealing
+
+KL.Ann <- R6::R6Class("KL.Ann",
+#We create a KerasCallback-like class by inheriting the shape
+                      inherit = KerasCallback,
+                     
+                      public = list(
+#Here we define and assingn the variables that we are going to use in the class (weight)
+
+                        losses = NULL,
+                        params = NULL,
+                        model = NULL,
+                        weight = NULL,
+                        
+                        set_context = function(params = NULL, model = NULL) {
+                          self$params <- params
+                          self$model <- model
+                          self$weight<-weight
+                        },                        
+#Here we define a function that runs at the end of each epoch
+#We modify the weight value according to three parameters
+#Epoch: The current epoch
+#kl.start: The last epoch in which the KL weight is 0
+#kl.steep: The length in epochs of the KL increase
+
+                        on_epoch_end = function(epoch, logs = NULL) {
+                          
+                          if(epoch>kl.start){
+                            new_weight<- min((epoch-kl.start)/kl.steep,1)
+                            k_set_value(self$weight, new_weight)
+                            print(paste("     ANNEALING KLD:", k_get_value(self$weight), sep = " "))
+                            
+                          }
+                        }
+                        
+                      ))</code></pre>
+
+Now we define the missing variables for the KL-Annealing.
+<pre><code>
+#Starting weight = 0
+weight <- k_variable(0)
+epochs <-30
+kl.start <-10
+kl.steep <- 10</code></pre>
+
+Now we are really ready to create the custom loss function
 
 ## The loss function
+
+
 
 ## Training the model 
 
@@ -178,7 +360,7 @@ O12<-Output12(O11)</code></pre>
 
 ## Exploring the latent space
 
-## KL-Anneling
+
 
 ## Going further
 
