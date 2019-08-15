@@ -348,18 +348,73 @@ epochs <-30
 kl.start <-10
 kl.steep <- 10</code></pre>
 
-Now we are really ready to create the custom loss function
-
 ## The loss function
 
+Now we are really ready to create the custom loss function. The loss function consist of a function wrapping a proper loss function (<code>l.f</code> in the code). I say proper because it compares Y and Ŷ, the wrapping function takes the parameter weight and passes it to <code>l.f</code> before returning the function. 
 
+<pre><code>loss<- function(weight){
+  l.f<-function(x, x_decoded_mean){
+    
+    x <- k_flatten(x)
+    x_decoded_mean <- k_flatten(x_decoded_mean)
+    xent_loss <- 2.0 * dimensions[1]* dimensions[2]*loss_mean_squared_error(x, x_decoded_mean)
+    kl_loss <- -0.5*k_mean(1 + z_log_var - k_square(z_mean) - k_exp(z_log_var), axis = -1L)
+    xent_loss + weight*kl_loss}
+  return(l.f)
+}</code></pre>
 
-## Training the model 
+Now we can compile the model and start the training process:
+
+<pre><code>vae %>% compile(optimizer = "rmsprop", loss = loss(weight))</code></pre>
 
 ## Setting up the GPU to be used by Keras in R
 
+Before describing the training process I would like to briefly describe the process of using the GPU of the computer instead the CPU, mainly because it took me quite few hours to have it up and running.
+
+First. Why should you train on your GPU instead on your CPU? Mainly because of speed, even if you have a decent CPU (an Intel i7-8700 with 12 threads) a normal GPU (an NVIDIA GTX1060 embebded on a laptop) trains the very same model 15 times faster. 
+
+Second. How do you do it? I have to tell you that it is not so trivial to do have the GPU working for training ML models in R, the documentation is pretty sparse. 
+
+The main guidelines are [here](https://tensorflow.rstudio.com/tools/local_gpu.html)
+Briefly, you have to download an install the *CUDA Toolkit* and the *cuDNN* libraries. It is **VERY IMPORTANT** that you download the proper versions of each library. In the guidelines they say that you need to download the *CUDA Toolkit v9* and the *cuDNN v7.0* but the truth is that those versions are a bit outdated so you can use more recent versions of the libraries, the problem is that not all versions are compatible among them and with TensorFlow. 
+
+Here is my setting, if you download this versions it is going to work:
+
+CUDA Toolkit: *Cuda compilation tools, release 10.0, V10.0.130*
+cuDNN: *7.4.2*
+Tensorflow: *1.13*
+
+To install them you need to follow the instructions provided in the link above and you shouldn't get any problem. In case by the time you read these lines there are new versions of the libraaries remember that it is essential to check the compatiblity before doing any installation. 
+
+## Training the model
+
+Now we are all set for the model training. 
+
+<pre><code>
+date<-as.character(date())
+logs<-gsub(" ","_",date)
+logs<-gsub(":",".",logs)
+logs<-paste("logs/",logs,sep = "")
+
+#Callbcks
+tb<-callback_tensorboard(logs)
+anneling <- KL.Ann$new()
+
+history<-vae %>% fit(x= df,
+                y= df,
+                batch_size=batch_size,
+                epoch=epochs,
+                callbacks = list(tb,annealing),
+                view_metrics=FALSE,
+                shuffle=TRUE)</code></pre>
+
+We can check the training process using tensorboard
+
+<pre><code>tensorboard(logs)</code></pre>
+
 ## Exploring the latent space
 
+## Generation of new pictures
 
 
 ## Going further
