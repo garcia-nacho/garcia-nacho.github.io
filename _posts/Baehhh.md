@@ -390,6 +390,9 @@ Tensorflow: *1.13*
 
 To install them you need to follow the instructions provided in the link above and you shouldn't get any problem. In case by the time you read these lines there are new versions of the libraaries remember that it is essential to check the compatiblity before doing any installation. 
 
+![GPU](/images/GPU.png)
+
+
 ## Training the model
 
 Now we are all set for the model training. 
