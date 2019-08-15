@@ -57,6 +57,10 @@ df<-array(as.numeric(df[,2:785]), dim = c(nrow(df),28,28,1))</pre></code>
 
 You also have to reshape the array so it has the shape c(samples,28,28,1) -1 because there is only one channel-
 
+Let's explore some of the "sheeps" of the training dataset
+
+You have to agree with me that they remotely resemble a sheep. It is also fair to admit that they are cotained in a square of 28x28 pixels so it is not very easy to draw something semi-decent in such reduced area. 
+
 ## The encoder
 
 Now we can start creating the encoder part of the model which is in deed very similar to the one that I described [here](https://garcia-nacho.github.io/VAEs/) and that is indeed and adapted version of this one [here](https://tensorflow.rstudio.com/keras/articles/examples/variational_autoencoder.html). The encoder consists in a mixture of convolutional layers connected to a neural net to capture the features of the drawings.
@@ -412,9 +416,21 @@ We can check the training process using tensorboard
 
 <pre><code>tensorboard(logs)</code></pre>
 
+and we can save the weights to avoid doing the training each time you run the script:
+
+<pre><code>save_model_weights_hdf5(vae, "/home/nacho/VAE_Faces/Baeh.h5")</code></pre>
+
+You can download my trained weights [here]() and load them into your model by doing this:
+
+<pre><code></code></pre>
+
+
 ## Exploring the latent space
 
 ## Generation of new pictures
+
+## Annomaly detection
+
 
 
 ## Going further
