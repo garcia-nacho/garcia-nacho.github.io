@@ -427,8 +427,25 @@ You can download my trained weights [here]() and load them into your model by do
 
 <pre><code></code></pre>
 
+This is how the training process looks like:
+![LFTB](/images/losstb.png)
+
+As you can see, as soon as we start introducing the second term of the loss function (the KL divergence) the total loss increases as expected, but it seems that the model handels it well because the increase it seems to be on the same range
 
 ## Exploring the latent space
+First of all I would like to show you how the latent space changes when the KL divergence is applied:
+
+Latent Space after 5 epocs (I did the training only in 10.000 samples for simplicity)
+
+Latent Space after 10 epocs
+
+Latent Space after 30 epocs
+
+
+
+This is how the latent space looks like when the whole training is done.
+
+![LS](/images/LatentSpace.png)
 
 ## Generation of new pictures
 
