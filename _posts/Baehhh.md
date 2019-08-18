@@ -447,11 +447,11 @@ This is how the latent space looks like when the whole training is done.
 
 ![LS](/images/LatentSpace.png)
 
+
+### DBSCAN
+### Annomaly detection
+
 ## Generation of new pictures
-
-## Annomaly detection
-
-
 
 ## Going further
 
