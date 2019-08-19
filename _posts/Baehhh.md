@@ -4,7 +4,7 @@ title:  "VAAAAAE!"
 ---
 
 *Do Androids Dream of Electric Sheep?* 
-Let's talk about VAAAAAAAAAAAAAAAE!!! 
+Let's talk about VAAAAAAAAAAAAAAAEs!!! 
 
 ## Introduction
 My son's favourite animal is the sheep, he loves to bleat when he sees one. It doesn't matter if it is in a book, a video, a plastic figure or in real life.
@@ -436,19 +436,52 @@ As you can see, as soon as we start introducing the second term of the loss func
 First of all I would like to show you how the latent space changes when the KL divergence is applied:
 
 Latent Space after 5 epocs (I did the training only in 10.000 samples for simplicity)
+![LS05](/images/LS5.png)
 
 Latent Space after 10 epocs
+![LS10](/images/LS10.png)
 
-Latent Space after 30 epocs
+Latent Space after 15 epocs
+![LS15](/images/LS15.png)
 
+Latent Space after 20 epocs
+![LS20](/images/LS20.png)
 
+As you can appreciate, although the latent space suffers a transformation during the learning withough the KL divergence, the introduccion of the second paramter in the loss function modifies the latent space to a greater stent 
 
-This is how the latent space looks like when the whole training is done.
+Final latent space after 30 epochs in the whole dataset:
 
 ![LS](/images/LatentSpace.png)
 
+Interestingly, we can observe some patterns despite the effect of the second term of the loss function pushing all values to follow a normal distribution. The presence of patterns indeed suggest the existance of different classes of drawing, so lets explore them further. First of all we can try to find the clusters in the dataset according to the patterns using k-means. K-means is a very powerfull tool that usually is strong enough to do the job of finding the clusters (you can check how I use k-means to predict human populations based on their genes [here]()). Unfortunately, in this case k-means does not work. It is impossible to find out the optimal number of clusters by using the [Elbow method](https://bl.ocks.org/rpgove/0060ff3b656618e9136b) as it is commonly done. Because in this case there is no logic in the pattern and the plateau is never reached (or reached since k=1): 
+
+This is how the plot for the Elbow method looks like after 20 epochs:
+![EM](/images/EM.png)
+And this is how clusters are distributed when k=100. 
+![K20](/images/kmeans20.png)
+
+Clusters distribute as a mosaic without following any clear pattern. So we definitely need a more powerful method and this is when DBSCAN comes in.
 
 ### DBSCAN
+DBSCAN as K-means is an unsupervised algorithm used in machine learning, but one of the main differences between k-means and DBSCAN is that DBSCAN is very good at [finding patterns](https://es.wikipedia.org/wiki/DBSCAN) and this is exactly what we want. The downside of the algorithm is that it is more difficult to tune. While in K-means the only important parameter is the number of clusters (K) and it is very intuitive to understand it. DBSCAN clustering need two parameters min.point: The minimal number of points to be consider a cluster and Epsilon: The distance between two points to be considered as part of the same cluster. Although the deffinitions seem to provide an obvious range for MinPoints and epsilon it is not usually the case and those parameters need to be tuned by try and error. There is an annalougs method to the Elbow method for k-means using the function <code>kNNdistplot</code> but if fails in the same way as the Elbow method does. So the only solution is to perform a random search for hyperparameters (epsilon, and min.point)
+
+<pre><code>db<-as.data.frame(matrix(data = NA, ncol = 3, nrow = 100))
+
+pb<-txtProgressBar(min = 1, max = 100, initial = 1)
+for (i in 1:100) {
+  setTxtProgressBar(pb,i)
+  eps<-runif(1, min = 0.005, max =0.5 )
+  mp<-round(runif(1,min = 5, max = 300))
+  dummy<-dbscan(intermediate_output[-to.remove,1:2], eps = eps, MinPts = mp)
+  db[i,1]<-eps
+  db[i,2]<-mp
+  db[i,3]<-max(dummy$cluster)
+}
+</code></pre>
+
+After 100 iterations we look for the parameters that give us a razonable number of clusters (saved in db[,3])
+
+
 ### Annomaly detection
 
 ## Generation of new pictures
