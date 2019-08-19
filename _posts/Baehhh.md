@@ -476,7 +476,8 @@ for (i in 1:100) {
 </code></pre>
 
 After 100 iterations we look for the parameters that give us a razonable number of clusters (saved in db[,3])
-
+<pre><code>dbs<-dbscan(intermediate_output[-to.remove,1:2], eps = 0.04270631, MinPts = 377)
+intermediate_output[-to.remove,]$Cluster<-dbs$cluster</code></pre>
 
 ### Annomaly detection
 
