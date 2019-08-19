@@ -449,10 +449,6 @@ Latent Space after 20 epocs
 
 As you can appreciate, although the latent space suffers a transformation during the learning withough the KL divergence, the introduccion of the second paramter in the loss function modifies the latent space to a greater stent 
 
-Final latent space after 30 epochs in the whole dataset:
-
-![LS](/images/LatentSpace.png)
-
 Interestingly, we can observe some patterns despite the effect of the second term of the loss function pushing all values to follow a normal distribution. The presence of patterns indeed suggest the existance of different classes of drawing, so lets explore them further. First of all we can try to find the clusters in the dataset according to the patterns using k-means. K-means is a very powerfull tool that usually is strong enough to do the job of finding the clusters (you can check how I use k-means to predict human populations based on their genes [here]()). Unfortunately, in this case k-means does not work. It is impossible to find out the optimal number of clusters by using the [Elbow method](https://bl.ocks.org/rpgove/0060ff3b656618e9136b) as it is commonly done. Because in this case there is no logic in the pattern and the plateau is never reached (or reached since k=1): 
 
 This is how the plot for the Elbow method looks like after 20 epochs:
