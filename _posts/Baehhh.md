@@ -516,6 +516,12 @@ for (i in 1:ncol(df)) {
   MSE[i] <- sum((df[i,,,] - dummy[1,,,])^2) 
 }</code></pre>
 
+
+
+![anomalies](/images/anomalies.png)
+
+![anomalies.pic](/images/pic.anomalies.png)
+
 ## Generation of new pictures
 
 ## Going further
