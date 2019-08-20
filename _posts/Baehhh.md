@@ -475,11 +475,46 @@ for (i in 1:100) {
 }
 </code></pre>
 
-After 100 iterations we look for the parameters that give us a razonable number of clusters (saved in db[,3])
+After 100 iterations we look for the parameters that give us a razonable number of clusters (saved in db[,3]) and assign clusters according them.
 <pre><code>dbs<-dbscan(intermediate_output[-to.remove,1:2], eps = 0.04270631, MinPts = 377)
 intermediate_output[-to.remove,]$Cluster<-dbs$cluster</code></pre>
+These parameters give us eight clusters that look like this:
+
+![dbscan](/images/dbscanfinal.png)
+
+The hypothesis is that the different clusters will group different representation of sheeps, lets explore some of the images that fall into each cluster:
+Let's look at the original images that fall into cluster 3 (green) and 6 (blue) because they are the more separated clusters
+
+<pre><code>cluster6<-which(intermediate_output$Cluster==6)
+cluster8<-which(intermediate_output$Cluster==8)
+
+sample6<-df[sample(cluster6,1),,,]
+sample8<-df[sample(cluster8,1),,,]
+
+cbind(abs(sample6-1),abs(sample8-1)) %>% as.raster() %>% plot()</code></pre>
+
+It looks like most of the sheeps in clusters 6 don't have legs (or they are small) while sheeps in cluster 8 do have prominent legs. Let's look at some examples 
+
+![68](/images/68.png)
+![682](/images/68.2.png)
+![683](/images/68.3.png)
+
+As you can see using unsupervised learning strategies give us a lot of information about the samples we are studying and that brings me to the next point.
 
 ### Annomaly detection
+
+If we can use the latent space to cluster the samples, we can use the predictions of an autoencoder as tool to detect anomalies. Let's say that someone dropped some drawings of cars among the drawings of sheeps. How could we find them? Easy, we create an autoencoder and then we will find which samples have a higher mean squared error (MSE) when they are sent through the model. Since the model has learnt how sheeps look like the more a sample deviate from a sheep the higher will be the MSE of that sample.
+
+Let's try to apply this strategy to our sheep-dataset. 
+
+<pre><code>#Annomaly detection 
+MSE<-vector()
+pb<-txtProgressBar(min = 1, max = 100, initial = 1)
+for (i in 1:ncol(df)) {
+  setTxtProgressBar(pb,i)
+  dummy<-predict(vae, df[i,,,,drop=FALSE], batch_size = 10)
+  MSE[i] <- sum((df[i,,,] - dummy[1,,,])^2) 
+}</code></pre>
 
 ## Generation of new pictures
 
