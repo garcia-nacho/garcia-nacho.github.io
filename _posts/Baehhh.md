@@ -527,14 +527,11 @@ and we retreive them
 It seems very clear that we have found anomalies, some drawings are just not sheeps and the one which resembles a sheep it is a black sheep, which is by definition the golden standard of anomalies when we talk about sheeps. 
 
 ## Generation of new pictures
-So far we have seen how to train a model so it captures the information about drawing sheeps based on thousands of picturesof sheeps. We have seen that the model can learn that it is possible to draw sheeps with small or long legs
+So far we have seen how to create a model to captures information about drawing of sheeps based on thousands of pictures. We have seen how that the model can learn features like that it is possible to draw sheeps with or without legs and it can even discriminate black sheeps. But now we are going to see something more interesting and funnier I will show you how this model can create new drawings of sheeps similar to the ones in the data set but different from all of them. 
 
-which pictures are annomalous and which 
+For this part we are goint to use the decoder model that we created, since it has shared layers with the end-to-end model the trained weights are ready, we only need to provide a 2D vector representing a position in the latent space and the decoder will write a sheep for us. Let's try it out.
 
 
-Lets start with the fun part now. We are going to create some drawin
-
-## Going further
 
 ## Conclusions
 
