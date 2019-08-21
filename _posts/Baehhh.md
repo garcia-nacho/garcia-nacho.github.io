@@ -531,7 +531,11 @@ So far we have seen how to create a model to captures information about drawing 
 
 For this part we are goint to use the decoder model that we created, since it has shared layers with the end-to-end model the trained weights are ready, we only need to provide a 2D vector representing a position in the latent space and the decoder will write a sheep for us. Let's try it out.
 
+![Sheeps1](/images/sheepswithlegs.png)
 
+![Sheeps2](/images/sheepswolegs.png)
+
+![Sheeps2](/images/sheepsarea2.png)
 
 ## Conclusions
 
