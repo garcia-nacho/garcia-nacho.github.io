@@ -516,13 +516,23 @@ for (i in 1:ncol(df)) {
   MSE[i] <- sum((df[i,,,] - dummy[1,,,])^2) 
 }</code></pre>
 
-
+We stablish a cut-off to classify the sample as annomalous 
 
 ![anomalies](/images/anomalies.png)
 
+and we retreive them
+
 ![anomalies.pic](/images/pic.anomalies.png)
 
+It seems very clear that we have found anomalies, some drawings are just not sheeps and the one which resembles a sheep it is a black sheep, which is by definition the golden standard of anomalies when we talk about sheeps. 
+
 ## Generation of new pictures
+So far we have seen how to train a model so it captures the information about drawing sheeps based on thousands of picturesof sheeps. We have seen that the model can learn that it is possible to draw sheeps with small or long legs
+
+which pictures are annomalous and which 
+
+
+Lets start with the fun part now. We are going to create some drawin
 
 ## Going further
 
