@@ -7,19 +7,21 @@ title:  "VAAAAAE!"
 Let's talk about VAAAAAAAAAAAAAAAEs!!! 
 
 ## Introduction
-My son's favourite animal is the sheep, he loves to bleat when he sees one. It doesn't matter if it is in a book, a video, a plastic figure or in real life.
-He knows how a sheep looks like and although I have disscussed about this kind of topics [before](https://garcia-nacho.github.io/FaceRecognition/), I would like to bring this topic up again because I think that the human brain is just amazing. With just one year a human brain has all the neuronal circuits that allows it to learn to reconize patterns no matter how different they are, think how different it is to see a sheep in the fields when compared with a more or less accurated drawn of a sheep in a book. 
-But not only that, a human brain has stored an idea of how a sheep looks like and it can extract that information to draw a sheep anytime. 
-In this post we will see how computers can do exactly the same, recognize, store and draw a picture of a sheep. 
-![Sheep](/images/sheeps.jpg)
+My son's favorite animal is sheep. He still doesn't talk and he doesn't know the name of the animal, but he bleats each time he sees one, it doesn't matter if it is in a book, a video, a plastic figure or in real life.
+He knows how a sheep looks like and although I have already discussed this kind of topics [before](https://garcia-nacho.github.io/FaceRecognition/), I would like to bring this question up again because the more I understand how difficult is to train machines the more I realize how amazing the human brain is. With just one year the developing human brain has all the neuronal circuits that allow it to learn how to recognize patterns no matter how different they are. Now, think how different it is to see a sheep in the fields when compared with a more or less accurate drawn of a sheep in a book. 
+But not only that, a human brain has stored the idea of how a sheep looks like and it can *extract* that encoded information to draw a sheep anytime.{: style="text-align: justify"}
+
+In this post, we will see how to train a computer to do exactly the same, recognize, store and draw a picture of a sheep. 
+![Sheep](/images/sheeps.jpg){: style="text-align: justify"}
 <!--more-->
 Image taken from [here](https://www.how-to-draw-funny-cartoons.com/cartoon-sheep.html)
 
-## VAE's again, a bit more of the theory.
-Although, in a previous post I already talked about [VAE's](https://garcia-nacho.github.io/VAEs/), I would like to discuss that type of models a bit more.
-VAEs models are based on the idea that it is possible to create a representation of the *inputs* called latent space and that by sampling that latent space it is possible to create new items simmilar to the ones present in the data used for training , but different from all of them. Translating this to the sheeps example it would be like when you are asked to draw a sheep, you could draw 1000 sheeps all of them different and all of them different from other pictures of sheeps just by using the idea of a sheep that it is stored in your brain. 
+## VAEs again and bit more of the theory.
+Although in a previous post I already talked about [VAEs] (https://garcia-nacho.github.io/VAEs/) and how to use them, I would like to review that type of models a bit further.
+VAEs are models that rely on the idea that it is possible to create a low-dimension representation of the *input* data. This representation is usually called *latent space* and VAE's theory proposes that by sampling this *latent space*, it is possible to create new items similar to the ones presented to the model during the training process.
+Translating this idea to the sheep example: If you ask someone to draw a sheep, that person could draw not one but one thousand different sheep that still recognizable as sheep. The mechanisms involved in those processes are not very different from VAEs since they rely on specific neuronal circuitry used to store general information about how sheep look like, that is the *biological latent space* of the human brain.{: Style = "text-align: justify "}
 
-To do something similar in a computer, we need an algorithm that can encode a set of instructions to recreate the drawing of a sheep. These sets of instructions are vectors, each indeed sets of vectors of N-dimensions, although it is very common for these vectors to have only two dimensions. The sets of all possible vectors lay in an N-dimesion space called latent space, so we can distinguish regions in the latent space, those encoding the instructions to draw a sheep and those which don't so the model needs to find these regions to make more likely that when we sample a vector from a sheep-region in the latent space the final product is a sheep. This can be seen as a probabilistic problem. 
+To train a computer to do something similar we need an algorithm able to encode sets of instructions necessary to draw a sheep. Although these sets of instructions are N-dimensional vectors, it is very common for these vectors to have only two dimensions. The distribution of all possible vectors for all possible sheep laying in this latent space integrates the *sheep-allowed latent space* all vectors representing a sheep lay there and all vectors representing something else lay somewhere else in the latent space. That is why the representation of vectors in the latent space can be studied as a probabilistic problem.{: style="text-align: justify"} 
 
 To increase the probability of drawing a sheep P(X) we neeed to increase two factors: The probability of selecting an area of the latent space that belongs to a sheep-region P(z) and the probability of actually drawing a sheep if we select any point in that sheep-region P(X|z):
 
