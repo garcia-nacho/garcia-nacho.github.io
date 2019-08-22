@@ -9,29 +9,34 @@ Let's talk about VAAAAAAAAAAAAAAAEs!!!
 ## Introduction
 My son's favorite animal is sheep. He still doesn't talk and he doesn't know the name of the animal, but he bleats each time he sees one, it doesn't matter if it is in a book, a video, a plastic figure or in real life.
 He knows how a sheep looks like and although I have already discussed this kind of topics [before](https://garcia-nacho.github.io/FaceRecognition/), I would like to bring this question up again because the more I understand how difficult is to train machines the more I realize how amazing the human brain is. With just one year the developing human brain has all the neuronal circuits that allow it to learn how to recognize patterns no matter how different they are. Now, think how different it is to see a sheep in the fields when compared with a more or less accurate drawn of a sheep in a book. 
-But not only that, a human brain has stored the idea of how a sheep looks like and it can *extract* that encoded information to draw a sheep anytime.{: style="text-align: justify"}
+But not only that, a human brain has stored the idea of how a sheep looks like and it can *extract* that encoded information to draw a sheep anytime.
+{: style="text-align: justify"}
 
 In this post, we will see how to train a computer to do exactly the same, recognize, store and draw a picture of a sheep. 
-![Sheep](/images/sheeps.jpg){: style="text-align: justify"}
+![Sheep](/images/sheeps.jpg)
+{: style="text-align: justify"}
 <!--more-->
 Image taken from [here](https://www.how-to-draw-funny-cartoons.com/cartoon-sheep.html)
 
 ## VAEs again and bit more of the theory.
 Although in a previous post I already talked about [VAEs] (https://garcia-nacho.github.io/VAEs/) and how to use them, I would like to review that type of models a bit further.
 VAEs are models that rely on the idea that it is possible to create a low-dimension representation of the *input* data. This representation is usually called *latent space* and VAE's theory proposes that by sampling this *latent space*, it is possible to create new items similar to the ones presented to the model during the training process.
-Translating this idea to the sheep example: If you ask someone to draw a sheep, that person could draw not one but one thousand different sheep that still recognizable as sheep. The mechanisms involved in those processes are not very different from VAEs since they rely on specific neuronal circuitry used to store general information about how sheep look like, that is the *biological latent space* of the human brain.{: Style = "text-align: justify "}
+Translating this idea to the sheep example: If you ask someone to draw a sheep, that person could draw not one but one thousand different sheep that still recognizable as sheep. The mechanisms involved in those processes are not very different from VAEs since they rely on specific neuronal circuitry used to store general information about how sheep look like, that is the *biological latent space* of the human brain.
+{: style="text-align: justify"}
 
-To train a computer to do something similar we need an algorithm able to encode sets of instructions necessary to draw a sheep. Although these sets of instructions are N-dimensional vectors, it is very common for these vectors to have only two dimensions. The distribution of all possible vectors for all possible sheep laying in this latent space integrates the *sheep-allowed latent space* all vectors representing a sheep lay there and all vectors representing something else lay somewhere else in the latent space. That is why the representation of vectors in the latent space can be studied as a probabilistic problem.{: style="text-align: justify"} 
+To train a computer to do something similar we need an algorithm able to encode sets of instructions necessary to draw a sheep. Although these sets of instructions are N-dimensional vectors, it is very common for these vectors to have only two dimensions. The distribution of all possible vectors for all possible sheep laying in this latent space integrates the *sheep-allowed latent space* all vectors representing a sheep lay there and all vectors representing something else lay somewhere else in the latent space. That is why the representation of vectors in the latent space can be studied as a probabilistic problem.
+{: style="text-align: justify"} 
 
-To increase the probability of drawing a sheep P(X) we neeed to increase two factors: The probability of selecting an area of the latent space that belongs to a sheep-region P(z) and the probability of actually drawing a sheep if we select any point in that sheep-region P(X|z):
+The probability of drawing a sheep P(X) can be enlarged by increasing two factors: The probability of selecting an area of the latent space that belongs to the sheep-allowed region P(z) and the probability of actually drawing a sheep if we select a vector from that sheep-allowed region P(X|z):
+{: style="text-align: justify"} 
 
 $\[\[P(X)=\sum_i P(X|z_i)(z_i)\]]$
 
-And this is exactly what a VAE does: It increases the P(z) by costraining it and it increases P(X|z) by reducing the differences between inputs and predictions during the training. All this is achieved by using a custom loss function with two terms, one to maximize P(z) and another to maximize P(X|z). You can read more of the statistical details [here](https://papers.nips.cc/paper/6528-variational-autoencoder-for-deep-learning-of-images-labels-and-captions.pdf).
+And this is exactly what a VAE does: It increases the P(z) by constraining it and it increases P(X|z) by reducing the differences between inputs and predictions during the training. All this is achieved by using a custom loss function with two terms, one to maximize P(z) and another to maximize P(X|z). The first thing that it's probably popping into your mind after reading this is that I am wrong, how can you increase P(z) by constraining it? Well... imagine that you are in the shooting range and that you have nine targets of 10cm by 10cm. What is it easier? To hit one of the nine 10x10 targets or to hit just one 30x30 target? You increase the probability of hitting a target by constraining the region where the targets can be. You can read more of the statistical details [here](https://papers.nips.cc/paper/6528-variational-autoencoder-for-deep-learning-of-images-labels-and-captions.pdf).
+{: style="text-align: justify"}
 
 ## The sheep dataset.
-
-First we need to download a process the files. We are going to use a dataset of thousands of hand drawn sheep from Google's Quickdraw game dataset from [here](https://console.cloud.google.com/storage/browser/quickdraw_dataset/full/numpy_bitmap). There are several formats but we are going to use .npy one. Once you have it downloaded you need to import the .npy files into R. 
+Now that we are done with the theory we can start by obtaining the dataset. We are going to use a dataset of thousands of hand drawn sheep from Google's Quickdraw game dataset from [here](https://console.cloud.google.com/storage/browser/quickdraw_dataset/full/numpy_bitmap). There are several formats but we are going to use .npy one. Once you have it downloaded you need to import the .npy files into R. 
 
 The .npy is a Python-specific format, so in order to load the files into R you need to import the Python numpy library first. We do that with the R library *reticulate*. Then, you have to reshape the array so it has the shape c(number-of-samples, 28, 28) -the pictures are 28x28 pixels-. The I normalize the values dividing them by 255 and I save a copy of the files in a R-friendly format. Finally it is important to unload the reticulate package otherwise Keras doesn't work.
 
