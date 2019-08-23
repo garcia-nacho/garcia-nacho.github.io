@@ -54,7 +54,8 @@ Here is the code to do everything:
  
  detach("package:reticulate", unload=TRUE)</code></pre>
 
-Alternatively you can savethe files in .csv format so you don't need to run this part each time you play around with the dataset. You just load the .csv, from the *checkpoint*. 
+Alternatively you can save the images in the .csv format so you don't need to run this part each time you play around with the dataset. You just load the .csv, from the *checkpoint*.
+{: style="text-align: justify"}
 
 <pre><code>
 library(keras)
@@ -65,15 +66,12 @@ df<-read.csv("/home/nacho/VAE_Faces/datasheep.csv")
 df<-as.matrix(df)
 df<-array(as.numeric(df[,2:785]), dim = c(nrow(df),28,28,1))</pre></code>
 
-You also have to reshape the array so it has the shape c(samples,28,28,1) -1 because there is only one channel-
-
-Let's explore some of the "sheeps" of the training dataset
-
-You have to agree with me that they remotely resemble a sheep. It is also fair to admit that they are cotained in a square of 28x28 pixels so it is not very easy to draw something semi-decent in such reduced area. 
+You also have to reshape the array to the shape {number of samples,28,28,1} -1 because there is only one channel-
+{: style="text-align: justify"}
 
 ## The encoder
 
-Now we can start creating the encoder part of the model which is in deed very similar to the one that I described [here](https://garcia-nacho.github.io/VAEs/) and that is indeed and adapted version of this one [here](https://tensorflow.rstudio.com/keras/articles/examples/variational_autoencoder.html). The encoder consists in a mixture of convolutional layers connected to a neural net to capture the features of the drawings.
+Now that the data is ready, we can start creating the encoder part of the model which is in deed very similar to the one that I described [here](https://garcia-nacho.github.io/VAEs/) and that is indeed and adapted version of this one [here](https://tensorflow.rstudio.com/keras/articles/examples/variational_autoencoder.html). The encoder consists in a mixture of convolutional layers connected to a neural net to capture the features of the drawings.
 
 <pre><code>
 
