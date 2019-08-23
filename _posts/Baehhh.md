@@ -32,16 +32,19 @@ The probability of drawing a sheep P(X) can be enlarged by increasing two factor
 
 $\[\[P(X)=\sum_i P(X|z_i)(z_i)\]]$
 
-And this is exactly what a VAE does: It increases the P(z) by constraining it and it increases P(X|z) by reducing the differences between inputs and predictions during the training. All this is achieved by using a custom loss function with two terms, one to maximize P(z) and another to maximize P(X|z). The first thing that it's probably popping into your mind after reading this is that I am wrong, how can you increase P(z) by constraining it? Well... imagine that you are in the shooting range and that you have nine targets of 10cm by 10cm. What is it easier? To hit one of the nine 10x10 targets or to hit just one 30x30 target? You increase the probability of hitting a target by constraining the region where the targets can be. You can read more of the statistical details [here](https://papers.nips.cc/paper/6528-variational-autoencoder-for-deep-learning-of-images-labels-and-captions.pdf).
+And this is exactly what a VAE does: It increases the P(z) by constraining it and it increases P(X|z) by reducing the differences between inputs and predictions during the training. All this is achieved by using a custom loss function with two terms, one to maximize P(z) and another to maximize P(X|z). The first thing that it's probably popping into your mind after reading this is how can you increase P(z) by constraining it? Well... imagine that you are in the shooting range and that you have nine targets of 10cm by 10cm. What is it easier? To hit one of the nine 10x10 targets or to hit just one 30x30 target? You increase the probability of hitting a target by constraining the region where the targets can be. You can read more of the statistical details [here](https://papers.nips.cc/paper/6528-variational-autoencoder-for-deep-learning-of-images-labels-and-captions.pdf).
 {: style="text-align: justify"}
 
 ## The sheep dataset.
-Now that we are done with the theory we can start by obtaining the dataset. We are going to use a dataset of thousands of hand drawn sheep from Google's Quickdraw game dataset from [here](https://console.cloud.google.com/storage/browser/quickdraw_dataset/full/numpy_bitmap). There are several formats but we are going to use .npy one. Once you have it downloaded you need to import the .npy files into R. 
+Now that we are done with the theory we can start by obtaining the sheep. We are going to use a dataset with thousands of hand-drawn sheep from Google's Quickdraw game dataset from [here](https://console.cloud.google.com/storage/browser/quickdraw_dataset/full/numpy_bitmap). Although there are several file formats we are going to use .npy files.
+{: style="text-align: justify"}
 
-The .npy is a Python-specific format, so in order to load the files into R you need to import the Python numpy library first. We do that with the R library *reticulate*. Then, you have to reshape the array so it has the shape c(number-of-samples, 28, 28) -the pictures are 28x28 pixels-. The I normalize the values dividing them by 255 and I save a copy of the files in a R-friendly format. Finally it is important to unload the reticulate package otherwise Keras doesn't work.
+The .npy is format a Python-specific format, so in order to load the files into R you need to import the Python <code>numpy</code> library first. We do that using the R library *reticulate*. Next, you have to reshape the array so it has the shape *{number-of-samples, 28, 28}+* -the pictures are 28x28 pixels-. Then we normalize the values by dividing them by 255 and we save a copy of the files in a more R-friendly format. 
+Finally, it is important to unload the reticulate package otherwise Keras doesn't work.
+Here is the code to do everything:
+{: style="text-align: justify"}
 
-<pre><code>
- library(reticulate)
+<pre><code>library(reticulate)
  np <- import("numpy")
   
  df<-np$load("/home/nacho/VAE_Faces/full_numpy_bitmap_sheep.npy")
@@ -51,7 +54,7 @@ The .npy is a Python-specific format, so in order to load the files into R you n
  
  detach("package:reticulate", unload=TRUE)</code></pre>
 
-If you have saved the files in a .csv format you don't need to run this part each time you play around with the dataset. You just load it, from the checkpoint. 
+Alternatively you can savethe files in .csv format so you don't need to run this part each time you play around with the dataset. You just load the .csv, from the *checkpoint*. 
 
 <pre><code>
 library(keras)
