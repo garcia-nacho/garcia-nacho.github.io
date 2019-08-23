@@ -70,12 +70,10 @@ You also have to reshape the array to the shape {number of samples,28,28,1} -1 b
 {: style="text-align: justify"}
 
 ## The encoder
+Now that the data is ready, we can start creating the encoder part of the model which is in deed very similar to the one that I described [here](https://garcia-nacho.github.io/VAEs/) and that is indeed and adapted version of this one [here](https://tensorflow.rstudio.com/keras/articles/examples/variational_autoencoder.html). The encoder model consists in a set of convolutional layers connected to a neural net to capture the features of the drawings.
+{: style="text-align: justify"}
 
-Now that the data is ready, we can start creating the encoder part of the model which is in deed very similar to the one that I described [here](https://garcia-nacho.github.io/VAEs/) and that is indeed and adapted version of this one [here](https://tensorflow.rstudio.com/keras/articles/examples/variational_autoencoder.html). The encoder consists in a mixture of convolutional layers connected to a neural net to capture the features of the drawings.
-
-<pre><code>
-
-#Model
+<pre><code>#Model
 reset_states(vae)
 filters <- 10
 intermediate_dim<-100
@@ -106,7 +104,6 @@ hidden <- faces %>% layer_dense( units = intermediate_dim, activation = activati
   layer_dense( units = round(intermediate_dim/4), activation = activation)</code></pre>
 
 ## The latent space
-
 The latent space is created using a lambda layer. Lambda layers in Keras are custom layers that are used to wrap a function. In our case we create two additional layers z_mean and z_log_var that we concatenate and transformed using the sampling function.
 
 <pre><code>
