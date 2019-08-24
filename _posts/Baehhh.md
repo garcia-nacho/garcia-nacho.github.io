@@ -302,15 +302,22 @@ ________________________________________________________________________________
 
 
 ## KL-Anneling
-Now that we have created the models, we are ready for the next step which is to create a custom loss function, but before we do it I would like to introduce an additional concept, the Kullback-Leibler anneling (KL-Annealing). 
-As I mentioned previously, the loss function is defined by assembling two *sub-loss functions*: The mean squared error that accounts for the fidelity of the model and the Kullback-Leibler divergence that constrains the distribution of samples in the latent space; however, these two terms are opposing each other (the  and if under some circumstances (e.g. noisy input, high input variance) the trained model falls into a local minima called *posterior collapse*, when this happens the model *learns* to avoid the latent space so all samples have the same values for the latent  variables. I have personally experience it when training models for generation of faces. 
-There are several solutions to prevent the posterior collapse and of them is the KL-Annealing. 
+Now that we have created the models, we are ready for the next step which is to create a custom loss function, but before we do it I would like to introduce an additional concept, the Kullback-Leibler annealing (KL-Annealing). 
+As I mentioned previously, the loss function is defined by assembling two *sub-loss functions*: The mean squared error that accounts for the fidelity of the model and the Kullback-Leibler divergence that constrains the distribution of samples in the latent space; however, these two terms are partially opposing each other and under some circumstances (e.g. noisy input, high input variance) the trained model falls into a local minima called *posterior collapse*. When this happens the model *learns* to avoid the latent space so all samples have the same values for the latent variables. I have personally experienced it when training models for the generation of faces.
+{: style="text-align: justify"}
 
-The KL-Annealing consist in the introduction of a weight to control the KL divergence during the training in a way that we train the model for some epochs just using the MSE and after certain epoch we start increasing the weight of the KL divergence to reach 1 after few epochs. 
+Fortunately for us, there are several solutions to prevent the posterior collapse and of them is the so called KL-Annealing. 
+{: style="text-align: justify"}
 
-Implementing KL-Annealing means that we need to modify the loss function dynamically during the training. This can be done in Keras/Tensoflow by using callbacks. The callbacks allow us to modify some parameters of the training process while it is happening. The documentation to do that in Python is pretty sparse but in R ins just negligible. So if you are interested in how to write callbacks for Keras in R keep reading.
+The KL-Annealing consists in the introduction of a weight to control the KL divergence during the training in a way that we train the model for some epochs just using the MSE and after certain epoch, we start to increase slowly the weight of the KL divergence to reach its maximun after few epochs.
+{: style="text-align: justify"}
 
-The first thing that we need to do is to create a class-like element in R using the <code>R6</code> package
+Implementing KL-Annealing means that we need to modify the loss function dynamically during the training. This can be done in Keras/Tensoflow by using callbacks. Callbacks allow us to modify some parameters of the training process while it is happening. 
+The documentation to do that in Python is pretty sparse but in R it's just negligible. So if you are interested in knowing how to write callbacks for Keras in R keep reading.
+{: style="text-align: justify"}
+
+First we need to create a *class-like* element in R using the <code>R6</code> package
+{: style="text-align: justify"}
 
 <pre><code>
 #Custom callback KL-Annealing
@@ -350,7 +357,7 @@ KL.Ann <- R6::R6Class("KL.Ann",
                         
                       ))</code></pre>
 
-Now we define the missing variables for the KL-Annealing.
+Now we define the variables to be used during KL-Annealing.
 <pre><code>
 #Starting weight = 0
 weight <- k_variable(0)
@@ -358,9 +365,12 @@ epochs <-30
 kl.start <-10
 kl.steep <- 10</code></pre>
 
-## The loss function
+<code>weight</code>(sic) is how much of the KL-Divergence we put at the beginning of the training process, <code>epochs</code> is for how many epochs we run the training, <code>kl.start</code> is the epoch number in which we start increasing the KL-Divergence and <code>kl.steep</code> is the number of epochs that last the increase, in our case it means that the maximum KL-Divergence is achieved at epoch 20.
+{: style="text-align: justify"}
 
-Now we are really ready to create the custom loss function. The loss function consist of a function wrapping a proper loss function (<code>l.f</code> in the code). I say proper because it compares Y and Ŷ, the wrapping function takes the parameter weight and passes it to <code>l.f</code> before returning the function. 
+## The loss function
+Now we are really ready to create the custom loss function. The loss function consist of an external function function wrapping a proper loss function (<code>l.f</code> in the code). I say proper because it is the one that compares Y and Ŷ. The wrapping function takes the parameter weight and passes it to <code>l.f</code> before returning the function. 
+{: style="text-align: justify"}
 
 <pre><code>loss<- function(weight){
   l.f<-function(x, x_decoded_mean){
@@ -374,34 +384,41 @@ Now we are really ready to create the custom loss function. The loss function co
 }</code></pre>
 
 Now we can compile the model and start the training process:
+{: style="text-align: justify"}
 
 <pre><code>vae %>% compile(optimizer = "rmsprop", loss = loss(weight))</code></pre>
 
 ## Setting up the GPU to be used by Keras in R
+Before describing the training process I would like to briefly describe the process of setting up the GPU of the computer instead of the CPU for training purposes.
+{: style="text-align: justify"}
 
-Before describing the training process I would like to briefly describe the process of using the GPU of the computer instead the CPU, mainly because it took me quite few hours to have it up and running.
+First. Why should you train on your GPU instead of on your CPU? Mainly because of speed, even if you have a decent CPU (an Intel i7-8700 with 12 threads) a normal GPU (an NVIDIA GTX1060 embedded on a laptop) trains the very same model 15 times faster. 
+{: style="text-align: justify"}
 
-First. Why should you train on your GPU instead on your CPU? Mainly because of speed, even if you have a decent CPU (an Intel i7-8700 with 12 threads) a normal GPU (an NVIDIA GTX1060 embebded on a laptop) trains the very same model 15 times faster. 
+Second. How do you do it? I have to tell you that it is not so trivial to do set up the GPU for training ML models in R, the documentation is pretty sparse.
+{: style="text-align: justify"}
 
-Second. How do you do it? I have to tell you that it is not so trivial to do have the GPU working for training ML models in R, the documentation is pretty sparse. 
+The main (and almost sole) guidelines are [these.](https://tensorflow.rstudio.com/tools/local_gpu.html)
+Briefly, you have to download an install the *CUDA Toolkit* and the *cuDNN* libraries. It is **VERY IMPORTANT** that you download the proper versions of each library. In the guidelines, they say that you need to download the *CUDA Toolkit v9* and the *cuDNN v7.0* but the truth is that those versions are a bit outdated so you can use more recent versions of the libraries, the problem is that not all versions are compatible among them and with TensorFlow.
+{: style="text-align: justify"}
 
-The main guidelines are [here](https://tensorflow.rstudio.com/tools/local_gpu.html)
-Briefly, you have to download an install the *CUDA Toolkit* and the *cuDNN* libraries. It is **VERY IMPORTANT** that you download the proper versions of each library. In the guidelines they say that you need to download the *CUDA Toolkit v9* and the *cuDNN v7.0* but the truth is that those versions are a bit outdated so you can use more recent versions of the libraries, the problem is that not all versions are compatible among them and with TensorFlow. 
-
-Here is my setting, if you download this versions it is going to work:
+After some trial and error processes I found an optimal combination of settings:
+{: style="text-align: justify"}
 
 CUDA Toolkit: *Cuda compilation tools, release 10.0, V10.0.130*
 cuDNN: *7.4.2*
 Tensorflow: *1.13*
 
-To install them you need to follow the instructions provided in the link above and you shouldn't get any problem. In case by the time you read these lines there are new versions of the libraaries remember that it is essential to check the compatiblity before doing any installation. 
+To install them you need to follow the instructions provided in the link above and you shouldn't get any problem. In case that by the time you read these lines there are new versions of the libraaries, remember that it is essential to check the cross-compatiblity before doing any installation.
+{: style="text-align: justify"}
 
-![GPU](/images/GPU.png)
-80% utilization (and 61ºC)
+![GPU](/images/GPU.png)   
+This is a picture of my NVIDIA panel during training: 80% utilization (and 61ºC)
+{: style="text-align: justify"}
 
 ## Training the model
-
-Now we are all set for the model training. 
+Now we are all set for the training of the model. 
+{: style="text-align: justify"}
 
 <pre><code>
 date<-as.character(date())
@@ -421,25 +438,30 @@ history<-vae %>% fit(x= df,
                 view_metrics=FALSE,
                 shuffle=TRUE)</code></pre>
 
-We can check the training process using tensorboard
+We can visualize the training process using tensorboard:
+{: style="text-align: justify"}
 
 <pre><code>tensorboard(logs)</code></pre>
 
-and we can save the weights to avoid doing the training each time you run the script:
+We save the weights to avoid doing the training each time you run the script.
+{: style="text-align: justify"}
 
 <pre><code>save_model_weights_hdf5(vae, "/home/nacho/VAE_Faces/Baeh.h5")</code></pre>
 
-You can download my trained weights [here]() and load them into your model by doing this:
-
-<pre><code></code></pre>
+and load them back into your model by doing this:
+{: style="text-align: justify"}
+<pre><code>load_model_weights_hdf5(vae, "/home/nacho/VAE_Faces/Baeh.h5")</code></pre>
 
 This is how the training process looks like:
+{: style="text-align: justify"}
 ![LFTB](/images/losstb.png)
 
-As you can see, as soon as we start introducing the second term of the loss function (the KL divergence) the total loss increases as expected, but it seems that the model handels it well because the increase it seems to be on the same range
+As you can see, as soon as we start introducing the second term of the loss function (the KL divergence) the total loss increases (as expected, remember that I told you that those two terms oppose each other at least partially) but it seems that, in general, the model handles it well because the increase seems to be on the more or less in the same range.
+{: style="text-align: justify"}
 
 ## Exploring the latent space
-First of all I would like to show you how the latent space changes when the KL divergence is applied:
+First of all, I would like to show you how the latent space changes when the KL divergence is applied:
+{: style="text-align: justify"}
 
 Latent Space after 5 epocs (I did the training only in 10.000 samples for simplicity)
 ![LS05](/images/LS5.png)
@@ -453,16 +475,24 @@ Latent Space after 15 epocs
 Latent Space after 20 epocs
 ![LS20](/images/LS20.png)
 
-As you can appreciate, although the latent space suffers a transformation during the learning withough the KL divergence, the introduccion of the second paramter in the loss function modifies the latent space to a greater stent 
+As you can appreciate the introduction of the KL divergence highly modifies the latent space. 
+{: style="text-align: justify"}
 
-Interestingly, we can observe some patterns despite the effect of the second term of the loss function pushing all values to follow a normal distribution. The presence of patterns indeed suggest the existance of different classes of drawing, so lets explore them further. First of all we can try to find the clusters in the dataset according to the patterns using k-means. K-means is a very powerfull tool that usually is strong enough to do the job of finding the clusters (you can check how I use k-means to predict human populations based on their genes [here]()). Unfortunately, in this case k-means does not work. It is impossible to find out the optimal number of clusters by using the [Elbow method](https://bl.ocks.org/rpgove/0060ff3b656618e9136b) as it is commonly done. Because in this case there is no logic in the pattern and the plateau is never reached (or reached since k=1): 
+### K-MEANS
+Interestingly, we can observe some patterns despite the effect of the KL-Divergence. The presence of patterns suggests the existence of different classes of drawings, so let's try to explore them further. 
+First of all, we can try to find the clusters in the dataset according to the patterns using k-means. K-means is a very powerful algorithm that usually is strong enough to do the job of finding clusters (you can check how I use k-means to predict human populations based on their genes [here](https://garcia-nacho.github.io/MyHer/)). Unfortunately, in this case, k-means does not work. It is impossible to find out the optimal number of clusters by using the [Elbow method](https://bl.ocks.org/rpgove/0060ff3b656618e9136b) as it is commonly done.
+{: style="text-align: justify"}
 
-This is how the plot for the Elbow method looks like after 20 epochs:
+This is how the plot for the Elbow method looks like after 20 epochs (appreciate that there is no curve to estimate the k)
+{: style="text-align: justify"}
 ![EM](/images/EM.png)
-And this is how clusters are distributed when k=100. 
+
+And this is how clusters are distributed when k=100.
+{: style="text-align: justify"}
 ![K20](/images/kmeans20.png)
 
-Clusters distribute as a mosaic without following any clear pattern. So we definitely need a more powerful method and this is when DBSCAN comes in.
+Clusters distribute as a mosaic without following any clear pattern. So we definitely need a better method and this is when DBSCAN comes in.
+{: style="text-align: justify"}
 
 ### DBSCAN
 DBSCAN as K-means is an unsupervised algorithm used in machine learning, but one of the main differences between k-means and DBSCAN is that DBSCAN is very good at [finding patterns](https://es.wikipedia.org/wiki/DBSCAN) and this is exactly what we want. The downside of the algorithm is that it is more difficult to tune. While in K-means the only important parameter is the number of clusters (K) and it is very intuitive to understand it. DBSCAN clustering need two parameters min.point: The minimal number of points to be consider a cluster and Epsilon: The distance between two points to be considered as part of the same cluster. Although the deffinitions seem to provide an obvious range for MinPoints and epsilon it is not usually the case and those parameters need to be tuned by try and error. There is an annalougs method to the Elbow method for k-means using the function <code>kNNdistplot</code> but if fails in the same way as the Elbow method does. So the only solution is to perform a random search for hyperparameters (epsilon, and min.point)
