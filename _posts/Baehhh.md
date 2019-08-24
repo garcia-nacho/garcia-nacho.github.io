@@ -54,7 +54,7 @@ Here is the code to do everything:
  
  detach("package:reticulate", unload=TRUE)</code></pre>
 
-If you have saved the images as .csv you don't need to run this part each time you play around with the dataset. You just load the .csv, from this *checkpoint*.
+If you have saved the images as .csv you don't need to run this part each time you play around with the dataset, you just load the .csv, from this *checkpoint*.
 {: style="text-align: justify"}
 
 <pre><code>
@@ -65,11 +65,11 @@ library(ggplot2)
 df<-read.csv("/home/nacho/VAE_Faces/datasheep.csv")
 df<-as.matrix(df)
 df<-array(as.numeric(df[,2:785]), dim = c(nrow(df),28,28,1))</pre></code>
-Next, you load the images and you reshape the array to the shape {number of samples,28,28,1} -1 because there is only one channel-
+Next, you load the images and you reshape the array to the shape {number of samples,28,28,1}, the last dimension is 1 because there is only one channel.
 {: style="text-align: justify"}
 
 ## The encoder
-Now that the data is ready, we can start creating the encoder part of the model which is in deed very similar to the one that I described [here](https://garcia-nacho.github.io/VAEs/) and that is indeed and adapted version of this one [here](https://tensorflow.rstudio.com/keras/articles/examples/variational_autoencoder.html). The encoder model consists in a set of convolutional layers connected to a neural net to capture the features of the drawings.
+Now that the data is ready, we can start creating the encoder part of the model which is indeed very similar to the one that I described [here](https://garcia-nacho.github.io/VAEs/) and that is actually an adapted version of this [one](https://tensorflow.rstudio.com/keras/articles/examples/variational_autoencoder.html). The encoder consists of a set of convolutional layers to capture the features of the drawings, these layers are connected to a neural net.
 {: style="text-align: justify"}
 
 <pre><code>#Model
@@ -103,7 +103,8 @@ hidden <- faces %>% layer_dense( units = intermediate_dim, activation = activati
   layer_dense( units = round(intermediate_dim/4), activation = activation)</code></pre>
 
 ## The latent space
-The latent space is created using a lambda layer. Lambda layers in Keras are custom layers that are used to wrap a function. In our case we create two additional layers z_mean and z_log_var that we concatenate and transformed using the sampling function.
+The latent space is created using a lambda layer. Lambda layers in Keras are custom layers that are used to wrap functions. In our case, we create two additional layers z_mean and z_log_var that we concatenate and transformed using the sampling function.
+{: style="text-align: justify"}
 
 <pre><code>
 z_mean <- hidden %>% layer_dense( units = latent_dim)
@@ -126,11 +127,11 @@ z <- layer_concatenate(list(z_mean, z_log_var)) %>% layer_lambda(sampling, name=
 </code></pre>
 
 ## The decoder
+Now we need to write the decoder part of the VAE in a way that we can use it to sample the latent space. To do this we share the layers between two models: the end-to-end VAE and the decoder itself, that is why this part might look a bit unusual if you compare it with the encoder, since it doesn't contain the pipe operator <code>%>%</code>. The reason for that is that we need to initialize all layers independently to be able to share them with their weights after training the model. Another way to do this is to create two independent models with the same architecture and transfer the weights from the trained end-to-end VAE to the decoder.
+{: style="text-align: justify"}
 
-Now we need to write the decoder part of the VAE and the decoder model itself so we can sample the latent space. This part is a bit unusual if you compare with the encoder, since it doesn't contain the pipe operator <code>%>%</code>, the reason for that is that we need to initialize all layers independently to share them with their weights between the different models (Decoder, Encoder-Decoder). Another option would be to create independent models with the same arquitecture and transfer the weights from the trained Encoder-Decoder to the other model.
-
-We initialize the layers one by one and we bind them consecutiverly:
-
+Here is the code to do this. We initialize the layers one by one and then we bind them:
+{: style="text-align: justify"}
 <pre><code>
 #Initialization of layers
 
@@ -178,14 +179,15 @@ O10D<-Output10(O9D)
 O11D<-Output11(O10D)
 O12D<-Output12(O11D)</code></pre>
 
-Now we can create the two models and explore them:
+Now we can create the two models and get a summary of them:
+{: style="text-align: justify"}
 
 <pre><code>
 ## variational autoencoder
 vae <- keras_model(Input, O12)
 summary(vae)
 
-## Decoder
+#Decoder
 decoder<- keras_model(decoder_input, O12D)
 summary(decoder)</code></pre>
 
@@ -300,8 +302,7 @@ ________________________________________________________________________________
 
 
 ## KL-Anneling
-
-Now that we have the models we are ready to create a custom loss function but before we do it I would like to introduce an additional concept, the Kullback-Leibler anneling (KL-Annealing). As I mentioned previously, the loss function is defined by assembling two sub-loss functions: The mean squared error that accounts for the fidelity of the model and the Kullback-Leibler divergence that forces the distribution of samples in the latent space; however these two terms are opposing each other and if under some circumstances (e.g. noisy input, high input variance) the trained model falls into a local minima called *posterior collapse*, when this happens the model *learns* to avoid the latent space so all samples have the same values for the latent  variables. I have personally experience it when training models for generation of faces. 
+Now that we have the models we are ready for the next step which is to create a custom loss function but before we do it I would like to introduce an additional concept, the Kullback-Leibler anneling (KL-Annealing). As I mentioned previously, the loss function is defined by assembling two sub-loss functions: The mean squared error that accounts for the fidelity of the model and the Kullback-Leibler divergence that forces the distribution of samples in the latent space; however these two terms are opposing each other and if under some circumstances (e.g. noisy input, high input variance) the trained model falls into a local minima called *posterior collapse*, when this happens the model *learns* to avoid the latent space so all samples have the same values for the latent  variables. I have personally experience it when training models for generation of faces. 
 There are several solutions to prevent the posterior collapse and of them is the KL-Annealing. 
 
 The KL-Annealing consist in the introduction of a weight to control the KL divergence during the training in a way that we train the model for some epochs just using the MSE and after certain epoch we start increasing the weight of the KL divergence to reach 1 after few epochs. 
