@@ -39,7 +39,7 @@ And this is exactly what a VAE does: It increases the P(z) by constraining it an
 Now that we are done with the theory we can start by obtaining the sheep. We are going to use a dataset with thousands of hand-drawn sheep from Google's Quickdraw game dataset from [here](https://console.cloud.google.com/storage/browser/quickdraw_dataset/full/numpy_bitmap). Although there are several file formats we are going to use .npy files.
 {: style="text-align: justify"}
 
-The .npy is format a Python-specific format, so in order to load the files into R you need to import the Python <code>numpy</code> library first. We do that using the R library *reticulate*. Next, you have to reshape the array so it has the shape *{number-of-samples, 28, 28}+* -the pictures are 28x28 pixels-. Then we normalize the values by dividing them by 255 and we save a copy of the files in a more R-friendly format. 
+The .npy is format a Python-specific format, so in order to load the files into R you need to import the Python <code>numpy</code> library first. We do that using the R library *reticulate*. Next, you have to reshape the array so it has the shape *{number-of-samples, 28, 28}+* -the pictures are 28x28 pixels-. Then we normalize the values by dividing them by 255 and we save a copy of the files in .csv, a more R-friendly format. 
 Finally, it is important to unload the reticulate package otherwise Keras doesn't work.
 Here is the code to do everything:
 {: style="text-align: justify"}
@@ -54,7 +54,7 @@ Here is the code to do everything:
  
  detach("package:reticulate", unload=TRUE)</code></pre>
 
-Alternatively you can save the images in the .csv format so you don't need to run this part each time you play around with the dataset. You just load the .csv, from the *checkpoint*.
+If you have saved the images as .csv you don't need to run this part each time you play around with the dataset. You just load the .csv, from this *checkpoint*.
 {: style="text-align: justify"}
 
 <pre><code>
@@ -65,8 +65,7 @@ library(ggplot2)
 df<-read.csv("/home/nacho/VAE_Faces/datasheep.csv")
 df<-as.matrix(df)
 df<-array(as.numeric(df[,2:785]), dim = c(nrow(df),28,28,1))</pre></code>
-
-You also have to reshape the array to the shape {number of samples,28,28,1} -1 because there is only one channel-
+Next, you load the images and you reshape the array to the shape {number of samples,28,28,1} -1 because there is only one channel-
 {: style="text-align: justify"}
 
 ## The encoder
