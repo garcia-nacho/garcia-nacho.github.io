@@ -495,7 +495,8 @@ Clusters distribute as a mosaic without following any clear pattern. So we defin
 {: style="text-align: justify"}
 
 ### DBSCAN
-DBSCAN as K-means is an unsupervised algorithm used in machine learning, but one of the main differences between k-means and DBSCAN is that DBSCAN is very good at [finding patterns](https://es.wikipedia.org/wiki/DBSCAN) and this is exactly what we want. The downside of the algorithm is that it is more difficult to tune. While in K-means the only important parameter is the number of clusters (K) and it is very intuitive to understand it. DBSCAN clustering need two parameters min.point: The minimal number of points to be consider a cluster and Epsilon: The distance between two points to be considered as part of the same cluster. Although the deffinitions seem to provide an obvious range for MinPoints and epsilon it is not usually the case and those parameters need to be tuned by try and error. There is an annalougs method to the Elbow method for k-means using the function <code>kNNdistplot</code> but if fails in the same way as the Elbow method does. So the only solution is to perform a random search for hyperparameters (epsilon, and min.point)
+DBSCAN as K-means is an unsupervised algorithm used in machine learning, but one of the main differences with k-means is that DBSCAN is very good at [finding patterns](https://es.wikipedia.org/wiki/DBSCAN) and this is exactly what we want. The downside of the algorithm is that it is more difficult to tune. While in K-means the only relevant parameter is the number of clusters (K) and it is very intuitive to understand its meaning. DBSCAN clustering needs two parameters *MinPoint*: The minimal number of points to be considered as a cluster and *Epsilon*: The distance between two points to be considered as part of the same cluster. Although the definitions of both parameters seem to provide an obvious interpretation, usually it is not that obvious to estimate them and they need to be tuned by try and error. There is an analogous method to the Elbow method for k-means using the function <code>kNNdistplot</code> but it fails in the same way as the Elbow method does in our latent space. So the only solution is to perform a random search for hyperparameters (Epsilon, and MinPoint)
+{: style="text-align: justify"}
 
 <pre><code>db<-as.data.frame(matrix(data = NA, ncol = 3, nrow = 100))
 
@@ -511,15 +512,19 @@ for (i in 1:100) {
 }
 </code></pre>
 
-After 100 iterations we look for the parameters that give us a razonable number of clusters (saved in db[,3]) and assign clusters according them.
+After 100 iterations we look for the parameters that give us a reasonable number of clusters (saved in <code>db[,3]</code>) and assign clusters according to them.
+{: style="text-align: justify"}
+
 <pre><code>dbs<-dbscan(intermediate_output[-to.remove,1:2], eps = 0.04270631, MinPts = 377)
 intermediate_output[-to.remove,]$Cluster<-dbs$cluster</code></pre>
-These parameters give us eight clusters that look like this:
 
+These parameters give us eight clusters that look like this:
+{: style="text-align: justify"}
 ![dbscan](/images/dbscanfinal.png)
 
-The hypothesis is that the different clusters will group different representation of sheeps, lets explore some of the images that fall into each cluster:
-Let's look at the original images that fall into cluster 3 (green) and 6 (blue) because they are the more separated clusters
+The hypothesis now is that the different clusters will group different representation of sheep so let's explore some of the images that fall into each cluster to validate the hypothesis.
+To plot some images that fall into cluster 3 (green) and 6 (blue) we use this code:
+{: style="text-align: justify"}
 
 <pre><code>cluster6<-which(intermediate_output$Cluster==6)
 cluster8<-which(intermediate_output$Cluster==8)
@@ -529,19 +534,26 @@ sample8<-df[sample(cluster8,1),,,]
 
 cbind(abs(sample6-1),abs(sample8-1)) %>% as.raster() %>% plot()</code></pre>
 
-It looks like most of the sheeps in clusters 6 don't have legs (or they are small) while sheeps in cluster 8 do have prominent legs. Let's look at some examples 
+That gives us this output:
+{: style="text-align: justify"}
 
 ![68](/images/68.png)
 ![682](/images/68.2.png)
-![683](/images/68.3.png)
+![683](/images/68.3.png)   
 
-As you can see using unsupervised learning strategies give us a lot of information about the samples we are studying and that brings me to the next point.
+It looks like most of the sheep in clusters six don't have legs (or they are small) while sheep in cluster eight do have prominent legs.
+{: style="text-align: justify"}
+
+As you can see the use of unsupervised learning strategies give us a lot of information about the samples that we are studying and that brings me to the next point.
+{: style="text-align: justify"}
 
 ### Annomaly detection
+As I have shown you, we can use the latent space to cluster the samples. Now, we will use the predictions of an autoencoder as a tool to detect anomalies. Let's say that someone dropped some drawings of cars among the drawings of sheep. How could we find them? 
+Easy, we create an autoencoder and then we will find which samples have a higher mean squared error (MSE) when they are sent through the model. Since the model has learned how sheep look like the more a sample deviate from a sheep the higher will be the MSE of that sample.
+{: style="text-align: justify"}
 
-If we can use the latent space to cluster the samples, we can use the predictions of an autoencoder as tool to detect anomalies. Let's say that someone dropped some drawings of cars among the drawings of sheeps. How could we find them? Easy, we create an autoencoder and then we will find which samples have a higher mean squared error (MSE) when they are sent through the model. Since the model has learnt how sheeps look like the more a sample deviate from a sheep the higher will be the MSE of that sample.
-
-Let's try to apply this strategy to our sheep-dataset. 
+Let's apply this strategy to our sheep-dataset: 
+{: style="text-align: justify"}
 
 <pre><code>#Annomaly detection 
 MSE<-vector()
@@ -552,29 +564,50 @@ for (i in 1:ncol(df)) {
   MSE[i] <- sum((df[i,,,] - dummy[1,,,])^2) 
 }</code></pre>
 
-We stablish a cut-off to classify the sample as annomalous 
-
+Now, we stablish a cut-off to classify the sample as annomalous 
+{: style="text-align: justify"}
 ![anomalies](/images/anomalies.png)
 
-and we retreive them
-
+and we retreive the samples with higher MSE than our cut-off
+{: style="text-align: justify"}
 ![anomalies.pic](/images/pic.anomalies.png)
 
-It seems very clear that we have found anomalies, some drawings are just not sheeps and the one which resembles a sheep it is a black sheep, which is by definition the golden standard of anomalies when we talk about sheeps. 
+It seems very clear that we have found anomalies. Some drawings are just not sheep and the one that resembles a sheep it is a black sheep, which is the definition of an anomalous sheep. 
+{: style="text-align: justify"}
 
 ## Generation of new pictures
-So far we have seen how to create a model to captures information about drawing of sheeps based on thousands of pictures. We have seen how that the model can learn features like that it is possible to draw sheeps with or without legs and it can even discriminate black sheeps. But now we are going to see something more interesting and funnier I will show you how this model can create new drawings of sheeps similar to the ones in the data set but different from all of them. 
+So far we have seen how to create a model to captures information about drawing of sheep based on thousands of pictures. We have seen how that the model can learn features like the possibility of drawing sheep with or without legs and it can even discriminate black sheep. 
+But now we are going to see something more interesting and funnier I will show you how this model can create new drawings of sheep, similar to the ones in the data set but different from all of them.  
+{: style="text-align: justify"}
 
-For this part we are goint to use the decoder model that we created, since it has shared layers with the end-to-end model the trained weights are ready, we only need to provide a 2D vector representing a position in the latent space and the decoder will write a sheep for us. Let's try it out.
+For this part, we are going to use the decoder model that we created before. As the decoder has shared layers with the end-to-end model, the trained weights are ready, we only need to provide a 2D vector representing a position in the latent space and the decoder will write a sheep for us. Let's try it out in a couple of different areas (cluster six and cluster eight)
+{: style="text-align: justify"}
+
+<pre><code># generator, from latent space to reconstructed inputs
+
+Samp<-array(data = c(rnorm(1, mean = 1, sd=0.5),rnorm(1, mean = 1, sd=0.5)), dim = c(1,2))
+Samp<- predict(decoder, generator.arrray, batch_size = 10)
+Samp <- Samp[1,,,1]
+
+for (i in 1:2) {
+  generator.arrray<-array(data = c(rnorm(1, mean = 1, sd=0.5),rnorm(1, mean = 1, sd=0.5)), dim = c(1,2))
+  Gen1 <- predict(decoder, generator.arrray, batch_size = 10)
+  Gen1 <- Gen1[1,,,1]
+  Samp<-cbind(Samp,Gen1)
+  
+}
+abs(Samp-1) %>% as.raster() %>% plot()</code></pre>
 
 ![Sheeps1](/images/sheepswithlegs.png)
 
 ![Sheeps2](/images/sheepswolegs.png)
 
-![Sheeps2](/images/sheepsarea2.png)
+The model has learned how to draw sheep with legs and sheep without legs. You might think that the drawings are not very good, but considering that we have only trained for 30 epochs and a latent space of two dimensions the results are extremely good and the margin to improve very broad. If you want to take it from here and enhance it, you should probably start by doing an hyperparameter search for different architectures (including a 3D/4D latent space).
+{: style="text-align: justify"}
 
 ## Conclusions
+In this post I have shown you how to create and train a model to draw sheeps, how to create callbacks in R, how to use the GPU for training and how to do unsupervised learning to find clusters and anomalies and more interestingly.
 
-
-
-http://anotherdatum.com/vae.html
+## Sources of inspiration
+[VAE explained](http://anotherdatum.com/vae.html)
+[Fixing Posterior Collapse](https://deepakbaby.github.io/post/vae-insights/)
