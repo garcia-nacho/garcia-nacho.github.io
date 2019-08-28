@@ -7,12 +7,12 @@ title:  "Welcome to my blog!"
 Finally I have decided to write a blog where I can share all my code and ideas about ML and AI. 
 Stay tuned \!
 test
-~~~ r
-# a comment
-import datetime
-
-a<-12
-for (I IN 1:10)
-~~~
+{% highlight ruby %}
+def print_hi(name)
+  puts "Hi, #{name}"
+end
+print_hi('Tom')
+#=> prints 'Hi, Tom' to STDOUT.
+{% endhighlight %}
 
 ![Fig1](/images/Fig1Post1.png)
