@@ -33,6 +33,12 @@ The hypothesis is simple: drugs with simmilar chemical descriptors will have sim
 
  ### Chemical descriptors calculation.
  First of all we need a dataset to test our hypothesis. In this case I am going to use a dataset of molecules downloaded from the [ZINC15](https://zinc15.docking.org/) database, which is a huge database of compounds, some of them with known properties other with unknown properties. 
- I have downloaded a set of 6102 molecules which are described to be proteases inhibitors. Proteases are enzymes that cut  proteins. While some proteases have important biological roles for the physiology of the cell others are essential for viruses to replicate and proteases inhibitors that espficically inhibit viral proteases are widely used as antivirals to treat HIV or Hepatitis C. You can download the dataset yourself fomr ZINC15 or download it from [here](/images/proteases.smi).
+ I have downloaded a set of 6102 molecules which are described to be proteases inhibitors. Proteases are enzymes that cut  proteins. While some proteases have important biological roles for the physiology of the cell others are essential for viruses to replicate and proteases inhibitors that espficically inhibit viral proteases are widely used as antivirals to treat HIV or Hepatitis C. You can download the dataset yourself fomr ZINC15 or download it from [here](/images/proteases.smi).  
  
- Once you have the file we are going to load it into memory, but first let's load the required libraries for the calculations (note that <code>Rcpi</code> needs to be installed through BioConductor and that if you are installing <code>rcdk</code> in linux you will have to install <code>rJava</code> first )
+ ![Protinh](/images/Protease-Inhibitors.jpg)
+    
+Once you have the file we are going to load it into memory, but first let's load the required libraries for the calculations (note that <code>Rcpi</code> needs to be installed through BioConductor and that if you are installing <code>rcdk</code> in linux you will have to install <code>rJava</code> first )
+
+## Sources of images
+[SMILES](https://en.wikipedia.org/wiki/Simplified_molecular-input_line-entry_system)
+ [Protease inhibitors](https://aidsinfo.nih.gov/understanding-hiv-aids/glossary/603/protease-inhibitor)
