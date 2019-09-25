@@ -39,6 +39,67 @@ The hypothesis is simple: drugs with simmilar chemical descriptors will have sim
     
 Once you have the file we are going to load it into memory, but first let's load the required libraries for the calculations (note that <code>Rcpi</code> needs to be installed through BioConductor and that if you are installing <code>rcdk</code> in linux you will have to install <code>rJava</code> first )
 
+{% highlight r %}
+library(Rcpi)
+library(rcdk)
+library(keras)
+library(ggplot2)
+{% endhighlight %}
+
+and we load the paths where the training and test data are. 
+
+{% highlight r %}
+#Folders
+path<-"C:/home/nacho/DrugDiscoveryWorkshop-master/SMILES_Activity.csv"
+pathDB<-"/home/nacho/DrugDiscoveryWorkshop-master/ZINCDB/"
+{% endhighlight %}
+
+Next, we load the training set and we extract the chemical descriptors with the function <code>extractDrugAIO</code>. You can got and get a cup a cup of coffee because it's going to take a while.
+
+{% highlight r %}
+#Loading and descriptors calculation
+df<-read.csv(path, sep = " ", header = FALSE)
+df<-df[,c(1,5)]
+df<-df[-1,]
+colnames(df)<-c("SMILES","Affinity")
+df$Affinity<-as.numeric(as.character(df$Affinity))
+df<-df[complete.cases(df),]
+mols <- sapply(as.character(df$SMILES), parse.smiles)
+desc <- extractDrugAIO(mols,  silent=FALSE)
+{% endhighlight %}
+
+In order to save that time calculating the descriptors if you are cosidering playing around with the script, I recomend you to save the descriptors in a csv file that you can load each time you want to test something.
+
+{% highlight r %}
+#Checkpoint
+#write.csv(desc, "/home/nacho/StatisticalCodingClub/parameters.csv")
+#desc<-read.csv("/home/nacho/StatisticalCodingClub/parameters.csv")
+{% endhighlight %}
+
+Now we need to clean up some of the variables 
+
+
+{% highlight r %}
+#Standarize based on previous data
+scale.db<-function(df.new, df.old){
+  if(ncol(df.new)!=ncol(df.old)) print("Error number of columns!")
+  for (i in 1:ncol(df.new)) {
+    df.new[,i]<- (df.new[,i]-mean(df.old[,i]))/sd(df.old[,i])
+  }
+  return(as.matrix(df.new))
+}
+{% endhighlight %}
+
+
+
+
+
+{% highlight r %}
+
+
+{% endhighlight %}
+
+
 ## Sources of images
 [SMILES](https://en.wikipedia.org/wiki/Simplified_molecular-input_line-entry_system)
  [Protease inhibitors](https://aidsinfo.nih.gov/understanding-hiv-aids/glossary/603/protease-inhibitor)
