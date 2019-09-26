@@ -76,7 +76,237 @@ In order to save that time calculating the descriptors if you are cosidering pla
 #desc<-read.csv("/home/nacho/StatisticalCodingClub/parameters.csv")
 {% endhighlight %}
 
-Now we need to clean up some of the variables 
+Now we need to clean up some of the variables. First we remove those that contain any NA value 
+
+{% highlight r %}
+#Automatic cleaning
+desc$X<-NULL
+findNA<-apply(desc, 2, anyNA)
+desc<-desc[,which(findNA==FALSE)]
+{% endhighlight %}
+
+Next, we clean those variables in which all the values are the same for al drugs. We do it calculating the standard deviation of the different variables, if the sd is zero, that means that all the values of the variable are the same, so we keep only those variables with non-zero sd.
+
+{% highlight r %}
+findIdentical<- apply(desc, 2, sd)
+desc<-desc[,which(findIdentical!=0)]
+{% endhighlight %}
+
+and finaly we manually clean some of the variables 
+
+{% highlight r %}
+#Manual cleaning
+to.remove<-c("ATSc1",
+             "ATSc2",
+             "ATSc3",
+             "ATSc4",
+             "ATSc5",
+             "BCUTw.1l",
+             "BCUTw.1h",
+             "BCUTc.1l",
+             "BCUTc.1h",
+             "BCUTp.1l",
+             "BCUTp.1h",
+             "khs.tCH",
+             "C2SP1")
+
+`%!in%` = Negate(`%in%`)
+desc<-desc[,which(names(desc) %!in% to.remove)]
+{% endhighlight %}
+
+Then we standarize the values in the colums (the mean of the variables will be zero and the sd one) and we normalize the values of the activity so they range between zero and one:
+
+{% highlight r %}
+x<-scale(desc)
+y<-(df$Affinity-min(df$Affinity))/(max(df$Affinity)-min(df$Affinity))
+{% endhighlight %}
+
+Now it is time to prepare the training and validation datasets by the drugs into 90% training 10% validation:
+
+{% highlight r %}
+#Train/Test
+val.ID<-sample(c(1:nrow(desc)),round(0.1*nrow(desc)))
+
+x.val<-x[val.ID,]
+y.val<-y[val.ID]
+x<-x[-val.ID,]
+y<-y[-val.ID]
+{% endhighlight %}
+
+We create the model with Keras/TensorFlow...
+
+{% highlight r %}
+model<-keras_model_sequential()
+
+model %>% layer_dense(units = 80, activation = "relu",  input_shape = (ncol(x))) %>% 
+  layer_dense(units = 40, activation = "relu") %>% 
+  layer_dense(units = 10, activation = "relu") %>% 
+  layer_dense(units = 1, activation = "linear")
+  
+{% endhighlight %}
+
+...compile it...
+{% highlight r %}
+compile(model, optimizer = "adagrad", loss = "mean_absolute_error")
+{% endhighlight %}
+
+and train it
+
+{% highlight r %}
+history<-model %>% fit(x=x,
+                       y=y,
+                       validation_data=list(x.val, y.val),
+                       callbacks = callback_tensorboard("logs/run_test"),
+                       batch_size=5,
+                       epochs=10
+                        )
+plot(history)
+{% endhighlight %}
+
+![loss](/images/historydrugs.png)
+
+As you can see, the training was as expected and although it seems that we are not suffering from overfitting I decided to run the training only for 10 epochs.
+
+Let's see how well the model generalizes by trying to predict the activity of the validation set:
+
+{% highlight r %}
+#Prediction over validation
+y.hat<-predict(model, x.val)
+
+ggplot()+
+  geom_jitter(aes(x=y.val, y=y.hat), colour="red", size=2, alpha=0.5)+
+  geom_smooth(aes(x=y.val, y=y.hat),method='lm',formula=y~x)+
+  ylim(0,1)+
+  xlab("Activity")+
+  ylab("Predicted Activity")+
+  theme_minimal()
+{% endhighlight %}
+
+![Yhat](/images/activityprediction.png)
+
+Wooow! Our first model is able to predict the activity of the drugs fairly well. But let's try to optimize it to see if there is a lot of space for improvement.
+To try to improve the model we are going to test different hyperparameters. In this case we only modifying the number neurons and some activation functions while keeping the main architecture intact. In following posts I will show you how to modidify the architecture of the model as another hyperparameter.
+
+Briefly, we iterate over 200 models saving the hyperparameters in a dataframe and we test the mean square error for each model.
+
+{% highlight r %}
+#Optimization
+reset_states(model)
+rounds<-200
+models<-as.data.frame(matrix(data = NA, ncol =9 ,nrow = rounds))
+colnames(models)<-c("UnitsL1", "UnitsL2", "UnitsL3", "act", "L1.norm", "L2.norm", "L1.norm.Rate", "L2.norm.Rate", "MSE")
+pb<-txtProgressBar(min=1, max = rounds, initial = 1)
+
+for (i in 1:rounds) {
+
+  #Hyperparams
+  unitsL1<-round(runif(1, min=20, max = 100))
+  unitsL2<-round(runif(1, min=10, max = 60))
+  unitsL3<-round(runif(1, min=2, max = 20))
+  actlist<-c("tanh","sigmoid","relu","elu","selu")
+  act<-actlist[round(runif(1,min = 1, max=5))]
+  L1.norm<-round(runif(1,min = 0, max = 1))
+  L2.norm<-round(runif(1,min = 0, max = 1))
+  L1.norm.Rate<-runif(1, min = 0.1, max = 0.5)
+  L2.norm.Rate<-runif(1, min = 0.1, max = 0.5)
+  ###
+  
+  setTxtProgressBar(pb, i)
+  model.search<-keras_model_sequential()
+  
+  model.search %>% layer_dense(units = unitsL1, activation = act, input_shape = (ncol(x)))
+  if(L1.norm==1)  model.search %>% layer_dropout(rate=L1.norm.Rate)
+  model.search %>% layer_dense(units = unitsL2, activation = act)
+  if(L2.norm==1)  model.search %>% layer_dropout(rate=L2.norm.Rate)   
+  model.search %>% layer_dense(units = unitsL3, activation = act) %>% 
+  layer_dense(units = 1, activation = "sigmoid")
+  
+  compile(model.search, optimizer = "adagrad", loss = "mean_squared_error")
+  model.search %>% fit(x=x,
+                         y=y,
+                         verbose=0,
+                         batch_size=10,
+                         epochs=10
+  )
+  
+  y.hat<-predict(model.search, x.val)
+  MSE<-(sum((y.val-y.hat)^2))/length(y.val)
+  
+  #FIlling dataframe
+  models$MSE[i]<-MSE
+  models$act[i]<-act
+  models$UnitsL1[i]<-unitsL1
+  models$UnitsL2[i]<-unitsL2
+  models$UnitsL3[i]<-unitsL3
+  models$L1.norm[i]<-L1.norm
+  models$L2.norm[i]<-L2.norm
+  models$L1.norm.Rate[i]<-L1.norm.Rate
+  models$L2.norm.Rate[i]<-L2.norm.Rate
+  reset_states(model.search)
+  }
+  {% endhighlight %}
+
+Next we select the best possible model and we train on it to use it to predict the activity of the test dataset:
+
+{% highlight r %}
+#Validation best performer
+models<-models[complete.cases(models),]
+unitsL1<- models$UnitsL1[models$MSE==min(models$MSE)]
+unitsL2<- models$UnitsL2[models$MSE==min(models$MSE)]
+unitsL3<- models$UnitsL3[models$MSE==min(models$MSE)]
+
+act<-models$act[models$MSE==min(models$MSE)]
+L1.norm<-models$L1.norm[models$MSE==min(models$MSE)]
+L2.norm<-models$L2.norm[models$MSE==min(models$MSE)]
+L1.norm.Rate<-models$L1.norm.Rate[models$MSE==min(models$MSE)]
+L2.norm.Rate<-models$L2.norm.Rate[models$MSE==min(models$MSE)]
+
+model.best<-keras_model_sequential()
+
+model.best %>% layer_dense(units = unitsL1, activation = act, input_shape = (ncol(x)))
+if(L1.norm==1)  model.best %>% layer_dropout(rate=L1.norm.Rate)
+model.best %>% layer_dense(units = unitsL2, activation = act)
+if(L2.norm==1)  model.best %>% layer_dropout(rate=L2.norm.Rate)   
+model.best %>% layer_dense(units = unitsL3, activation = act) %>% 
+  layer_dense(units = 1, activation = act)
+
+compile(model.best, optimizer = "adam", loss = "mean_squared_error")
+model.best %>% fit(x=x,
+                     y=y,
+                     
+                     batch_size=10,
+                     epochs=10
+)
+
+y.hat<-predict(model.best, x.val)
+
+ggplot()+
+  geom_jitter(aes(x=y.val, y=y.hat), colour="red", size=2, alpha=0.5)+
+  geom_smooth(aes(x=y.val, y=y.hat),method='lm',formula=y~x)+
+  ylim(0,1)+
+  xlab("Activity")+
+  ylab("Predicted Activity")+
+  theme_minimal()
+{% endhighlight %}
+
+Now we are ready to find new protease-inhibitors among large datasets. 
+Since the next chunk of code contains a big while loop that I don't want to cut, I will explain how it works here:
+
+First, we define the folder in which the SMILES are. 
+Next, we check that the files cotaining the SMILES have not been processed yet. This part is very useful because it allows you to add more files to the folder while the script is running so it keeps going iterating over the new files.
+Then, in order to run of memory when we process the SMILES we load them in batches of 10000. 
+
+
+#Screening
+db.completed<-vector()
+db<-list.files(pathDB)
+db.toprocess<-setdiff(db,db.completed)
+if(length(db.toprocess>0)) continue=TRUE
+
+
+
+
+
 
 
 {% highlight r %}
