@@ -289,7 +289,7 @@ ggplot()+
   theme_minimal()
 {% endhighlight %}
 
-We save the model so we can reuse it or share it. Download mine here. 
+We save the model so we can reuse it or share it. Download my trained model [here.](/images/modelNNet.h5) 
 
 {% highlight r %}
 save_model_hdf5(model.best, "/home/nacho/Drugs/BestModelNN.h5")
