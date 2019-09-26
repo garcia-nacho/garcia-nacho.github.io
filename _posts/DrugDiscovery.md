@@ -289,6 +289,12 @@ ggplot()+
   theme_minimal()
 {% endhighlight %}
 
+We save the model so we can reuse it or share it. Download mine here. 
+
+{% highlight r %}
+save_model_hdf5(model.best, "/home/nacho/Drugs/BestModelNN.h5")
+{% endhighlight %}
+
 Now we are ready to find new protease-inhibitors among large datasets. 
 Since the next chunk of code contains a big while loop that I don't want to cut, I will explain how it works here:
 
