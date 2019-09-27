@@ -92,7 +92,7 @@ findIdentical<- apply(desc, 2, sd)
 desc<-desc[,which(findIdentical!=0)]
 {% endhighlight %}
 
-and finaly we manually clean some of the variables 
+and finaly we manually clean some of the variables. In this case I found that those variables in the validation set only had one value so I removed them from the training set.
 
 {% highlight r %}
 #Manual cleaning
@@ -291,12 +291,13 @@ ggplot()+
 
 ![best](/images/bestmodel.png)
 
-As you can see there is an improvement from the first model. 
+As you can see there is a substantial improvement from the first model althought it is not huge, meaning that we had already proposed a good model as starting point.
 
 But before proceeding we save the model so we can reuse it or share it. Download my trained model [here.](/images/BestModelNN.h5) 
 
 {% highlight r %}
 save_model_hdf5(model.best, "/home/nacho/Drugs/BestModelNN.h5")
+#model.best<-load_model_hdf5("/home/nacho/Drugs/BestModelNN.h5")
 {% endhighlight %}
 
 Now we are ready to find new protease-inhibitors among large datasets. 
@@ -304,20 +305,16 @@ Since the next chunk of code contains a big while loop that I don't want to cut,
 
 First, we define the folder in which the SMILES are. 
 Next, we check that the files cotaining the SMILES have not been processed yet. This part is very useful because it allows you to add more files to the folder while the script is running so it keeps going iterating over the new files.
-Then, in order to run of memory when we process the SMILES we load them in batches of 10000. 
+Then, in order to avoid running of memory when we process the SMILES, we load them in batches of 10000.
+To be able to normalize the data in the test set we need to use an additional function. This is because the way the normalization step is done: 
 
+$$ Z_i= \frac{X_i-\mu(X)}{\sigma(X)}$$
 
-#Screening
-db.completed<-vector()
-db<-list.files(pathDB)
-db.toprocess<-setdiff(db,db.completed)
-if(length(db.toprocess>0)) continue=TRUE
+The normalization works only if we assume that our training data and our validation data have the same mean and standard deviation and that is not true in most of the cases. This can be solved by using the mean and standard deviation of the training set to standarize the test set like this:
 
+$$ Z_i= \frac{Test_i-\mu(Training)}{\sigma(Training)}$$
 
-
-
-
-
+and this is exactly what the function <code>scale.db</code> does:
 
 {% highlight r %}
 #Standarize based on previous data
@@ -330,16 +327,75 @@ scale.db<-function(df.new, df.old){
 }
 {% endhighlight %}
 
-
-
-
+Once the descritors from the SMILES in the test set are standarized we can procceed to predict the affinity of the drugs for the proteases. 
+Finally, we save the results in the disk every 1000 compounds and at the end of the proccess. Here is the code to do everything:
 
 {% highlight r %}
+#Screening
+db.completed<-vector()
+db<-list.files(pathDB)
+db.toprocess<-setdiff(db,db.completed)
+if(length(db.toprocess>0)) continue=TRUE
 
+while (continue) {
 
+  batchsize<-10000
+  batch.vector<-c(1,batchsize)
+  
+  smi.db<-read.csv(paste(pathDB,db.toprocess[1],sep=""), sep = " ", head=FALSE)
+  db.completed[length(db.completed)+1]<-db.toprocess[1]
+
+while(nrow(smi.db)>batch.vector[2]){
+  mols.db <- sapply(as.character(smi.db$V1[batch.vector[1]:batch.vector[2]]), parse.smiles)  
+  descs.db <- extractDrugAIO(mols.db,  silent=FALSE)
+  findNA<-apply(descs.db, 2, anyNA)
+  descs.db<-descs.db[,which(findNA==FALSE)]
+  descs.db$khs.tCH<-NULL
+  desc.db$C2SP1<-NULL
+  desc.in.model<-colnames(desc)
+  descs.db<-descs.db[,which(names(descs.db) %in% desc.in.model)]
+  
+  descs.db<-scale.db(descs.db,desc)
+
+  predicted.act<-predict(model.best, descs.db)
+  
+  if(!exists("activity.db")) 
+   {activity.db<- predicted.act}
+  else{ activity.db<-c(activity.db, predicted.act)}
+  
+  batch.vector[1]<-sum(batch.vector)
+  batch.vector[2]<-batch.vector[2]+batchsize
+  if(batch.vector[2]>nrow(smi.db)) batch.vector[2]<-nrow(smi.db)
+  
+}
+
+if(!exists("compound.db")) 
+{compound.db<- smi.db$V2}
+else{ compound.db<-c(compound.db, smi.db$V2)}   
+  
+db.toprocess<-setdiff(db,db.completed)  
+if(length(db.toprocess==0)) continue==FALSE  
+counter<-counter+1  
+if(counter%%1000=0){
+  output<-data.frame(compound.db,activity.db) 
+  write.csv(output,paste(pathDB,"results.csv",sep = ""))
+  }
+
+} 
+
+output<-data.frame(compound.db,activity.db)
+write.csv(output,paste(pathDB,"results.csv",sep = ""))
 {% endhighlight %}
 
+And this is it. Now you have the tools to start your own search for bioactive drugs.
+
+## Conclusions
+In this post I have shown you the basics of drug discovery so you can get an intuition about how using ML approaches we can speed up the search for new medicines. I hope that you have enjoyed it.
+
+In the next post I will explain how to use convolutional neural networks to increase the efficacy of the drug-discovery process.
+
+As always you can download my code from here and a pdf that I prepared for a workshop about this topic at work here.
 
 ## Sources of images
-[SMILES](https://en.wikipedia.org/wiki/Simplified_molecular-input_line-entry_system)
+[SMILES](https://en.wikipedia.org/wiki/Simplified_molecular-input_line-entry_system)   
  [Protease inhibitors](https://aidsinfo.nih.gov/understanding-hiv-aids/glossary/603/protease-inhibitor)
