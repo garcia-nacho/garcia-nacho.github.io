@@ -35,15 +35,16 @@ Now that we know how to represent the drugs we need to find a way to parameteriz
 There are several ways and today I am just going to talk about the simplest way of doing it: using chemical descriptors.{: style="text-align: justify"}  
 
 ## Chemical descriptors. 
-Chemical descriptors are numerical representations that cover different chemical propierties of the drugs. There are hundreds of molecular descriptors that parametrizes different features of the molecules, from the number of atoms or bonds to the solubility in water. By computing the chemical descriptors of a molecule we are predicting the physicochemical, topological, electronical and quantum properties of it and I say prediciting because chemical descriptors of the molecule are calculated algorithmically, that means that some of them such as logP, logD or logS are just predictions.{: style="text-align: justify"}   
+Chemical descriptors are numerical representations that cover different chemical propierties of the drugs. There are hundreds of molecular descriptors that parametrize different features of the molecules, from the number of atoms or bonds to the solubility in water. By computing the chemical descriptors of a molecule we are predicting the physicochemical, topological, electronical and quantum properties of it and I say *"prediciting"* because chemical descriptors of the molecule are calculated algorithmically, that means that some of them such as logP, logD or logS are just (very precise) predictions.{: style="text-align: justify"}   
 
-Ok. We have found a simple way to parametrize a drug by defining each it as a vector of chemical descriptors that we can use to predicit its bioactivity. 
+Ok. We have found a simple way to parametrize a drug by defining it as a vector of chemical descriptors that we can use to predicit its bioactivity. 
 
 The hypothesis is simple: drugs with simmilar chemical descriptors will have simmilar activities. Let's test the hypothesis out.
 
  ### Chemical descriptors calculation.
- First of all we need a dataset to test our hypothesis. In this case I am going to use a dataset of molecules downloaded from the [ZINC15](https://zinc15.docking.org/) database, which is a huge database of compounds, some of them with known properties other with unknown properties. 
- I have downloaded a set of 6102 molecules which are described to be proteases inhibitors. Proteases are enzymes that cut  proteins. While some proteases have important biological roles for the physiology of the cell others are essential for viruses to replicate and proteases inhibitors that espficically inhibit viral proteases are widely used as antivirals to treat HIV or Hepatitis C. You can download the dataset yourself fomr ZINC15 or download it from [here](/images/proteases.smi).  
+First of all we need a dataset to test our hypothesis. In this case I am going to use a dataset of molecules downloaded from the [ZINC15](https://zinc15.docking.org/) database, which is a huge database of compounds, some of them with known properties other with unknown properties. 
+
+I have downloaded a set of 6102 molecules which are described to be proteases inhibitors. Proteases are enzymes that cut  proteins. While some proteases have important biological roles for the physiology of the cell others are essential for viruses to replicate and proteases inhibitors that espficically inhibit viral proteases are widely used as antivirals to treat HIV or Hepatitis C. You can download the dataset yourself fomr ZINC15 or download it from [here](/images/proteases.smi).  
  
  ![Protinh](/images/Protease-Inhibitors.jpg)
     
