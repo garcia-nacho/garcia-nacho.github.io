@@ -445,4 +445,5 @@ As always, you can download my code from [here](/images/DrugDiscoveryScript.R) a
 
 ## Sources of images
 [SMILES](https://en.wikipedia.org/wiki/Simplified_molecular-input_line-entry_system)   
- [Protease inhibitors](https://aidsinfo.nih.gov/understanding-hiv-aids/glossary/603/protease-inhibitor)
+[Protease inhibitors](https://aidsinfo.nih.gov/understanding-hiv-aids/glossary/603/protease-inhibitor)
+[Chemical representations](https://chem.libretexts.org/Bookshelves/General_Chemistry/)
