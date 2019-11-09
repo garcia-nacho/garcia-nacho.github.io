@@ -39,7 +39,7 @@ One of the first things that we need to decide is how we represent the drugs, be
 Since most of the information about the drug is retained in the SMILES they are a very convenient way to encode, keep and trasfer information about a drug. You could for instance store millions of them in a USB stick. In later posts I will show you other interesting properties of the SMILES so they can be used in convolutional neural networks and/or in recursive neural networks.   
 {: style="text-align: justify"}  
 
-Now that we know how to represent the drugs we need to find a way to parameterize them. {: style="text-align: justify"} 
+Now that we know how to represent the drugs we need to find a way to parameterize them.  
 Although there are several ways to do it, today I am just going to talk about the simplest of them: using chemical descriptors.   
 {: style="text-align: justify"}  
 
@@ -53,7 +53,7 @@ Ok. We have found a simple way to parametrize a drug by defining it as a vector 
 The hypothesis is simple: drugs with simmilar chemical descriptors will have simmilar activities. Let's test the hypothesis out.   
 {: style="text-align: justify"}  
 
- ### Chemical descriptors calculation.
+### Chemical descriptors calculation.   
 First of all, we need a dataset to test our hypothesis. In this case, I will use a dataset of molecules downloaded from [ZINC15](https://zinc15.docking.org/), which is a massive database of known and unknown compounds.   
 {: style="text-align: justify"}
 
