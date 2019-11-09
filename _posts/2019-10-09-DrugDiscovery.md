@@ -60,7 +60,7 @@ First of all, we need a dataset to test our hypothesis. In this case, I will use
 For this post, I have downloaded a set of 6102 molecules which are described to be proteases inhibitors. Proteases are enzymes that cut proteins. While some proteases have important biological roles for the physiology of the cell others are essential for viruses to replicate and proteases inhibitors that especially inhibit viral proteases are widely used as antivirals to treat HIV or Hepatitis C. You can download the dataset yourself from ZINC15 or download it from [here](/images/proteases.smi).    
 {: style="text-align: justify"}    
 
- ![Protinh](/images/Protease-Inhibitors.jpg){width=60% height=60%}
+ ![Protinh](/images/Protease-Inhibitors.jpg)
     
 Once the file is ready we are going to load it into memory, but first let's load the required libraries for the calculations (note that <code>Rcpi</code> needs to be installed through BioConductor and that if you are installing <code>rcdk</code> in Linux you will have to install <code>rJava</code> first)   
 {: style="text-align: justify"}  
