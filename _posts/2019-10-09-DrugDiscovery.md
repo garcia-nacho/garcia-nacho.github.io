@@ -5,11 +5,14 @@ date: '2019-08-25 21:30:00'
 ---
 
 ## Introduction
-We humans learned how to use drugs many thousands of years ago. The shaman of the tribe already knew which roots and plants had healing effects on sick people. Of course, he didn't know of anything about chemistry or why they worked, but it was the pre-scientific era, so who cared?!
+We humans learned how to use drugs many thousands of years ago. The shaman of the tribe already knew which roots and plants had healing effects on sick people. Of course, he didn't know of anything about chemistry or why they worked, but it was the pre-scientific era, so who cared?!   
+{: style="text-align: justify"}
 
-Slowly, mankind became better at using drugs, but only as a consequence of a long trial and error process and it was not until the scientific revolution when we started an active and systematic search for new medicines which, together with the advances in chemistry and biology, lead us to a golden age of medicine in the middle of the 20th century when there was an explosion in the number of antibiotics, anticancer and antifungal treatments. It seemed that in a few years we would be able to cure anything.    Unfortunately, that was not the case, fungi and bacteria infections are becoming resistant to treatments and anticancer therapies are still ineffective and unspecific. Moreover, the drug-discovery pipeline is still slow and inefficient and since the number of *drugs-to-be-found* is finite, it is becoming more and more difficult to find novel bioactive-chemicals, making the process extremely expensive. {: style="text-align: justify"}
+Slowly, mankind became better at using drugs, but only as a consequence of a long trial and error process and it was not until the scientific revolution when we started an active and systematic search for new medicines which, together with the advances in chemistry and biology, lead us to a golden age of medicine in the middle of the 20th century when there was an explosion in the number of antibiotics, anticancer and antifungal treatments. It seemed that in a few years we would be able to cure anything.    Unfortunately, that was not the case, fungi and bacteria infections are becoming resistant to treatments and anticancer therapies are still ineffective and unspecific. Moreover, the drug-discovery pipeline is still slow and inefficient and since the number of *drugs-to-be-found* is finite, it is becoming more and more difficult to find novel bioactive-chemicals, making the process extremely expensive.   
+{: style="text-align: justify"}
 
-We clearly need new approaches to speed up the process of drug discovery and in these series of posts, I will present some ideas about using ML and AI to reach that goal.{: style="text-align: justify"}
+We clearly need new approaches to speed up the process of drug discovery and in these series of posts, I will present some ideas about using ML and AI to reach that goal.    
+{: style="text-align: justify"}
 <!--more-->
 
 ## The rationale behind using ML to find drugs
