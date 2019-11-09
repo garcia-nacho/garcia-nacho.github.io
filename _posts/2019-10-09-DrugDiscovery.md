@@ -8,7 +8,7 @@ date: '2019-08-25 21:30:00'
 We humans learned how to use drugs many thousands of years ago. The shaman of the tribe already knew which roots and plants had healing effects on sick people. Of course, he didn't know of anything about chemistry or why they worked, but it was the pre-scientific era, so who cared?!   
 {: style="text-align: justify"}
 
-Slowly, mankind became better at using drugs, but only as a consequence of a long trial and error process and it was not until the scientific revolution when we started an active and systematic search for new medicines which, together with the advances in chemistry and biology, lead us to a golden age of medicine in the middle of the 20th century when there was an explosion in the number of antibiotics, anticancer and antifungal treatments. It seemed that in a few years we would be able to cure anything.    Unfortunately, that was not the case, fungi and bacteria infections are becoming resistant to treatments and anticancer therapies are still ineffective and unspecific. Moreover, the drug-discovery pipeline is still slow and inefficient and since the number of *drugs-to-be-found* is finite, it is becoming more and more difficult to find novel bioactive-chemicals, making the process extremely expensive.   
+Slowly, mankind became better at using drugs, but only as a consequence of a long trial and error process and it was not until the scientific revolution when we started an active and systematic search for new medicines which, together with the advances in chemistry and biology, lead us to a golden age of medicine in the middle of the 20th century when there was an explosion in the number of antibiotics, anticancer and antifungal treatments. It seemed that in a few years we would be able to cure anything.    Unfortunately, that was not the case, fungi and bacteria are becoming resistant to treatments and anticancer therapies are still ineffective and unspecific. Moreover, the drug-discovery pipeline is still slow and inefficient and since the number of *drugs-to-be-found* is finite, it is becoming more and more difficult to find novel bioactive-chemicals, making the process extremely expensive.   
 {: style="text-align: justify"}
 
 We clearly need new approaches to speed up the process of drug discovery and in these series of posts, I will present some ideas about using ML and AI to reach that goal.    
@@ -16,14 +16,14 @@ We clearly need new approaches to speed up the process of drug discovery and in 
 <!--more-->
 
 ## The rationale behind using ML to find drugs
-When we develop a ML model we are creating an algorithm that learns a function *f(x)=y*. In our case the function that we want to learn is simple: *f(drug)=activity* and the hypothesis to test is that *"if we can learn (or approximate) the f(drug)=activity function we can instantly predict the activity of a drug without testing it in the lab"*.
-If the hypothesis is true it would save thousands of hours and tons of money in the drug-discovery process.   
+When we train a ML model we are creating an algorithm that learns a function *f(x)=y*. In our case the function that we want to learn is simple: *f(drug)=activity* and the hypothesis to test is that *"if we can learn (or approximate) the f(drug)=activity function we can instantly predict the activity of a drug without testing it in the lab"*.
+So if this hypothesis is true it would save thousands of hours and tons of money in the drug-discovery process.   
 {: style="text-align: justify"}
 
 The first thing to do to approximate the function *f(drug)=activity* is to parameterize the two terms of the function.   
 {: style="text-align: justify"} 
 
-The parameterization of the activity is easy because we can quantify it: it can be, for instance, the EC50, which is the concentration at which the drug achieve half of the maximum effect, it can be the pKi, which is a measurement of the strength of a drug-protein interaction or it can be the area under an activity curve. It can be continuous ranging between two values or discrete with two or more classes (e.g. no-activity, moderate-activity, high-activity). It doesn't really matter as long as it is measurable and meaningful to make inferences about unknown drugs.   
+The parameterization of the activity is easy because we can quantify it: it can be, for instance, the EC50, which is the concentration at which the drug achieves half of the maximum effect, it can be the pKi, which is a measurement of the strength of a drug-protein interaction or it can be the area under certain activity curve. It can be continuous ranging between two values or discrete with two or more classes (e.g. no-activity, moderate-activity, high-activity). It doesn't really matter as long as it is measurable and meaningful to make inferences about unknown drugs.   
 {: style="text-align: justify"} 
 
 The parameterization of the drugs is much more complex and it first requires to find a suitable way to represent the compounds. Although there are many ways of representing a drug (e.g. Molecular and structural formulas, balls-and-sticks, space-filling) all of them have downsides due to loss of information (e.g. loss of 3D information) or wrong assumptions (e.g. all bonds having a similar length). Additionally, these representations are very difficult to parameterize.    
@@ -32,7 +32,7 @@ The parameterization of the drugs is much more complex and it first requires to 
 ![Rep](/images/representations.jpg)
 
 ## Drug representation
-One of the first things that we need to decide is how we represent the drugs, because drugs can be represented in several ways: we can draw the molecule or we can use text-based representations of the drugs like [InChI](https://es.wikipedia.org/wiki/International_Chemical_Identifier) or [SMILES](https://en.wikipedia.org/wiki/Simplified_molecular-input_line-entry_system) which are sequences of characters that represent the chemical structure of a molecule without losing information about it. That means that you can easily interconvert SMILES/InChI and drug drawings. Due to its simplicity compared with InChI I will use SMILES in the rest of the post.   
+Before doing any drug parameterization we need to find a meaningful way to represent a drug, because drugs can be represented in several ways: we can draw the molecule or we can use text-based representations of the drugs like [InChI](https://es.wikipedia.org/wiki/International_Chemical_Identifier) or [SMILES](https://en.wikipedia.org/wiki/Simplified_molecular-input_line-entry_system) which are sequences of characters that represent the chemical structure of a molecule without losing information about it. That means that you can easily interconvert SMILES/InChI and drug drawings. Due to its simplicity compared with InChI I will use SMILES in the rest of the post.   
 {: style="text-align: justify"} 
 ![SMILES](/images/SMILES.png)
 
