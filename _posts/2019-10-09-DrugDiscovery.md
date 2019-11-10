@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "Computational Drug Discovery (*Novice Mode*)"
+title:  "Computational Drug Discovery (Novice Mode)"
 date: '2019-08-25 21:30:00'
 ---
 
