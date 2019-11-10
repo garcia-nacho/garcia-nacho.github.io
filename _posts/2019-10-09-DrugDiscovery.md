@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "Computational Drug Discovery (Novice Mode)"
+title:  "Computational Drug Discovery (*Novice Mode*)"
 date: '2019-08-25 21:30:00'
 ---
 
@@ -16,7 +16,7 @@ We clearly need new approaches to speed up the process of drug discovery and in 
 <!--more-->
 
 ## The rationale behind using ML to find drugs
-When we train a ML model we are creating an algorithm that learns a function *f(x)=y*. In our case the function that we want to learn is simple: *f(drug)=activity* and the hypothesis to test is that *"if we can learn (or approximate) the f(drug)=activity function we can instantly predict the activity of a drug without testing it in the lab"*.
+When we train a ML model we are creating an *"algorithm"* that learns a function *f(x)=y*. In our case the function that we want to learn is simple: *f(drug)=activity* and the hypothesis to test is that *"if we can learn (or approximate) the f(drug)=activity function we can instantly predict the activity of a drug without testing it in the lab"*.
 So if this hypothesis is true it would save thousands of hours and tons of money in the drug-discovery process.   
 {: style="text-align: justify"}
 
@@ -32,19 +32,18 @@ The parameterization of the drugs is much more complex and it first requires to 
 ![Rep](/images/representations.jpg)
 
 ## Drug representation
-Before doing any drug parameterization we need to find a meaningful way to represent a drug, because drugs can be represented in several ways: we can draw the molecule or we can use text-based representations of the drugs like [InChI](https://es.wikipedia.org/wiki/International_Chemical_Identifier) or [SMILES](https://en.wikipedia.org/wiki/Simplified_molecular-input_line-entry_system) which are sequences of characters that represent the chemical structure of a molecule without losing information about it. That means that you can easily interconvert SMILES/InChI and drug drawings. Due to its simplicity compared with InChI I will use SMILES in the rest of the post.   
+Before doing any drug parameterization we need to find a meaningful way to represent a drug, because drugs can be represented in several ways. We can draw the molecule or we can use text-based representations of the drugs like [InChI](https://es.wikipedia.org/wiki/International_Chemical_Identifier) or [SMILES](https://en.wikipedia.org/wiki/Simplified_molecular-input_line-entry_system) which are sequences of characters that represent the chemical structure of a molecule without losing information about it. That means that you can easily interconvert SMILES/InChI and drug drawings. Due to its simplicity compared with InChI I will use SMILES in the rest of the post.   
 {: style="text-align: justify"} 
 ![SMILES](/images/SMILES.png)
 
 Since most of the information about the drug is retained in the SMILES they are a very convenient way to encode, keep and trasfer information about a drug. You could for instance store millions of them in a USB stick. In later posts I will show you other interesting properties of the SMILES so they can be used in convolutional neural networks and/or in recursive neural networks.   
 {: style="text-align: justify"}  
 
-Now that we know how to represent the drugs we need to find a way to parameterize them.  
-Although there are several ways to do it, today I am just going to talk about the simplest of them: using chemical descriptors.   
+Now that we know how to represent the drugs we need to find a way to parameterize them. Although there are several ways to do it, today I am just going to talk about the simplest of them: using chemical descriptors.   
 {: style="text-align: justify"}  
 
 ## Chemical descriptors. 
-Chemical descriptors are numerical representations that cover different chemical properties of the drugs. There are hundreds of molecular descriptors that parametrize different features of the molecules, from the number of atoms or bonds to the solubility in water. By computing the chemical descriptors of a molecule we are predicting the physicochemical, topological, electronic and quantum properties of it and I say *"predicting"* because chemical descriptors of the molecule are calculated algorithmically, that means that some of them such as logP, logD or logS are just (very precise) predictions.   
+Chemical descriptors are numerical representations that cover different chemical properties of the drugs. There are hundreds of molecular descriptors that parametrize different features of the molecules, from the number of atoms or bonds to the solubility in water or the acdicity. By computing the chemical descriptors of a molecule we are predicting the physicochemical, topological, electronic and quantum properties of it and I say *"predicting"* because chemical descriptors of the molecule are calculated algorithmically, that means that some of them such as logP, logD or logS are just (very precise) predictions.   
 {: style="text-align: justify"}   
 
 Ok. We have found a simple way to parametrize a drug by defining it as a vector of chemical descriptors that we could use to predicit its bioactivity.   
@@ -57,7 +56,8 @@ The hypothesis is simple: drugs with simmilar chemical descriptors will have sim
 First of all, we need a dataset to test our hypothesis. In this case, I will use a dataset of molecules downloaded from [ZINC15](https://zinc15.docking.org/), which is a massive database of known and unknown compounds.   
 {: style="text-align: justify"}
 
-For this post, I have downloaded a set of 6102 molecules which are described to be proteases inhibitors. Proteases are enzymes that cut proteins. While some proteases have important biological roles for the physiology of the cell others are essential for viruses to replicate and proteases inhibitors that especially inhibit viral proteases are widely used as antivirals to treat HIV or Hepatitis C. You can download the dataset yourself from ZINC15 or download it from [here](/images/proteases.smi).    
+For this post, I have downloaded a set of 6102 molecules which are described to be proteases inhibitors. Proteases are enzymes that cut proteins. While some proteases have important biological roles for the physiology of the cell, others are essential for viruses to replicate and proteases inhibitors that specifically inhibit viral proteases are widely used as antivirals to treat HIV or Hepatitis C.   
+You can download the dataset yourself from ZINC15 or download it from [here](/images/proteases.smi).    
 {: style="text-align: justify"}    
 
  ![Protinh](/images/Protease-Inhibitors.jpg)
@@ -81,7 +81,8 @@ path<-"C:/home/nacho/DrugDiscoveryWorkshop-master/SMILES_Activity.csv"
 pathDB<-"/home/nacho/DrugDiscoveryWorkshop-master/ZINCDB/"
 {% endhighlight %}
 
-Next, we load the training set and we extract the chemical descriptors with the function <code>extractDrugAIO</code>. You can go and get yourself a cup of coffee because this will take a while.   
+Next, we load the training set and we extract the chemical descriptors with the function <code>extractDrugAIO</code>.    
+Now you can go and get yourself a cup of coffee because this will take a while.   
 {: style="text-align: justify"}  
 
 {% highlight r %}
@@ -105,7 +106,7 @@ In order to save that time calculating the descriptors if you are considering pl
 #desc<-read.csv("/home/nacho/StatisticalCodingClub/parameters.csv")
 {% endhighlight %}
 
-Now we need to clean up some of the variables. First, we remove those that contain any NA value.   
+Now we need to clean up some of the variables. First, we remove those that contain *NAs*.   
 {: style="text-align: justify"}   
 
 {% highlight r %}
@@ -123,7 +124,7 @@ findIdentical<- apply(desc, 2, sd)
 desc<-desc[,which(findIdentical!=0)]
 {% endhighlight %}
 
-and finally, we manually clean some of the variables. In this case, I found that those variables in the validation set only had one value so I removed them from the training set.   
+and finally, we manually clean some of the variables. In this case, I've found that some variables in the validation set only had one value so I removed them from the training set.   
 {: style="text-align: justify"}
 
 {% highlight r %}
@@ -154,7 +155,7 @@ x<-scale(desc)
 y<-(df$Affinity-min(df$Affinity))/(max(df$Affinity)-min(df$Affinity))
 {% endhighlight %}
 
-Now it is time to prepare the training and validation datasets by the drugs into 90% training 10% validation:   
+Now it is time to prepare the training and validation datasets by dividing the dataset into training (90%) and validation (10%):   
 {: style="text-align: justify"}
 
 {% highlight r %}
@@ -166,6 +167,10 @@ y.val<-y[val.ID]
 x<-x[-val.ID,]
 y<-y[-val.ID]
 {% endhighlight %}
+
+For the model, I have just decided to create a very simple model with three *fully-connected* layers   
+{: style="text-align: justify"}
+![fcdrugs](/images/fcdrugs.png)
 
 We create the model with Keras/TensorFlow...
 
@@ -199,7 +204,7 @@ plot(history)
 
 ![loss](/images/historydrugs.png)
 
-As you can see, the training went as expected and although it seems that it is suffering from overfitting I decided to train only for 10 epochs.   
+As you can see, the training went as expected and although it seems that it is not suffering from overfitting I decided to train only for 10 epochs.   
 {: style="text-align: justify"}
 
 Let's see how well the model generalizes by trying to predict the activity of the validation set:   
@@ -220,7 +225,8 @@ ggplot()+
 
 ![Yhat](/images/activityprediction.png)
 
-Wooow! Our first model is able to predict the activity of the drugs fairly well. But let's try to optimize it to see if there is a lot of space for improvement.
+Wooow! Our first model is able to predict the activity of the drugs fairly well.    
+But let's try to optimize it to see if there is a lot of space for improvement.
 To try to improve the model we are going to test different hyperparameters. In this case, we only modify the number of neurons and some activation functions while keeping the main architecture intact. In the following posts, I will show you how to modify the architecture of the model as another hyperparameter.   
 {: style="text-align: justify"}
 
@@ -330,7 +336,7 @@ ggplot()+
 
 ![best](/images/bestmodel.png)
 
-As you can see although the difference is not huge, there is already a substantial improvement from the first model, meaning that we had proposed a good model as starting point.   
+As you can see although the difference is not huge, meaning that we had proposed a good model as starting point, there is already a substantial improvement from the original model.   
 {: style="text-align: justify"}
 
 Then we save the model so we can reuse it or share it. Indeed you can download my trained model [here.](/images/BestModelNN.h5)   
@@ -341,13 +347,14 @@ save_model_hdf5(model.best, "/home/nacho/Drugs/BestModelNN.h5")
 #model.best<-load_model_hdf5("/home/nacho/Drugs/BestModelNN.h5")
 {% endhighlight %}
 
-Now we are ready to find new protease-inhibitors among large libraries. {: style="text-align: justify"}
-Since the next chunk of code contains a big <codewhile</code> loop that I don't want to cut, I will explain how it works here:   
+Now we are ready to find new protease-inhibitors among large libraries.    
+{: style="text-align: justify"}
+Since the next chunk of code contains a big <code>while</code> loop that I don't want to cut, I will explain how it works here:   
 {: style="text-align: justify"}
 
 First, we define the folder in which the SMILES are. 
 Next, we check that the files containing the SMILES have not been processed yet. This part is very useful because it allows you to add more files to the folder while the script is running so it keeps going iterating over the new files.
-Then, in order to avoid running of memory when we process the SMILES, we load them in batches of 10000.
+Then, in order to avoid running out of memory when we process the SMILES, we load them in batches of 10000.
 To be able to normalize the data in the test set we need to use an additional function. This is because of the way the normalization step is done:    
 {: style="text-align: justify"}
 
@@ -371,7 +378,7 @@ scale.db<-function(df.new, df.old){
 }
 {% endhighlight %}
 
-Once the descriptors extracted from the SMILES in the test set are standardized we can proceed to predict the affinity of the drugs for the proteases.   
+Once the descriptors are extracted from the SMILES and the test is standardized we can proceed to predict the affinity of the drugs for the proteases.   
 {: style="text-align: justify"}
   
 Finally, we save the results in the disk every 1000 compounds and at the end of the process. Here is the code to do everything:   
@@ -434,11 +441,13 @@ output<-data.frame(compound.db,activity.db)
 write.csv(output,paste(pathDB,"results.csv",sep = ""))
 {% endhighlight %}
 
-And this is it. Now you have the tools to start your own search for bioactive drugs.   
+And this is it.   
+Now you have the tools to start your own search for bioactive drugs.   
 {: style="text-align: justify"}
 
 ## Conclusions
-In this post, I have shown you the **very basics** of drug discovery so you can get an intuition about how using ML approaches we can speed up the search for new medicines. Even though I have shown you how to extract and use chemical descriptors in most of the cases this is not a good idea, the reason for that is that during the extraction of the descriptors there is a loss of information. In the next post, I will explain how to use convolutional neural networks to increase the efficacy of the drug-discovery process by using lossless parametrizations of the drugs. Anyway, I hope you have enjoyed it.   
+In this post, I have shown you the **very basics** of drug discovery so you can get an intuition about how using ML approaches can speed up the search for new medicines.   
+Even though I have shown you how to extract and use chemical descriptors in most of the cases this is not a good idea, the reason for that is that during the extraction of the descriptors there is a huge loss of information. In the next post, I will explain how to use convolutional neural networks to increase the efficacy of the drug-discovery process by using lossless parametrizations of the drugs. Anyway, I hope you have enjoyed it.   
 {: style="text-align: justify"}
 
 As always, you can download my code from [here](/images/DrugDiscoveryScript.R) and a pdf that I prepared for a workshop about this topic [here](/images/DrugDiscoveryWorkshop.pdf).
