@@ -16,7 +16,23 @@ Unfortunately, neither ancient greeks or guys like Copernicus or Huygens had the
 <!--more-->
 
 ### The paradox of Drake equation
-In 1961 Frank Drake, tried to shreed some light into it by defining 
+In 1961 Frank Drake tried to shed some light on the topic by turning the philosophical question into a parametric hypothesis. He numerically computed the probability of another intelligent civilization living in our galaxy.  For the first time in history, someone had answer the question from a numerical point of view.  According to Drake, we are sharing our galaxy with another 10 intelligent civilizations with the ability to communicate. Is that too much? is that too little? Well... for sure we would not be able to detect our own presence from a distance 10K light-years (3,1kpc) which is approximately 1/10 of the galactic size. Indeed we would not be able to detect even the presence of Earth since the furthest exoplantet detected and confirmed it is around 6.5K light-years:
+
+[Exoplanets](/images/1920px-Distribution_of_exoplanets_by_distance.png)
+
+But coming back to Drake equations, it takes into account the following parameters:
+
+![DrakeEq](/images/drakeequation.svg)
+
+R∗ = the rate of star formation
+fp = the ratio of stars having planets
+ne = the ratio of planets in the habitable zone
+fl = the ratio of ne that would actually develop life
+fi = the ratio of fl that would develop intelligent life
+fc = the ratio of civilizations that develop a technology detectable from other planets 
+L = the time for which civilizations send detectable signatures to space
+
+Of course, Drake equation is based on very strong assumptions 
 
 {% highlight r %}
 linear<-lm(log(df$Infected-1)~df$Day)
