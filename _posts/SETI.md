@@ -32,8 +32,21 @@ fi = the ratio of fl that would develop intelligent life
 fc = the ratio of civilizations that develop a technology detectable from other planets 
 L = the time for which civilizations send detectable signatures to space
 
-Of course, some of Drake equation's constrains are purely theoretical, for instance... we don't know how easy it is for a form of life to become intelligent and in that sense, there is a new paper in which the authors develop a theoretical Bayesian framework to estimate some of those parameters and they argue that considering how early life arrived to Earth and how late this life became intelligent, it might not be an easy step to take; however, the universe is vast so big that even events with very low probality are likely to happen somewhere and this is where the Fermi paradox come in. If there is so likely that there is intelligent life somewhere in the observable universe, why haven't we heard from them??!! 
-And there are so many posible answers to try to explain the paradox that it is impossible to mention them all, and still it is a paradox because none of the arguments is strong enough to solve the paradox. 
+Of course, some of Drake equation's constrains are purely theoretical, for instance... we don't know how easy it is for a form of life to become intelligent and in that sense, there is a new paper in which the authors develop a theoretical Bayesian framework to estimate some of those parameters and they argue that considering how early life arrived to Earth and how late this life became intelligent[Ref](https://www.pnas.org/content/117/22/11995), it might not be an easy step to take; however, the universe is vast so big that even events with very low probality are likely to happen somewhere and this is where the Fermi paradox comes in. If there is so likely that there is intelligent life somewhere in the observable universe, why haven't we heard from them??!! 
+There are so many posible answers to try to explain the paradox that it is impossible to mention them all, and still it is a paradox because none of the arguments is strong enough to solve it.
+
+{: style="text-align: justify"}
+
+### The SETI/Breakthrough programs 
+Since we haven't been able to disprove any hypothesis regarding extraterrestrial intelligence, we can only keep scanning the space looking for a signature of an intelligent civilization and this is what the SETI does. Through different initiatives SETI scans most of the electromagenetic spectrum (from radio waves to light sources) trying to find unnatural signals. However the amount of data gathered so far is so vast that a comprenhensive analysis using classical approaches would take a lot of years, so SETI, through the Breakthrough program has released a masive dataset containing data from the closests 100000 stars. The data comes from    [The Parkes Observatory](https://en.wikipedia.org/wiki/Parkes_Observatory), [The Green Bank Telescope](https://greenbankobservatory.org/science/telescopes/gbt/) or the [Automated Planted Finder(Lick Observatory)](https://en.wikipedia.org/wiki/Automated_Planet_Finder). 
+ 
+
+
+
+
+
+https://www.pnas.org/content/115/42/E9755
+
 
 
 
