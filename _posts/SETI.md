@@ -42,7 +42,7 @@ Since we haven't been able to disprove any hypothesis regarding extraterrestrial
 The idea behind releasing such a dataset is to make it available for the community, so everyone can explore to try to find signatures indicative of alien civilizations, and this what I will do in this post:to establish a framework and to provide some ideas so everyone can explore the dataset. 
 
 ### Navigating the data. 
-In this first post on the topic, I will focus on the APF dataset because of it's simplicity. The APF dataset is a set of images in XXX format. Each image corresponds to the observation of one star at one particular timepoint. The "images" are indeed echelle spectrograms ![Echelle](/images/Echelle_Principle.svg.png).
+In this first post on the topic, I will focus on the APF dataset because of it's simplicity. The APF dataset is a set of images in XXX format. Each image corresponds to the observation of one star at one particular timepoint. The "images" are indeed echelle spectrograms ![Echelle](/images/micromachines-10-00037-g002.png).
 
 
  
