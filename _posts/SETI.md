@@ -38,7 +38,13 @@ There are so many posible answers to try to explain the paradox that it is impos
 {: style="text-align: justify"}
 
 ### The SETI/Breakthrough programs 
-Since we haven't been able to disprove any hypothesis regarding extraterrestrial intelligence, we can only keep scanning the space looking for a signature of an intelligent civilization and this is what the SETI does. Through different initiatives SETI scans most of the electromagenetic spectrum (from radio waves to light sources) trying to find unnatural signals. However the amount of data gathered so far is so vast that a comprenhensive analysis using classical approaches would take a lot of years, so SETI, through the Breakthrough program has released a masive dataset containing data from the closests 100000 stars. The data comes from    [The Parkes Observatory](https://en.wikipedia.org/wiki/Parkes_Observatory), [The Green Bank Telescope](https://greenbankobservatory.org/science/telescopes/gbt/) or the [Automated Planted Finder(Lick Observatory)](https://en.wikipedia.org/wiki/Automated_Planet_Finder). 
+Since we haven't been able to disprove any hypothesis regarding extraterrestrial intelligence, we can only keep scanning the space looking for a signature of an intelligent civilization and this is what the SETI does. Through different initiatives SETI scans most of the electromagenetic spectrum (from radio waves to light sources) trying to find unnatural signals. However the amount of data gathered so far is so vast that a comprenhensive analysis using classical approaches would take a lot of years, so SETI, through the Breakthrough program has released a masive dataset containing data from the closests 100000 stars. The data comes from    [The Parkes Observatory](https://en.wikipedia.org/wiki/Parkes_Observatory), [The Green Bank Telescope](https://greenbankobservatory.org/science/telescopes/gbt/) or the [Automated Planted Finder(Lick Observatory)](https://en.wikipedia.org/wiki/Automated_Planet_Finder) and you can download everything from [here](https://breakthroughinitiatives.org/opendatasearch).
+The idea behind releasing such a dataset is to make it available for the community, so everyone can explore to try to find signatures indicative of alien civilizations, and this what I will do in this post:to establish a framework and to provide some ideas so everyone can explore the dataset. 
+
+### Navigating the data. 
+In this first post on the topic, I will focus on the APF dataset because of it's simplicity. The APF dataset is a set of images in XXX format. Each image corresponds to the observation of one star at one particular timepoint. The "images" are indeed echelle spectrograms (Image here).
+
+
  
 
 
