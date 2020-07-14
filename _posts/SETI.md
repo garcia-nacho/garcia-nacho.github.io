@@ -54,7 +54,10 @@ The raw images that we obtain from the echelle telescope look like this:
 The image represents the diffaction of the light of a star and wavelenght increases from up to low and from left to right, so on the top left corner the photons with the lower wavelength (red) are adquired and in the lower left corner the photons with the highest wavelength (blue). If we assing a colour to each region we would have something like this:
 
 ![ColouredEchelle](/images/echelle-spectrum.jpg)
-[source](https://blogs.maryville.edu/aas/echelle-spectrum/)
+[source](https://blogs.maryville.edu/aas/echelle-spectrum/)    
+
+As you can see there are a couple of features in the image, the shadows and the "tracks" 
+
 And this is how it looks when we zoom in:
 
 ![Echelle zoom](/images/echelle%20zoom.png) 
