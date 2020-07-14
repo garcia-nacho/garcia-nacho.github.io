@@ -53,7 +53,7 @@ The raw images that we obtain from the echelle telescope look like this:
 
 And this is how it looks when we zoom in:
 
-![Echelle zoom](/images/echelle zoom.png) 
+![Echelle zoom](/images/echelle%20zoom.png) 
 
 
 
