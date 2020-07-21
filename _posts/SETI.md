@@ -56,12 +56,11 @@ The image represents the diffaction of the light of a star and wavelenght increa
 ![ColouredEchelle](/images/echelle-spectrum.jpg)
 [source](https://blogs.maryville.edu/aas/echelle-spectrum/)    
 
-As you can see there are a couple of features in the image, the shadows and the "tracks" 
-
-And this is how it looks when we zoom in:
+As you can see there are a couple of features in the image, the shadows and the "tracks". This is more obvious if we zoom in into the image:
 
 ![Echelle zoom](/images/echelle%20zoom.png) 
 
+This is basically an artifact of the technique, not all area of the image is covered by the diffracted light, that means that we are only interested in the tracks of light which are called orders. We therefore need a way to extract the useful information (the tracks) from the image, this process is called compression (basically because the resulting image with the important information is much smaller in size), but to do it we need to know where the tracks lay in the image. And this might  
 
 
 https://www.pnas.org/content/115/42/E9755
