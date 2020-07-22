@@ -62,7 +62,88 @@ As you can see there are a couple of features in the image, the shadows and the 
 
 This is basically an artifact of the technique, not all area of the image is covered by the diffracted light, that means that we are only interested in the tracks of light which are called orders. We therefore need a way to extract the useful information (the tracks) from the image, this process is called compression (basically because the resulting image with the important information is much smaller in size), but to do it we need to know where the tracks lay in the image. 
 The way to do it is a bit convoluted: We need to find the functions that draw a line going though all the pixels of every track. 
-As you can see in the image, the tacks are curved and although this is totally normal in echelle spectra, it is a bit problematic for us because the functions tha draw such a curves are 4rd order polynomial functions like this one:
+As you can see in the image, the tacks are curved and although this is totally normal in echelle spectra, it is a bit problematic for us because the functions tha draw such a curves are 4rd order polynomial functions like this one:   
+$$y=a+b\cdot x+c\cdot x^{2}+d\cdot x^{3}+e\cdot x^{4}$$   
+
+so we *only* need a way to find a, b, c and d for each order (and in total we have 79. I guess that different processing softwares have their own but I had to develop my own algorithm to estimate the 5 parameters.
+
+My algorithm basically find the orders by identifying the tracks in the central region of the image, which is where all the tracks are better defined and then it goes track by track finding the parameters that satisfy the following two conditions: 
+  
+1. The curve must go through the point of the track identified in the central retgion.
+2. The mean of the pixels of the that the curve overlay must be maximize (meaning that we are avoiding the shades between tracks)
+
+So let's start coding it: 
+
+Before doing anything we need to load the FITS files and this is done in R using the FITSio library (we also load the rest of the libraries that we are going to use later on)
+
+{% highlight r %}
+library(FITSio)
+library(doParallel)
+library(parallel)
+library(foreach)
+library(data.table)
+library(ggplot2)
+library(ggpubr)
+library(ggrepel)
+library(RCurl)
+
+df<-readFITS("/home/nacho/SETI/ucb-bek230.fits")
+df.img<-df$imDat
+
+{% endhighlight %}
+
+You can download the ucb-beck230.fits file from [here](/images/ucb-bek230.fits). Now the image is stored in the df.img matrix with dimensions [2080,4608]. Although you can plot the image I don't recomend it, the rendering it is very slow and it is going to be difficult to see anythin. Anyway if you insist this is the best I have obtained by tweaking the zlim of the image function:
+
+<code>image(df.img, zlim = c(median(df.img)/2, median(df.img)*2))</code>
+
+as you can see the rendering is so inefficient that it creates the horizontal white stripes that you can see on the image:
+![EchelleR](/images/Rplot27.png)   
+Next we need to remove the background of the image and we do it by substracting the value corresponding to the first 30 rows of the image, that never have a track:
+
+{% highlight r %}
+baseline<-median(df.img[1:30,])
+df.img<-df.img-baseline
+{% endhighlight %}
+ 
+Then, we look for the 79 peaks of photons corresponding to the orders at the center of the image:
+
+{% highlight r %}
+#Identification of N peaks 
+df.img<-df.img-baseline
+anchor.band<-round(ncol(df.img)/2)
+track.width <- 5
+track.n<-79
+central.band<- df.img[,anchor.band]
+#Remove cosmic ray
+central.band[which(central.band>2500)]<-0
+
+anchor.point <- vector()
+for (i in 1:track.n) {
+  anchor.point.dummy <- which(central.band==max(central.band))[1]
+  central.band[(anchor.point.dummy-5): (anchor.point.dummy+5)]<-0
+  anchor.point<-c(anchor.point, anchor.point.dummy)
+}
+anchor.point<-unique(anchor.point)
+{% endhighlight %}
+
+In this algorithm, the peaks are stored in the anchor point vector.
+
+This is how the order look like when they cross the central part of the image:
+![AnchorPoints](/images/anchorpoints.png)
+and his is how the algorithm finds the peaks:
+![AnchorPoints](/images/anchorpoints.png)
+
+
+
+
+
+
+Notes:
+NOTE1: You have probably notice that the algorithm has some problems recognizing all the orders because some of them are really noisy, so the best I have been able to do is 72 orders. However by tuning the tack.widh parameter or by removing order that are too close to each other, but addressing this problem goes beyond the scope of this post.  
+
+
+
+
 
 
 Althought the information is usually encoded in a file that is provided together with the spectra, I haven't find any  
