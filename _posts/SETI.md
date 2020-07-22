@@ -131,7 +131,7 @@ In this algorithm, the peaks are stored in the anchor point vector.
 This is how the order look like when they cross the central part of the image:
 ![AnchorPoints](/images/anchorpoints.png)
 and his is how the algorithm finds the peaks:
-![AnchorPoints](/images/anchorpoints.png)
+![AnchorPoints2](/images/anchorpoints2.png)
 
 
 
