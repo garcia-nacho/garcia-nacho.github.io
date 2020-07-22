@@ -60,7 +60,12 @@ As you can see there are a couple of features in the image, the shadows and the 
 
 ![Echelle zoom](/images/echelle%20zoom.png) 
 
-This is basically an artifact of the technique, not all area of the image is covered by the diffracted light, that means that we are only interested in the tracks of light which are called orders. We therefore need a way to extract the useful information (the tracks) from the image, this process is called compression (basically because the resulting image with the important information is much smaller in size), but to do it we need to know where the tracks lay in the image. And this might  
+This is basically an artifact of the technique, not all area of the image is covered by the diffracted light, that means that we are only interested in the tracks of light which are called orders. We therefore need a way to extract the useful information (the tracks) from the image, this process is called compression (basically because the resulting image with the important information is much smaller in size), but to do it we need to know where the tracks lay in the image. 
+The way to do it is a bit convoluted: We need to find the functions that draw a line going though all the pixels of every track. 
+As you can see in the image, the tacks are curved and although this is totally normal in echelle spectra, it is a bit problematic for us because the functions tha draw such a curves are 4rd order polynomial functions like this one:
+
+
+Althought the information is usually encoded in a file that is provided together with the spectra, I haven't find any  
 
 
 https://www.pnas.org/content/115/42/E9755
