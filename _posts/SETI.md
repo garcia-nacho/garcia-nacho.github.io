@@ -203,7 +203,7 @@ for (i in 2:length(output)) {
 }
 {% endhighlight %}
 
-
+Now that we have found where the orders lay in the image, we need to extract them. To do that, we average the value of the width of the track (approximately five pixels) 
 
 
 
