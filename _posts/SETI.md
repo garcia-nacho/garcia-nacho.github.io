@@ -111,7 +111,7 @@ Then, we look for the 79 peaks of photons corresponding to the orders at the cen
 #Identification of N peaks 
 df.img<-df.img-baseline
 anchor.band<-round(ncol(df.img)/2)
-track.width <- 5
+track.width <- 10
 track.n<-79
 central.band<- df.img[,anchor.band]
 #Remove cosmic ray
@@ -120,7 +120,7 @@ central.band[which(central.band>2500)]<-0
 anchor.point <- vector()
 for (i in 1:track.n) {
   anchor.point.dummy <- which(central.band==max(central.band))[1]
-  central.band[(anchor.point.dummy-5): (anchor.point.dummy+5)]<-0
+  central.band[(anchor.point.dummy-track.width): (anchor.point.dummy+track.width)]<-0
   anchor.point<-c(anchor.point, anchor.point.dummy)
 }
 anchor.point<-unique(anchor.point)
@@ -133,13 +133,85 @@ This is how the order look like when they cross the central part of the image:
 and his is how the algorithm finds the peaks:
 ![AnchorPoints2](/images/anchorpoints2.png)
 
+Now that we have identified the orders in the middle part of the spectrogram, we need to identify the tracks. Note that the algorithm has some problems identifying lowest and highest orders (the signal in those wavelengths is so weak that the algorithms fails detecting them over the background noise.
+
+As I mentioned above we want to find those 4rd oder functions that overlap the tracks, since the function to be maximized is not differentiable we will find the parameters by doing a random search. Parameters *b, c, d,* and *e* will take values on a small range so it will be easier for the model to find the optimal solution after few iterations (10000). Parameter *a* will take the only possible value that make the curve go through the pixel identified to belong to the order at the cental region. 
+Since the algorithm has to find the parameters for each one of the 79 orders identifed it offers a good opportunity to paralelize the code, so each processor gets the task of finding the parameters for one order and here is the code that does it:
+
+{% highlight r %}
+fitter <- function(x, a, b, c, d, e){
+  y<-a + b*x + c*x^2 + d*x^3+ e*x^4 
+  return(round(y))
+}
+
+iterations<-10000
+
+cores<-detectCores()-1
+cluster.cores<-makeCluster(cores)
+registerDoParallel(cluster.cores)
+
+output<-foreach(i=1:length(anchor.point), .verbose = TRUE) %dopar%{
+  #Function to call equation
+
+#for (i in 1:length(anchor.point)) {
+  
+  x<-round(ncol(df.img)/2)
+  y<-anchor.point[i] 
+  for (k in 1:iterations) {
+
+  #Parameter generation
+  b <-runif(1, min = -0.08, max= 0)
+  c <-runif(1, min = 0, max= 1.6e-05)
+  d <-runif(1, min = -1.1e-09, max= 1.5e-09)
+  e<- runif(1, min=-1e-13,max= 2e-13)
+  a<- y - b*x - c*x^2 - d*x^3 - e*x^4 
+  
+  #call function
+  row.ids<-fitter(c(1:ncol(df.img)),a,b,c,d,e)
+  
+  row.ids<-row.ids[row.ids>0]
+  row.ids<-row.ids[row.ids<nrow(df.img)]
+  
+  if(length(row.ids)>100){
+  indexes<-vector()
+  for (j in 1:length(row.ids)) indexes[j]<-((2080)*(j-1))+row.ids[j]
+  
+  #Create evaluation metric
+  score<-mean(df.img[indexes])
+  
+  if(!exists("best.score")) {
+    best.score<-score
+    best.params <- c(a,b,c,d,e,i)
+    }
+    
+  if(score>best.score){
+    best.score<-score
+    best.params<-c(a,b,c,d,e,i)
+    } }
+  }
+  return(best.params)
+  rm(best.params)
+  rm(best.score)
+}
+
+stopCluster(cluster.cores)
+
+params.opt<-output[[1]] 
+for (i in 2:length(output)) {
+  params.opt<-rbind(params.opt, output[[i]])
+  
+}
+{% endhighlight %}
 
 
 
 
 
-Notes:
-NOTE1: You have probably notice that the algorithm has some problems recognizing all the orders because some of them are really noisy, so the best I have been able to do is 72 orders. However by tuning the tack.widh parameter or by removing order that are too close to each other, but addressing this problem goes beyond the scope of this post.  
+
+
+{% highlight r %}
+
+{% endhighlight %}
 
 
 
