@@ -206,19 +206,19 @@ for (i in 2:length(output)) {
 Now that we have found where the orders lay in the image, we need to extract them. To do that, we average the value of the width of the track (approximately five pixels) 
 
 
+{% highlight r %}
 
+{% endhighlight %}
 
+Unfortunately, the random nature of the paarameters finding the orders would be uncomparable to each other unless we aligned them using some common spectral features (eg. The H-band due to the hydrogen and/or iodine bands used to calibrate echelle spectographs). However, that goes beyond the scope of the article because, luckily for us we don't need to do the entire process for each spectrogram. We can just donwload the compressed spectrogram from the SETI webpage.  
+
+### Scrapping SETI 
+Now that we have a plan A (to download the compressed spectrogram) and a plan B (to compress the raw spectrogram when it is needed) we can procceed to download the data from the breakthrough database. First of all we are going to use a file containing all the 
 
 {% highlight r %}
 
 {% endhighlight %}
 
-
-
-
-
-
-Althought the information is usually encoded in a file that is provided together with the spectra, I haven't find any  
 
 
 https://www.pnas.org/content/115/42/E9755
