@@ -213,12 +213,42 @@ Now that we have found where the orders lay in the image, we need to extract the
 Unfortunately, the random nature of the paarameters finding the orders would be uncomparable to each other unless we aligned them using some common spectral features (eg. The H-band due to the hydrogen and/or iodine bands used to calibrate echelle spectographs). However, that goes beyond the scope of the article because, luckily for us we don't need to do the entire process for each spectrogram. We can just donwload the compressed spectrogram from the SETI webpage.  
 
 ### Scrapping SETI 
-Now that we have a plan A (to download the compressed spectrogram) and a plan B (to compress the raw spectrogram when it is needed) we can procceed to download the data from the breakthrough database. First of all we are going to use a file containing all the 
+Now that we have a plan A (to download the compressed spectrogram) and a plan B (to compress the raw spectrogram when it is needed) we can procceed to download the data from the breakthrough database. To do that we would use an index file of the database, so we can get only the files that are interesting for us. You can download the file [here](/images/apf_log.txt) and this is the code to get the information:
 
 {% highlight r %}
+files<-read.csv("/home/nacho/SETI/apf_log.txt", sep = " ", header = FALSE)
+files<-files[-1,]
+files<-files[,1:8]
+files$reduced<-gsub(".*\\/r", "TRUE", files$V1)
+files$reduced<-gsub("TRUE.*", "TRUE", files$reduced)
+files<-files[files$reduced=="TRUE", ]
+
+stars<- unique(as.character(files$V3))
+stars.n<-vector()
+for (i in 1:length(stars)) {
+  stars.n[i]<-nrow(files[files$V3==as.character(stars[i]),])
+  
+}
+stars<-stars[order(stars.n, decreasing = TRUE)]
+stars.n<-stars.n[order(stars.n, decreasing = TRUE)]
+{% endhighlight %}
+
+This code gets the information about the stars that are in the database and the number of observations for each one of them. 
+From there you could extract the information about your favourite star. In this example I am going to get the information about the Tabby star (aka. 8462852), to do that I just need to find and download the files in the dtabase that correspond to observations of Tabby:
+
+{% highlight r %}
+tabby <- files[grep("8462852", files$V3),]
+
+tabby$link<-gsub("gs:\\/", "https:\\/\\/storage.googleapis.com", tabby$V1)
+tabby$filename<-gsub(".*\\/","",tabby$V1)
+
+for (i in 1:nrow(tabby)) {
+  download.file(tabby$link[i], paste("/home/nacho/SETI/Tabby/",tabby$filename[i],sep = ""))
+}
 
 {% endhighlight %}
 
+If you have never heard of Tabby. 
 
 
 https://www.pnas.org/content/115/42/E9755
