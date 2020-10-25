@@ -248,7 +248,10 @@ for (i in 1:nrow(tabby)) {
 
 {% endhighlight %}
 
-If you have never heard of Tabby. 
+I am sure that you have already heard of Tabby, although you might not recognize it by the name. Tabby is a star that became very famous a few years ago when it was found that it had abnormal reductions of the light intensity that were not consistent with any stellar event or the presence of planets orbiting it [ref](). Based on this unusual observations XXXX proposed that an hypotheis that fits with the data would be the presence of a Dyson Sphere. Which is an hypothetical alien megastructure developed by very advanced civilization to extract the energy from a star. There have been propossed several types of Dyson Speres, from a rigid gigant sphere to a swarm of smaller satelites devoted to get the star energy.
+
+Although the mystery is still unsolved, no radio emisions from Tabby have been detected and the strongest hypothesis nowadays is that the cause of the fluctuations could be originated by a cloud of asteroids/comets/dust 
+
 
 
 https://www.pnas.org/content/115/42/E9755
