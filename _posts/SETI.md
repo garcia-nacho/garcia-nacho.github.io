@@ -250,8 +250,46 @@ for (i in 1:nrow(tabby)) {
 
 I am sure that you have already heard of Tabby, although you might not recognize it by the name. Tabby is a star that became very famous a few years ago when it was found that it had abnormal reductions of the light intensity that were not consistent with any stellar event or the presence of planets orbiting it [ref](). Based on this unusual observations XXXX proposed that an hypotheis that fits with the data would be the presence of a Dyson Sphere. Which is an hypothetical alien megastructure developed by very advanced civilization to extract the energy from a star. There have been propossed several types of Dyson Speres, from a rigid gigant sphere to a swarm of smaller satelites devoted to get the star energy.
 
-Although the mystery is still unsolved, no radio emisions from Tabby have been detected and the strongest hypothesis nowadays is that the cause of the fluctuations could be originated by a cloud of asteroids/comets/dust 
+Although the mystery is still unsolved, no radio emisions from Tabby have been detected and the strongest hypothesis nowadays is that the  fluctuations could be originated by a cloud of asteroids/comets/dust there is a strong interest on this star by the media, so let's surf the vawe of trendiness and explore Tabby.
 
+Now that we have all the compressed spectra from Tabby in the same folder we can load them into a 3D array, although there are different approaches to deal with time-series in R in this case I fnd this one more convinient because it just treates the spectra as if they were images and the 3rd dimension would be the temporal dimension, it is like doing a time-lapse with the spectra.
+
+{% highlight r %}
+### Load files directory Taby--------------
+files<-list.files("/home/nacho/SETI/Tabby/")
+
+image.array<-array(data = NA, dim = c(length(files), 4608, 79))
+date<-vector()
+for (i in 1:length(files)) {
+  dummy<-readFITS(paste("/home/nacho/SETI/Tabby/", files[i], sep = ""))
+  date[i]<-dummy$header[25]
+  image.array[i,,]<-dummy$imDat
+}
+
+wl<-readFITS("/home/nacho/SETI/apf_wav.fits")
+wl<-wl$imDat
+
+{% endhighlight %}
+
+You have probably noticed that the scripts uses an additional file [apf_wav.fits](/images/apf_wav.fits). That file can be used to extract the information regarding the correspondance between the wavelenght and the possitions of the spectra. 
+
+Next, we normalize the data
+
+{% highlight r %}
+#Normalization
+photons_norm<-vector()
+for (timeevents in 1:dim(image.array)[1]) {
+  photons_norm[timeevents]<-sum(image.array[timeevents,,])
+  
+}
+photons_norm<-photons_norm/min(photons_norm)
+
+for (timeevents in 1:dim(image.array)[1]) {
+  image.array[timeevents,,]<-image.array[timeevents,,,drop=FALSE]/photons_norm[timeevents]
+  
+}
+
+{% endhighlight %}
 
 
 https://www.pnas.org/content/115/42/E9755
