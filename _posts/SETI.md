@@ -64,13 +64,13 @@ As you can see, there are two features in the image, the shadows and the "tracks
 
 ![Echelle zoom](/images/echelle%20zoom.png) 
 
-This pattern is indeed an artifact from the technique, not all area on the image is covered by the diffracted light. We are obviously interested only in the tracks of light because they are contain the information about the photons. Those "tracks" are called orders and we need a way to extract the useful information laying on the orders in a process called compression (basically because the resulting image with the important information is much smaller in size).   
+This pattern is indeed an artifact from the technique, not all area on the image is covered by the diffracted light. We are interested only in the tracks of light because they contain the information. Those "tracks" are called orders and we need a way to extract the information laying on the orders in a process called compression (basically because the resulting image with the important information is much smaller in size).   
 The fist step in the compresion is to find out where the tracks lay in the image. 
-The way to do it is a bit convoluted: We need to find the functions that draw lines going though all the pixels of every track. 
+The way to do it is a bit convoluted: We need to find functions that *draw"* lines going though all the pixels of every track. 
 As you can see in the image, the tacks are curved and although this is totally normal in echelle spectra, it is a bit problematic for us because the functions tha draw such a curves are 4rd order polynomial functions like this one:   
 $$y=a+b\cdot x+c\cdot x^{2}+d\cdot x^{3}+e\cdot x^{4}$$   
 
-so we *only* need a way to find a, b, c and d for each of the 79 orders. I guess that different processing softwares have their own algorithms but I had to develop my own to estimate the 5 parameters.
+Now we *only* need a way to find **a**, **b**, **c** and **d** for each one of the 79 orders. I guess that different tools have their own algorithms but I had to develop my own to estimate the 5 parameters.
 
 My algorithm basically find the orders by identifying the tracks in the central region of the image, which is where all the tracks are better defined and then it goes track by track finding the parameters that satisfy the following two conditions: 
   
