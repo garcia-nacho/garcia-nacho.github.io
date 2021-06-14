@@ -72,14 +72,14 @@ $$y=a+b\cdot x+c\cdot x^{2}+d\cdot x^{3}+e\cdot x^{4}$$
 
 Now we *only* need a way to find **a**, **b**, **c** and **d** for each one of the 79 orders. I guess that different tools have their own algorithms but I had to develop my own to estimate the 5 parameters.
 
-My algorithm basically finds the orders by identifying the tracks in the central region of the image, which is where all the tracks are better defined and then it goes track by track finding the parameters that satisfy the following two conditions: 
+My algorithm finds the orders by identifying the tracks in the central region of the image, which is where all the tracks are better defined and then, it goes track by track finding the parameters that satisfy the following two conditions: 
   
 1. The curve must go through the point of the track identified in the central region which I call anchoring point.
 2. The mean of the pixels of the that the curve overlay must be maximize (meaning that we are avoiding the shades between tracks)
 
 So let's start coding it: 
 
-Before doing anything we need to load the FITS files and this is done in R using the FITSio library (we also load the rest of the libraries that we are going to use later on)
+Before doing anything we need to load the FITS files and this is done in R using the FITSio library (We also load the rest of the libraries that we are going to use later on)
 
 {% highlight r %}
 library(FITSio)
@@ -97,13 +97,13 @@ df.img<-df$imDat
 
 {% endhighlight %}
 
-You can download the ucb-beck230.fits file from [here](/images/ucb-bek230.fits). Now the image is stored in the df.img matrix with dimensions [2080,4608]. Although you can plot the image I don't recomend it, the rendering it is very slow and it is going to be difficult to see anythin. Anyway if you insist this is the best I have obtained by tweaking the zlim of the image function:
+You can download the ucb-beck230.fits file from [here](/images/ucb-bek230.fits). Now the image is stored in the df.img matrix with dimensions [2080,4608]. Although you can plot the image I don't recomend it, the rendering is very slow and it is going to be difficult to see anything anyway. This is the best I have obtained by tweaking the zlim of the image function:
 
 <code>image(df.img, zlim = c(median(df.img)/2, median(df.img)*2))</code>
 
-as you can see the rendering is so inefficient that it creates the horizontal white stripes that you can see on the image:
+as you can see the rendering is so inefficient that it even creates horizontal white stripes:
 ![EchelleR](/images/Rplot27.png)   
-Next we need to remove the background of the image and we do it by substracting the value corresponding to the first 30 rows of the image, that never have a track:
+Next, we need to remove the background on the image and we do it by substracting the value corresponding to the first 30 rows of the image, that never have a track:
 
 {% highlight r %}
 baseline<-median(df.img[1:30,])
