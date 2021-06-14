@@ -72,9 +72,9 @@ $$y=a+b\cdot x+c\cdot x^{2}+d\cdot x^{3}+e\cdot x^{4}$$
 
 Now we *only* need a way to find **a**, **b**, **c** and **d** for each one of the 79 orders. I guess that different tools have their own algorithms but I had to develop my own to estimate the 5 parameters.
 
-My algorithm basically find the orders by identifying the tracks in the central region of the image, which is where all the tracks are better defined and then it goes track by track finding the parameters that satisfy the following two conditions: 
+My algorithm basically finds the orders by identifying the tracks in the central region of the image, which is where all the tracks are better defined and then it goes track by track finding the parameters that satisfy the following two conditions: 
   
-1. The curve must go through the point of the track identified in the central retgion.
+1. The curve must go through the point of the track identified in the central region which I call anchoring point.
 2. The mean of the pixels of the that the curve overlay must be maximize (meaning that we are avoiding the shades between tracks)
 
 So let's start coding it: 
