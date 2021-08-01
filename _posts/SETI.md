@@ -138,10 +138,12 @@ This is how the order look like when they cross the central part of the image:
 and his is how the algorithm finds the peaks:
 ![AnchorPoints2](/images/anchorpoints2.png)
 
-Now that we have identified the orders in the middle part of the spectrogram, we need to identify the tracks. Note that the algorithm has some problems identifying lowest and highest orders (the signal in those wavelengths is so weak that the algorithms fails detecting them over the background noise.
+Now that we have identified the orders in the central part of the spectrogram, we need to identify the tracks. Note that the algorithm has some problems identifying lowest and highest orders (the signal in those wavelengths is so weak that the algorithm fails detecting them over the background noise).
 
-As I mentioned above we want to find those 4rd oder functions that overlap the tracks, since the function to be maximized is not differentiable we will find the parameters by doing a random search. Parameters *b, c, d,* and *e* will take values on a small range so it will be easier for the model to find the optimal solution after few iterations (10000). Parameter *a* will take the only possible value that make the curve go through the pixel identified to belong to the order at the cental region. 
-Since the algorithm has to find the parameters for each one of the 79 orders identifed it offers a good opportunity to paralelize the code, so each processor gets the task of finding the parameters for one order and here is the code that does it:
+As I mentioned above, we want to find those 4rd oder functions that overlap the tracks. Since the function to be maximized is not differentiable, we will find the parameters by doing a random search. Parameters *b, c, d,* and *e* will take random values on a small range (because of the similar shape of the curves), so it will be easier for the model to find the optimal solution after few iterations, let's say 10000. The optimal solution is the one in which the mean of the values of the image defined by the functions are maximized. 
+
+Parameter *a* will be assigned to the only possible value that makes the curve go throught the pixel identified on the cental region. 
+Since the algorithm has to find the parameters for each one of the 79 orders, it is possible to paralelize the code, so each processor gets the task of finding the parameters for one order. Here is the code to do it:
 
 {% highlight r %}
 fitter <- function(x, a, b, c, d, e){
@@ -208,17 +210,31 @@ for (i in 2:length(output)) {
 }
 {% endhighlight %}
 
-Now that we have found where the orders lay in the image, we need to extract them. To do that, we average the value of the width of the track (approximately five pixels) 
-
+Now, we have found where the orders lay in the image and we need to extract their values. To do that, we average the value of the width of the track (approximately five pixels). 
 
 {% highlight r %}
-
+#Order extraction
+for (i in 1:length(anchor.point)) {
+  df.coord<-  as.data.frame(fitter(c(1:ncol(df.img)),a,b,c,d,e))
+  colnames(df.coord)<-"Y"
+  df.coord$X<-c(1:ncol(df.img))  
+  dummy.row<-vector()
+  
+  for (j in 1:nrow(df.coord)) {
+    dummy.row[j]<-mean(df.img[c((df.coord$Y[j]-2):(df.coord$Y[j]+2)),df.coord$X[j]])
+  }
+  if(!exists("compressed")){
+  compressed<-dummy
+  }else{
+  compressed<-rbind(compressed,dummy)
+  }
+}
 {% endhighlight %}
 
-Unfortunately, the random nature of the paarameters finding the orders would be uncomparable to each other unless we aligned them using some common spectral features (eg. The H-band due to the hydrogen and/or iodine bands used to calibrate echelle spectographs). However, that goes beyond the scope of the article because, luckily for us we don't need to do the entire process for each spectrogram. We can just donwload the compressed spectrogram from the SETI webpage.  
+Althought this method works, the random nature of the paarameters would make the extractions uncomparable unless we aligned them using some common spectral features (eg. The H-band due to the hydrogen and/or iodine bands used to calibrate echelle spectographs). If you find this algorithmic approach interesting, you can just take the code and develope it futher but this additional tests and validations go beyond the scope of this post. Luckily for us, we don't need to do the entire process for each spectrogram. We can just donwload the compressed spectrogram from the SETI webpage.
 
 ### Scrapping SETI 
-Now that we have a plan A (to download the compressed spectrogram) and a plan B (to compress the raw spectrogram when it is needed) we can procceed to download the data from the breakthrough database. To do that we would use an index file of the database, so we can get only the files that are interesting for us. You can download the file [here](/images/apf_log.txt) and this is the code to get the information:
+Now that we have a plan A (to download the compressed spectrogram) and a plan B (to compress the raw spectrogram when it is needed) we can procceed to download the data from the breakthrough database. To do that, we would use an index of the database which you can download [here](/images/apf_log.txt). This is the code to get information about the compressed files (reduced==TRUE) stored in the database.
 
 {% highlight r %}
 files<-read.csv("/home/nacho/SETI/apf_log.txt", sep = " ", header = FALSE)
@@ -238,8 +254,10 @@ stars<-stars[order(stars.n, decreasing = TRUE)]
 stars.n<-stars.n[order(stars.n, decreasing = TRUE)]
 {% endhighlight %}
 
-This code gets the information about the stars that are in the database and the number of observations for each one of them. 
-From there you could extract the information about your favourite star. In this example I am going to get the information about the Tabby star (aka. 8462852), to do that I just need to find and download the files in the dtabase that correspond to observations of Tabby:
+This code gets the information about the stars that are in the database and the number of observations for each one of them.  
+From there you could extract information about your favourite star. 
+
+In this example I am just going to get the information about the Tabby star (aka. 8462852), to do that I just need to find and download the files in the dtabase that correspond to observations of Tabby:
 
 {% highlight r %}
 tabby <- files[grep("8462852", files$V3),]
