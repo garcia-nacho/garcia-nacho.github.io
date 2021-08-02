@@ -257,7 +257,7 @@ stars.n<-stars.n[order(stars.n, decreasing = TRUE)]
 This code gets the information about the stars that are in the database and the number of observations for each one of them.  
 From there you could extract information about your favourite star. 
 
-In this example I am just going to get the information about the Tabby star (aka. 8462852), to do that I just need to find and download the files in the dtabase that correspond to observations of Tabby:
+In this example, I am just going to get the information about *KIC 8462852*, to do that I just need to find and download the files in the dtabase that correspond to observations of Tabby:
 
 {% highlight r %}
 tabby <- files[grep("8462852", files$V3),]
@@ -271,7 +271,7 @@ for (i in 1:nrow(tabby)) {
 
 {% endhighlight %}
 
-I am sure that you have already heard of Tabby, although you might not recognize it by the name. Tabby is a star that became very famous a few years ago when it was found that it had abnormal reductions of the light intensity that were not consistent with any stellar event or the presence of planets orbiting it [ref](). Based on this unusual observations XXXX proposed that an hypotheis that fits with the data would be the presence of a Dyson Sphere. Which is an hypothetical alien megastructure developed by very advanced civilization to extract the energy from a star. There have been propossed several types of Dyson Speres, from a rigid gigant sphere to a swarm of smaller satelites devoted to get the star energy.
+So, what's the deal with *KIC 8462852*? KIC 8462852 is also known as Tabby's star. Tabby's is a star that became very famous a few years ago when it was found that it had *abnormal* reductions on the light intensity that were not consistent with any known stellar event. Several hypotheses were proposed to explain these unusual observations and one of them is the presence of an gigantic megastructe warping the star developed by a very advanced alien civilization to extract the energy of the star. Of couse, once the alien hypothesis reached the media, the idea propagated exponentially. 
 
 Although the mystery is still unsolved, no radio emisions from Tabby have been detected and the strongest hypothesis nowadays is that the  fluctuations could be originated by a cloud of asteroids/comets/dust there is a strong interest on this star by the media, so let's surf the vawe of trendiness and explore Tabby.
 
