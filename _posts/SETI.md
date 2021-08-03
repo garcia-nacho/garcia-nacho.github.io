@@ -273,9 +273,9 @@ for (i in 1:nrow(tabby)) {
 
 So, what's the deal with *KIC 8462852*? KIC 8462852 is also known as Tabby's star. Tabby's is a star that became very famous a few years ago when it was found that it had *abnormal* reductions on the light intensity that were not consistent with any known stellar event. Several hypotheses were proposed to explain these unusual observations and one of them is the presence of an gigantic megastructe warping the star developed by a very advanced alien civilization to extract the energy of the star. Of couse, once the alien hypothesis reached the media, the idea propagated exponentially. 
 
-Although the mystery is still unsolved, no radio emisions from Tabby have been detected and the strongest hypothesis nowadays is that the  fluctuations could be originated by a cloud of asteroids/comets/dust there is a strong interest on this star by the media, so let's surf the vawe of trendiness and explore Tabby.
+Although the mystery is still unsolved, no radio emisions from Tabby have been detected and the most likely hypothesis nowadays is that the  fluctuations could be originated by a cloud of asteroids/comets/dust there is still a strong interest on this star by the media, so let's surf the vawe of trendiness and explore Tabby looking for aliens. 
 
-Now that we have all the compressed spectra from Tabby in the same folder we can load them into a 3D array, although there are different approaches to deal with time-series in R in this case I fnd this one more convinient because it just treates the spectra as if they were images and the 3rd dimension would be the temporal dimension, it is like doing a time-lapse with the spectra.
+Now that we have all the compressed spectra from Tabby in the same folder, we can load them into a 3D array in which the first dimension is the temporal one. 
 
 {% highlight r %}
 ### Load files directory Taby--------------
@@ -294,9 +294,9 @@ wl<-wl$imDat
 
 {% endhighlight %}
 
-You have probably noticed that the scripts uses an additional file [apf_wav.fits](/images/apf_wav.fits). That file can be used to extract the information regarding the correspondance between the wavelenght and the possitions of the spectra. 
+You might have noticed that the scripts uses an additional file [apf_wav.fits](/images/apf_wav.fits). That file is used to extract the information that links the wavelenght and the possitions of the spectra. 
 
-Next, we normalize the data
+Next, we normalize the data:
 
 {% highlight r %}
 #Normalization
@@ -313,6 +313,37 @@ for (timeevents in 1:dim(image.array)[1]) {
 }
 
 {% endhighlight %}
+
+Now that we have the data ready, we need an strategy to find the interesting wavelengths. 
+
+
+
+
+{% highlight r %}
+#Spike finder
+mean.array<-matrix(data = NA, nrow = dim(image.array)[2], ncol = dim(image.array)[3])
+sd.array<-matrix(data = NA, nrow = dim(image.array)[2], ncol = dim(image.array)[3])
+median.array<-matrix(data = NA, nrow = dim(image.array)[2], ncol = dim(image.array)[3])
+
+for (i in 1:dim(mean.array)[2]) {
+  mean.array[,i]<-apply(image.array[,,i], 2, mean)  
+  sd.array[,i]<-apply(image.array[,,i], 2, sd)
+  median.array[,i]<-apply(image.array[,,i], 2, median)  
+}
+{% endhighlight %}
+
+
+
+
+
+{% highlight r %}
+
+
+{% endhighlight %}
+
+
+
+
 
 
 https://www.pnas.org/content/115/42/E9755
