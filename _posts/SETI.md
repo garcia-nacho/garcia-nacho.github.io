@@ -314,7 +314,9 @@ for (timeevents in 1:dim(image.array)[1]) {
 
 {% endhighlight %}
 
-Now that we have the data ready, we need an strategy to find the interesting wavelengths. 
+##Finding artificial signatures. 
+Now that we have the data ready, we need an strategy to discover the interesting wavelengths. 
+What would it be an interesting wavelenght and how do we find them? This is a very difficult question and a very challenging task. It is difficult because we don't really know what to expect. If we were looking to our Sun even from the closest stars we wouldn't find any artificial signature on the wavelenghts what we are analyzing here.    
 
 
 
