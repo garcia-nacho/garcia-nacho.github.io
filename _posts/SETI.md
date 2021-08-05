@@ -315,10 +315,11 @@ for (timeevents in 1:dim(image.array)[1]) {
 {% endhighlight %}
 
 ##Finding artificial signatures. 
-Now that we have the data ready, we need an strategy to discover the interesting wavelengths. 
-What would it be an interesting wavelenght and how do we find them? This is a very difficult question and a very challenging task. It is difficult because we don't really know what to expect. If we were looking to our Sun even from the closest stars we wouldn't find any artificial signature on the wavelenghts what we are analyzing here.    
+Now that we have the data ready, we need an strategy to find the intesting stuff. How do an intelligent signature look like? We don't really know, indeed, if someone on the closests star were looking at the Sun using an Echelle telescope could find biosignatures (if they were lucky enough to observe an eclipse and their telescopes were sensitive enough) but they would not be able to find any sign of intelligence in our solar system. They might find that the Earth's atmosphere contains compounds difficult to explain by non biological sources; however we are not emiting anyting strong enough on any visible wavelenght to be detected. 
+Of the two light anomalies that we can find using an echelle telescope (reduction or emission of light) I find emission much more interesting because it is more difficult to be explained by natural sources. 
+Why do a civilization would want to emit any light beacon strong enough to be detected? We don't really know and we can't even image it but there're less natural events emiting of light on discrete wavelenghts that those absorving light. 
 
-
+One of the main sources of "contamination" on echelle spectrograms are cosmic rays, they appear as peaks of photons at any waveleght. To remove them, we will use an statistical approach. Cosmic rays generate an spark of    
 
 
 {% highlight r %}
