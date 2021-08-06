@@ -319,8 +319,7 @@ Now that we have the data ready, we need an strategy to find the intesting stuff
 Of the two light anomalies that we can find using an echelle telescope (reduction or emission of light) I find emission much more interesting because it is more difficult to be explained by natural sources. 
 Why do a civilization would want to emit any light beacon strong enough to be detected? We don't really know and we can't even image it but there're less natural events emiting of light on discrete wavelenghts that those absorving light. 
 
-One of the main sources of "contamination" on echelle spectrograms are cosmic rays, they appear as peaks of photons at any waveleght. To remove them, we will use an statistical approach. Cosmic rays generate an spark of    
-
+One of the main sources of "contamination" on echelle spectrograms are cosmic rays, they appear as peaks of photons at any waveleght. To remove them, we will use statistical approaches. We are going to generate 3 arrays, one for the mean, one for the median and one for the standard deviation of all the time points for all the wavelenghts represented by each single pixel of the spectrogram:
 
 {% highlight r %}
 #Spike finder
@@ -335,6 +334,16 @@ for (i in 1:dim(mean.array)[2]) {
 }
 {% endhighlight %}
 
+By plotting a wavelenght range, we can see how this approach cleans the spectrogram from cosmic rays. Let't look ath the Hydrogen-alpha absorption line of Tabby's (coordinates on the arrays [1500:2500,54]). The Hydrogen-alpha absorption line is a region of the expectrogram where there are less photons that in surrounding areas because of the absortion due to the the star's own hydrogen.    
+
+![Raw](/images/rawcount.png)
+![mean](/images/mean_photons.png)
+![median](/images/median_photons.png)
+![sd](/images/sd_photons.png)
+
+As you can see the median gets rid of most of the noise of the observations, se we will continue using this array. It is possible to find anomalies just by visual inspection. 
+
+
 
 
 
@@ -346,15 +355,3 @@ for (i in 1:dim(mean.array)[2]) {
 
 
 
-
-
-
-https://www.pnas.org/content/115/42/E9755
-
-
-
-
-{% highlight r %}
-linear<-lm(log(df$Infected-1)~df$Day)
-start <- list(a=exp(coef(linear)[1]), b=coef(linear)[2])
-{% endhighlight %}
