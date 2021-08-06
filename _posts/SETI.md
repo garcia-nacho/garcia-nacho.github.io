@@ -343,7 +343,7 @@ By plotting a wavelenght range, we can see how this approach cleans the spectrog
 
 As you can see the median gets rid of most of the noise of the observations, se we will continue using this array. It is possible to find anomalies just by visual inspection. 
 
-
+![raster_median](/images/median_raster.png)
 
 
 
