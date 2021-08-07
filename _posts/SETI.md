@@ -341,17 +341,45 @@ By plotting a wavelenght range, we can see how this approach cleans the spectrog
 ![median](/images/median_photons.png)
 ![sd](/images/sd_photons.png)
 
-As you can see the median gets rid of most of the noise of the observations, se we will continue using this array. It is possible to find anomalies just by visual inspection. 
+As you can see the median gets rid of most of the noise of the observations, se we will continue using this array. It is possible to find anomalies just by visual inspection (later we will find a programatical way to find them). 
 
 ![raster_median](/images/median_raster.png)
 
+#Peak 1
+peak1_graph.png
+peak1_pic.png
+
+#Peak2
+peak2_graph.png
+peak2_graph
+
+
+#Peak3
+peak3_img.png
+peak3_graph.png
+
+#Peak4
+peak4_graph.png
+peak4_img.png
 
 
 
 {% highlight r %}
+date<-gsub(".*=..", "",date)
+date<-gsub(". / UT.*", "",date)
+date<-as.POSIXct(date,format="%Y-%m-%dT%H:%M:%S")
+date.julian<-julian.POSIXt(date)
+date.julian<-(date.julian-min(date.julian))
+date.julian<-as.numeric(date.julian)
+{% endhighlight %}
 
+
+{% highlight r %}
 
 {% endhighlight %}
 
+{% highlight r %}
+
+{% endhighlight %}
 
 
