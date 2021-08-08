@@ -345,6 +345,33 @@ As you can see the median gets rid of most of the noise of the observations, se 
 
 ![raster_median](/images/median_raster.png)
 
+Let's first start with the series of two peaks and two valleys in the center of the image. 
+
+![Sodium](/images/sodium_raster.png)
+
+and this is the profile:
+
+![NaMedian](/images/median_profile_sodium.png)
+
+and this the overlay of all observations
+
+![NaOverlay](/images/overlay_sodium.png)
+
+If we plot their intensity over the time-series this is how it looks.
+
+![Naov2](/images/sodium_overalay.png)
+
+As you can see, the two peaks overlap almost perfectly, that means that whatever source it is, it must cause both. 
+
+So those are the elements of the misterious signal. 
+1. It causes two peaks with maximum around 5891.623Å and 5896.737Å.
+2. The peaks are alongside two valleys
+3. Same source 
+
+
+And the solution is that these peaks actually are caused by the sodium vapour lamps of the cities nearby San Jose, where the telecope is located. When the astronomers talk about the luminic contamination they are really serious about it. 
+[](/images/lpsstreet.jpg)
+
 #Peak 1
 peak1_graph.png
 peak1_pic.png
