@@ -368,13 +368,25 @@ So those are the elements of the misterious signal.
 2. The peaks are alongside two valleys
 3. Same source 
 
+And the solution is that these peaks actually are caused by the sodium vapour lamps of the cities nearby San Jose, where the telecope is located. When the astronomers talk about the luminic contamination they are really serious about it.  
+![svl](/images/lpsstreet.jpg)
 
-And the solution is that these peaks actually are caused by the sodium vapour lamps of the cities nearby San Jose, where the telecope is located. When the astronomers talk about the luminic contamination they are really serious about it. 
-[](/images/lpsstreet.jpg)
+Now we can try to solve the other mysterious peaks
 
-#Peak 1
-peak1_graph.png
-peak1_pic.png
+![peak1g](/images/peak1_graph.png)
+![peak1p](/images/peak1_pic.png)
+
+The emission at 5578Å has this profile, what that is... we don't know, but at least we have a human signature to compare with, the sodium vapour lamps, if the profile is simmilar we infer that the source of both peaks is the same: humans:
+
+Althouth the correlation is not perfect, the three maximum correlate, suggesting that the source is probably related with human light sources:
+![peak1c](/images/peak1_correlation.png)
+
+Problem partially solved, let's chase no ghost here! 
+
+Next one: 
+
+
+
 
 #Peak2
 peak2_graph.png
