@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "Finding anomalies in other stars"
+title:  "It’s never aliens (Until it is)"
 date: '2019-02-18 19:25:00'
 ---
 
