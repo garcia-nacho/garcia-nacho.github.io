@@ -35,27 +35,32 @@ fi = the ratio of fl that would develop intelligent life
 fc = the ratio of civilizations that develop a technology detectable from other planets    
 L = the time for which civilizations send detectable signatures to space   
 
-Of course, some of Drake equation's constrains are purely theoretical; for instance, we don't know how easy it is for a form of life to exist or to become intelligent. There is a recent study in which the authors develop a theoretical Bayesian framework to estimate some of Drake's parameters. In this paper they argue that considering how early life arrived to Earth and how late this life became intelligent[Ref](https://www.pnas.org/content/117/22/11995), adquisition of intelligence might not be an easy leap to make; however, the universe is vast, so big that even events with very low probality are likely to happen somewhere and this is where the Fermi paradox comes in: If it is so likely that there is intelligent life somewhere in the observable universe, why haven't we heard from them??!! 
-There are so many possible answers to try to solve the paradox that it is impossible to mention them all, and still it is a paradox because none of the arguments is strong enough to solve it. Maybe aliens are not interested in communicate, maybe they are too advanced for us to understand them, maybe there are "technological filters" like nuclear wars, climate changes, etc... wipping out civilizations once they discover these technological stages.    
+Of course, some of Drake equation's constrains are purely theoretical; for instance, we don't know how easy it is for a form of life to exist or to become intelligent. There is a recent study in which the authors develop a theoretical Bayesian framework to estimate some of Drake's parameters. In [this paper](https://www.pnas.org/content/117/22/11995), they argue that considering how early life arrived to Earth and how late this life became intelligent, adquisition of intelligence might not be an easy leap to make; however, the universe is vast, so big that even events with very low probalites are likely to happen somewhere and this is where the Fermi paradox kicks in: If it is so likely that there is intelligent life somewhere in the observable universe, why haven't we heard from them??!!   
+{: style="text-align: justify"}
+There are so many possible answers to try to *solve* the paradox that it would impossible to mention them all, and still it is a paradox because none of the arguments is strong enough to solve it. Maybe aliens are not interested in communicate, maybe they are too advanced for us to understand them, maybe there are *"technological filters"* lke nuclear wars, climate changes, etc... wipping out civilizations once they reacch these technological stages.    
 Again, we don't know.
 {: style="text-align: justify"}
 
 ### The SETI/Breakthrough programs 
-Since we haven't been able to disprove any hypothesis regarding extraterrestrial intelligence so far, we can only keep scanning the sky looking for a signature of an intelligent civilization and this is what the SETI does. Through different initiatives, SETI scans most of the electromagenetic spectrum (from radio waves to light sources) trying to find unnatural signals. However the amount of data gathered so far is insanely big, that big that a comprenhensive analysis using "humans-informed" analyses would take a lot of years. We need machines to do the job.
-![MatrixQ](/images/matrxquote.jpeg)
+Since we haven't been able to disprove any hypothesis regarding extraterrestrial intelligence so far, we can only keep scanning the sky looking for a signature of an intelligent civilization and this is what the SETI does. Through different initiatives, SETI scans most of the electromagenetic spectrum (from radio waves to light sources) trying to find unnatural signals. However the amount of data gathered so far is insanely big, that big that a comprenhensive analysis using *"humans-informed"* analyses would take a lot of years. We need machines to do the job.
+{: style="text-align: justify"}
 
-SETI, through the Breakthrough program, has released a masive dataset containing data from the closests 100000 stars. The data comes from [The Parkes Observatory](https://en.wikipedia.org/wiki/Parkes_Observatory), [The Green Bank Telescope](https://greenbankobservatory.org/science/telescopes/gbt/) and the [Automated Planted Finder(Lick Observatory)](https://en.wikipedia.org/wiki/Automated_Planet_Finder) and you can download everything from [here](https://breakthroughinitiatives.org/opendatasearch).
-The idea behind releasing such a dataset is to make it available for the community, so everyone can explore it and this what I will do in this post:to establish a computational framework so everyone can explore the dataset. 
+<img src="/images/matrxquote.jpeg" width="500">
+
+SETI, through the Breakthrough program, has released masive datasets containing data from the closests 100000 stars. The data comes from [The Parkes Observatory](https://en.wikipedia.org/wiki/Parkes_Observatory), [The Green Bank Telescope](https://greenbankobservatory.org/science/telescopes/gbt/) and the [Automated Planted Finder(Lick Observatory)](https://en.wikipedia.org/wiki/Automated_Planet_Finder) and you can download everything [here](https://breakthroughinitiatives.org/opendatasearch).
+The idea behind releasing such a dataset is to make it available for the community, so everyone can explore it and this is what I will do in this post:to establish a computational framework so everyone can explore this and other astronomical datasets.
+{: style="text-align: justify"}
 
 ### Navigating the data. 
 In this post I will just focus on the APF dataset because of it's simplicity. The APF dataset is a set of images in [FITS](https://en.wikipedia.org/wiki/FITS) format. Each image corresponds to the observation of one star at one particular timepoint. The "images" are indeed spectrograms which are generated by a telescope coupled with an [echelle spectrograph](https://en.wikipedia.org/wiki/Echelle_grating) that splits the light coming from an star into its different wavelenghts. This allows us to measure the number of photons of each wavelength coming from that particular start:
 Here is an scheeme of an echelle spectograph:
 
-![Echelle](/images/micromachines-10-00037-g002.png)  [Source](https://www.mdpi.com/2072-666X/10/1/37/htm)
+<img src="/images/micromachines-10-00037-g002.png" width="500">
+[Source](https://www.mdpi.com/2072-666X/10/1/37/htm)
 
 The raw images that we obtain from the echelle telescope look like this:
 
-![Echelle image](/images/echelle1.png)
+<img src="/images/echelle1.png" width="500">
 
 The image represents the diffaction of the light of a star. THe wavelenght increases from up to low and from left to right, so the photons with the lower wavelength (red) hit the top left corner and in the lower left corner shows the amount of photons with the highest wavelength (blue). If we assing a colour to each region we would have something like this:
 
