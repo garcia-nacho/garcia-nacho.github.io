@@ -65,7 +65,6 @@ The raw images that we obtain from the echelle telescope look like this:
 The image represents the diffaction of the light of a star. THe wavelenght increases from up to low and from left to right, so the photons with the lower wavelength (red) hit the top left corner and in the lower left corner shows the amount of photons with the highest wavelength (blue). If we assing a colour to each region we would have something like this:   
 
 <img src="/images/echelle-spectrum.jpg" width="500">   
-[source](https://blogs.maryville.edu/aas/echelle-spectrum/)    
 
 As you can see, there are two features in the image, the shadows and the "tracks". This is more obvious if we zoom in into the image:
 <img src="/images/echelle%20zoom.png" width="500">
@@ -292,7 +291,7 @@ Although the mystery is still unsolved, no radio emisions from Tabby have been d
 Now that we have all the compressed spectra from Tabby in the same folder, we can load them into a 3D array in which the first dimension is the temporal one. 
 
 {% highlight r %}
-### Load files directory Taby--------------
+# Load files directory Taby
 files<-list.files("/home/nacho/SETI/Tabby/")
 
 image.array<-array(data = NA, dim = c(length(files), 4608, 79))
@@ -328,7 +327,7 @@ for (timeevents in 1:dim(image.array)[1]) {
 
 {% endhighlight %}
 
-##Finding artificial signatures. 
+### Finding artificial signatures. 
 Now that we have the data ready, we need an strategy to find the intesting stuff. How do an intelligent signature look like? We don't really know, indeed, if someone on the closests star were looking at the Sun using an Echelle telescope could find biosignatures (if they were lucky enough to observe an eclipse and their telescopes were sensitive enough) but they would not be able to find any sign of intelligence in our solar system. They might find that the Earth's atmosphere contains compounds difficult to explain by non biological sources; however we are not emiting anyting strong enough on any visible wavelenght to be detected. 
 Of the two light anomalies that we can find using an echelle telescope (reduction or emission of light) I find emission much more interesting because it is more difficult to be explained by natural sources. 
 Why do a civilization would want to emit any light beacon strong enough to be detected? We don't really know and we can't even image it but there're less natural events emiting of light on discrete wavelenghts that those absorving light. 
@@ -350,81 +349,94 @@ for (i in 1:dim(mean.array)[2]) {
 
 By plotting a wavelenght range, we can see how this approach cleans the spectrogram from cosmic rays. Let't look ath the Hydrogen-alpha absorption line of Tabby's (coordinates on the arrays [1500:2500,54]). The Hydrogen-alpha absorption line is a region of the expectrogram where there are less photons that in surrounding areas because of the absortion due to the the star's own hydrogen.    
 
-![Raw](/images/rawcount.png)
-![mean](/images/mean_photons.png)
-![median](/images/median_photons.png)
-![sd](/images/sd_photons.png)
+<img src="/images/rawcount.png" width="500"> 
+
+<img src="/images/mean_photons.png" width="500">
+
+<img src="/images/median_photons.png" width="500">
+
+<img src="/images/sd_photons.png" width="500">
 
 As you can see the median gets rid of most of the noise of the observations, se we will continue using this array. It is possible to find anomalies just by visual inspection (later we will find a programatical way to find them). 
 
-![raster_median](/images/median_raster.png)
+<img src="/images/median_raster.png" width="500">
 
 Let's first start with the series of two peaks and two valleys in the center of the image. 
 
-![Sodium](/images/sodium_raster.png)
+<img src="/images/sodium_raster.png" width="500">
 
 and this is the profile:
 
-![NaMedian](/images/median_profile_sodium.png)
+<img src="/images/median_profile_sodium.png" width="500">
 
 and this the overlay of all observations
 
-![NaOverlay](/images/overlay_sodium.png)
+<img src="/images/overlay_sodium.png" width="500">
 
 If we plot their intensity over the time-series this is how it looks.
 
-![Naov2](/images/sodium_overalay.png)
+<img src="/images/sodium_overalay.png" width="500">
+
+
 
 As you can see, the two peaks overlap almost perfectly, that means that whatever source it is, it must cause both. 
 
 So those are the elements of the misterious signal. 
-1. It causes two peaks with maximum around 5891.623Å and 5896.737Å.
-2. The peaks are alongside two valleys
-3. Same source 
+1. It causes two peaks with maximum around 5891.623Å and 5896.737Å.   
+2. The peaks are alongside two valleys.   
+3. Same source.    
 
 And the solution is that these peaks actually are caused by the sodium vapour lamps of the cities nearby San Jose, where the telecope is located. When the astronomers talk about the luminic contamination they are really serious about it.  
-![svl](/images/lpsstreet.jpg)
+<img src="/images/lpsstreet.jpg" width="500">
 
 Now we can try to solve the other mysterious peaks
 
-![peak1g](/images/peak1_graph.png)
-![peak1p](/images/peak1_pic.png)
+<img src="/images/peak1_graph.png" width="500">   
 
-The emission at 5578Å has this profile, what that is... we don't know, but at least we have a human signature to compare with, the sodium vapour lamps, if the profile is simmilar we infer that the source of both peaks is the same: humans:
+<img src="/images/peak1_pic.png" width="500">   
+
+The emission at 5578Å has this profile, what that is... we don't know, but at least we have a human signature to compare with, the sodium vapour lamps, if the profile is simmilar we infer that the source of both peaks is the same: humans
 
 Althouth the correlation is not perfect, the three maximum correlate, suggesting that the source is probably related with human light sources:
-![peak1c](/images/peak1_correlation.png)
+
+<img src="/images/peak1_correlation.png" width="500">   
 
 Problem partially solved, let's chase no ghost here! 
 
 Next one: Peak at 6302.073Å
 
-![peak2i](/images/peak2_img.png)   
-![peak2g](/images/peak2_graph.png)
+<img src="/images/peak2_img.png" width="500">   
+
+<img src="/images/peak2_graph.png" width="500">   
 
 If we plot together the 3 peaks we get this (the red one is the one at 6302.073Å)
-![peak2c](/images/peak2correlation.png)
+
+<img src="/images/peak2correlation.png" width="500">   
 
 Again, they partially overlap, suggesting at least a common origin for some of the peaks. Whether this common origin is, we don't know, maybe it is related with the weather or the time of the day where the observations were taken.  
 
 Next peak: 5578.931Å
-![peak3i](/images/peak3_img.png)   
-![peak3g](/images/peak3_graph.png)
+<img src="/images/peak2correlation.png" width="500">   
+
+<img src="/images/peak3_img.png" width="500">   
+<img src="/images/peak3_graph.png" width="500">    
 
 Let's plot all the peaks together. 
 
-![peak3g](/images/peak3_corr.png)
+<img src="/images/peak3_corr.png" width="500">    
 
 It seems, that the green one and this (black) have almost perfect correlation (as in the case os the sodium vapour lamps). Of course, it is indeed the same peak that appears in two orders of the spectrogram with wavelengths stimated at 5578.931Å and 5578.909Å.
 As you can see in this plot, you can find overlapping wavelenghts on the order 41 and 42:
-![echelle_problem](/images/echelle_problem.png)
+
+<img src="/images/echelle_problem.png" width="500">    
 
 Let't look at the last peak: 9383.27Å
-This one falls on the infrared range of the spectra a,d it looks like this
-![peak4i](/images/peak4_img.png)   
-![peak4g](/images/peak4_graph.png)
+This one falls on the infrared range of the spectra and it looks like this
+<img src="/images/peak4_img.png" width="500">    
 
-![peak4c](/images/peak4_c.png)
+<img src="/images/peak4_graph.png" width="500">    
+
+<img src="/images/peak4_c.png" width="500">    
 
 Sadly, the high-intensity peaks overalap with the other non-natura peaks, that means no alien lasers on Tabby's sending us solar sails.  
 
@@ -435,16 +447,15 @@ As you can image, analyzing this way all the spectra for all stars in the data b
 This is an example of the output of my aline-scapping tool:
 It generates a plot like this one:
 
-![ht1](/images/ht_1.png)
+<img src="/images/ht_1.png" width="500">    
 
 A correlation matrix.
 
-![pcc1](/images/pcc1.png)
+<img src="/images/pcc1.png" width="500">    
 
 And the profile of the spectrum binned so it is possible to visualize it. 
 
-![pcc1](/images/profile.png)
-
+<img src="/images/profile.png" width="500">    
 
 Additionally, it saves the results of the peaks and surrounding areas as csv.
 
@@ -457,7 +468,7 @@ No problem I have uploaded the results of a lot of them here, so you can just su
 
 If you liked this post and you wanted to do something simmilar, you can apply what I used here including the scapping method. You could start finding correlations between the two filters of the Gaia telescope...
 
-![Gaia](/images/gaia1.png)
+<img src="/images/gaia1.png" width="500">    
 
 And here I'm plotting only two paramaters of the 500K observations stored in just one file, so maybe the alien lasers are waiting for you on the datbase but remember: It is never aliens, until it is. 
 
