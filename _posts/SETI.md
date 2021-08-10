@@ -7,31 +7,33 @@ date: '2019-02-18 19:25:00'
 ### Introduction.
 **"Are we alone in the universe?"**.  
 When it comes to answering one of the most relevant questions that humanity has still open, we have to admit that we don't have a clue. 
-The first historical references to the question are found in ancient Greece. Greek and Roman philosophers reasoned that since the universe seemed to be so vast it would be reasonable to think that other "tribes" would be living somewhere out there. Later on, religious thinking displaced the logical reasoning and humanity became special just because it was God's will for the humans to be special. It was not until the Renascent when others started to ask the same question again: *"If the Earth is no the center of the universe and there are other planets and stars, why should be life on Earth special?"*   
-
-If you think for a second on the implications that answering that question would have, you would realize how crucial it is for us, humans, find the answer. It doesn't really matter the answer itself, just knowing with 100% certainty that there is or that there is not life somewhere else in the universe would change us as a whole. 
-
-Unfortunately, neither ancient greeks or guys like Copernicus or Huygens had the technology to find it out and indeed we still don't know if we can answer that question today, but today in this post, I will show you some of the current approaches that we, humans, are using to try to answer that question. 
-
-{: style="text-align: justify"}
+The first historical references to the question are found in ancient Greece. Greek and Roman philosophers reasoned that since the universe seemed to be so vast, it would be reasonable to think that other *"tribes"* would be living somewhere out there. Later on, religious thinking displaced the logical reasoning and humanity became special just because it was God's will for the humans to be special. It was not until the Renascent when others started to ask the same question again: *"If the Earth is no the center of the universe and there are other planets and stars, why should be life on Earth special?"*   
+{: style="text-align: justify"} 
 <!--more-->
 
-### The Fermi paradox and the Drake equation
-In 1961 Frank Drake tried to shed some light into the mystery by turning the philosophical question into a parametric hypothesis. He estimated numerically the probability of another intelligent civilization living in our galaxy.  For the first time in history, someone had answered the question from a numerical point of view.  According to Drake, we are sharing our galaxy with another 10 intelligent civilizations with the ability to communicate. Is that too much? is that too little? Well... for sure we would not be able to detect our own presence from a distance 10K light-years (3,1kpc) which is approximately 1/10 of the galactic size. Indeed we would not be able to detect even the presence of Earth since the furthest exoplantet detected and confirmed it is around 6.5K light-years:
+If you think for a second about the implications that answering that question would have, you soon realize how crucial it is for us, humans, find the answer. It doesn't really matter the answer itself, just knowing with 100% certainty that there is (or that there is not) life somewhere else in the universe, would change our view of the universe. 
+{: style="text-align: justify"} 
 
-![Exoplanets](/images/1920px-Distribution_of_exoplanets_by_distance.png)
+Unfortunately, neither ancient greeks, guys like Copernicus or Huygens had the technology to answer the question, and indeed we still don't know if we can answer that question today. But here in this post, I will show you some of the current approaches that we, humans, are using to try to answer the question. 
+{: style="text-align: justify"}
+
+### The Fermi paradox and the Drake equation.
+In 1961 Frank Drake tried to shed some light into the mystery by turning the philosophical question into a parametric hypothesis. He estimated numerically the probability of another intelligent civilization living in our galaxy.  For the first time in history, someone had answered the question from a numerical point of view.  According to Drake, we are sharing our galaxy with another 10 intelligent civilizations with the ability to communicate. Is that too much? is that too little? Well... for sure we would not be able to detect our own presence from a distance 10K light-years (3,1kpc) which is approximately 1/10 of the galactic size. Indeed we would not be able to detect even the presence of Earth since the furthest exoplantet detected and confirmed it is around 6.5K light-years:
+{: style="text-align: justify"}
+
+<img src="/images/1920px-Distribution_of_exoplanets_by_distance.png" width="500">
 
 But coming back to Drake equations, it takes into account the following parameters:
 
-![DrakeEq](/images/drakeequation.svg)
+<img src="/images/drakeequation.svg" width="500">
 
-R∗ = the rate of star formation
-fp = the ratio of stars having planets
-ne = the ratio of planets in the habitable zone
-fl = the ratio of ne that would actually develop life
-fi = the ratio of fl that would develop intelligent life
-fc = the ratio of civilizations that develop a technology detectable from other planets 
-L = the time for which civilizations send detectable signatures to space
+R∗ = the rate of star formation   
+fp = the ratio of stars having planets   
+ne = the ratio of planets in the habitable zone   
+fl = the ratio of ne that would actually develop life   
+fi = the ratio of fl that would develop intelligent life   
+fc = the ratio of civilizations that develop a technology detectable from other planets    
+L = the time for which civilizations send detectable signatures to space   
 
 Of course, some of Drake equation's constrains are purely theoretical; for instance, we don't know how easy it is for a form of life to exist or to become intelligent. There is a recent study in which the authors develop a theoretical Bayesian framework to estimate some of Drake's parameters. In this paper they argue that considering how early life arrived to Earth and how late this life became intelligent[Ref](https://www.pnas.org/content/117/22/11995), adquisition of intelligence might not be an easy leap to make; however, the universe is vast, so big that even events with very low probality are likely to happen somewhere and this is where the Fermi paradox comes in: If it is so likely that there is intelligent life somewhere in the observable universe, why haven't we heard from them??!! 
 There are so many possible answers to try to solve the paradox that it is impossible to mention them all, and still it is a paradox because none of the arguments is strong enough to solve it. Maybe aliens are not interested in communicate, maybe they are too advanced for us to understand them, maybe there are "technological filters" like nuclear wars, climate changes, etc... wipping out civilizations once they discover these technological stages.    
@@ -421,15 +423,33 @@ As you can image, analyzing this way all the spectra for all stars in the data b
 This is an example of the output of my aline-scapping tool:
 It generates a plot like this one:
 
-and a correlation matrix.
+![ht1](/images/ht_1.png)
+
+A correlation matrix.
+
+![pcc1](/images/pcc1.png)
+
+And the profile of the spectrum binned so it is possible to visualize it. 
+
+![pcc1](/images/profile.png)
+
 
 Additionally, it saves the results of the peaks and surrounding areas as csv.
 
 Do you like it? Would you like to explore the data without spending the days that the analysis requies? 
 No problem I have uploaded the results of a lot of them here, so you can just surf it looking alien signatures on them. 
 
+[Kaggle](https://www.kaggle.com/nachogarcia/anomalies-from-seti)
 
 #Where to go from here.
 
-If you liked this post and you wanted to do something simmilar, you could use the database generated by Gaia
+If you liked this post and you wanted to do something simmilar, you can apply what I used here including the scapping method. You could start finding correlations between the two filters of the Gaia telescope...
+
+[Gaia](/images/gaia1.png)
+
+And here I'm plotting only two paramaters of the 500K observations stored in just one file, so maybe the alien lasers are waiting for you on the datbase but remember: It is never aliens, until it is. 
+
+
+As always, the R scripts are available here.
+
 
