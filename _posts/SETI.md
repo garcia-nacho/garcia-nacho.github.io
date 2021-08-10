@@ -445,7 +445,7 @@ No problem I have uploaded the results of a lot of them here, so you can just su
 
 If you liked this post and you wanted to do something simmilar, you can apply what I used here including the scapping method. You could start finding correlations between the two filters of the Gaia telescope...
 
-[Gaia](/images/gaia1.png)
+![Gaia](/images/gaia1.png)
 
 And here I'm plotting only two paramaters of the 500K observations stored in just one file, so maybe the alien lasers are waiting for you on the datbase but remember: It is never aliens, until it is. 
 
