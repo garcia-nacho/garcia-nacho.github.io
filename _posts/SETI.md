@@ -7,54 +7,56 @@ date: '2019-02-18 19:25:00'
 ### Introduction.
 **"Are we alone in the universe?"**.  
 When it comes to answering one of the most relevant questions that humanity has still open, we have to admit that we don't have a clue. 
-The first historical references to the question are found in ancient Greece. Greek and Roman philosophers reasoned that since the universe seemed to be so vast, it would be reasonable to think that other *"tribes"* would be living somewhere out there. Later on, religious thinking displaced the logical reasoning and humanity became special just because it was God's will for the humans to be special. It was not until the Renascent when others started to ask the same question again: *"If the Earth is no the center of the universe and there are other planets and stars, why should be life on Earth special?"*   
+The first historical references to the question are found in ancient Greece. Greek and Roman philosophers reasoned that since the universe seemed to be so vast, it would be reasonable to think that other *"tribes"* would be living somewhere out there. Later on, religious thinking displaced logical reasoning and humanity became special just because it was God's will for humans to be special. It was not until the Renascent, when others started to ask the same question again: *"If the Earth is no the center of the universe and there are other planets and stars, why should be life on Earth special?"*   
 {: style="text-align: justify"} 
 <!--more-->
 
-If you think for a second about the implications that answering that question would have, you soon realize how crucial it is for us, humans, find the answer. It doesn't really matter the answer itself, just knowing with 100% certainty that there is (or that there is not) life somewhere else in the universe, would change our view of the universe. 
+If you think for a second about the implications that answering that question would have, you soon realize how crucial it is for us, humans, to find the answer. It doesn't matter the answer itself, just knowing with 100% certainty that there is (or that there is not) life somewhere else in the universe, would change our view of the universe. 
 {: style="text-align: justify"} 
 
-Unfortunately, neither ancient greeks, guys like Copernicus or Huygens had the technology to answer the question, and indeed we still don't know if we can answer that question today. But here in this post, I will show you some of the current approaches that we, humans, are using to try to answer the question. 
+Unfortunately, neither ancient greeks nor guys like Copernicus and Huygens had the technology to answer the question, and indeed we still don't know if we can answer that question today. But here in this post, I will show you some of the current approaches that we, humans, are using to try to answer the question. 
 {: style="text-align: justify"}
 
 ### The Fermi paradox and the Drake equation.
-In 1961 Frank Drake tried to shed some light into the mystery by turning the philosophical question into a parametric hypothesis. He estimated numerically the probability of another intelligent civilization living in our galaxy.  For the first time in history, someone had answered the question from a numerical point of view.  According to Drake, we are sharing our galaxy with another 10 intelligent civilizations with the ability to communicate. Is that too much? is that too little? Well... for sure we would not be able to detect our own presence from a distance 10K light-years (3,1kpc) which is approximately 1/10 of the galactic size. Indeed we would not be able to detect even the presence of Earth since the furthest exoplantet detected and confirmed it is around 6.5K light-years:
+In 1961 Frank Drake tried to shed some light on the mystery by turning the philosophical question into a parametric hypothesis. He estimated numerically the probability for another intelligent civilization to live in the Milky Way.  For the first time in history, someone had tried to answer the question from a numerical point of view.  According to Drake, we should be sharing our galaxy with another 10 intelligent civilizations with the ability to communicate. Is that too much? is that too little? Well... for sure we would not be able to detect our presence from 10K light-years (3,1kpc) which accounts for approximately 1/10 of the galactic size. Moreover, we would not be able to detect even the presence of Earth since the closest exoplantet detected is around around 6.5K light-years from us.
 {: style="text-align: justify"}
 
 <img src="/images/1920px-Distribution_of_exoplanets_by_distance.png" width="500">
 
-But coming back to Drake equations, it takes into account the following parameters:
+But coming back to Drake's equations. It takes into account the following parameters:
 
 <img src="/images/drakeequation.svg" width="500">
 
-R∗ = the rate of star formation   
-fp = the ratio of stars having planets   
-ne = the ratio of planets in the habitable zone   
-fl = the ratio of ne that would actually develop life   
-fi = the ratio of fl that would develop intelligent life   
-fc = the ratio of civilizations that develop a technology detectable from other planets    
-L = the time for which civilizations send detectable signatures to space   
+R∗ = Rate of star formation   
+fp = Ratio of stars having planets   
+ne = Ratio of planets in the habitable zone of the stars   
+fl = Ratio of *ne*that would actually develop life   
+fi = Ratio of *fl* that would develop intelligent life   
+fc = Ratio of civilizations that develop a technology detectable from other planets    
+L = Time for which civilizations send detectable signatures to space   
 
-Of course, some of Drake equation's constrains are purely theoretical; for instance, we don't know how easy it is for a form of life to exist or to become intelligent. There is a recent study in which the authors develop a theoretical Bayesian framework to estimate some of Drake's parameters. In [this paper](https://www.pnas.org/content/117/22/11995), they argue that considering how early life arrived to Earth and how late this life became intelligent, adquisition of intelligence might not be an easy leap to make; however, the universe is vast, so big that even events with very low probalites are likely to happen somewhere and this is where the Fermi paradox kicks in: If it is so likely that there is intelligent life somewhere in the observable universe, why haven't we heard from them??!!   
+Of course, some of the parameters are purely theoretical; for instance, we don't know how easy it is for a form of life to exist or to become intelligent. There is, indeed, a recent study in which the authors develop a theoretical Bayesian framework to estimate some of Drake's parameters. In [this paper](https://www.pnas.org/content/117/22/11995), they argue that considering how early life arrived on Earth and how late this life became intelligent, acquisition of intelligence might not be an easy leap to make. However, the universe is vast, so big that even events with very low probabilities are likely to happen somewhere. Here is where  Fermi's paradox kicks in: *If it is so likely that there is intelligent life somewhere in the observable universe, why haven't we heard from them??!!*   
 {: style="text-align: justify"}
-There are so many possible answers to try to *solve* the paradox that it would impossible to mention them all, and still it is a paradox because none of the arguments is strong enough to solve it. Maybe aliens are not interested in communicate, maybe they are too advanced for us to understand them, maybe there are *"technological filters"* lke nuclear wars, climate changes, etc... wipping out civilizations once they reacch these technological stages.    
+
+There are so many possible answers to try to *solve* the paradox that it would be impossible to mention them all, and still, it is a paradox because none of the arguments is strong enough to solve it. Maybe aliens are not interested in communicating, maybe they are too advanced for us to understand them, maybe there are *"technological filters"* like nuclear wars, climate changes, etc... wiping out civilizations once they reach these technological stages.    
 Again, we don't know.
 {: style="text-align: justify"}
 
 ### The SETI/Breakthrough programs 
-Since we haven't been able to disprove any hypothesis regarding extraterrestrial intelligence so far, we can only keep scanning the sky looking for a signature of an intelligent civilization and this is what the SETI does. Through different initiatives, SETI scans most of the electromagenetic spectrum (from radio waves to light sources) trying to find unnatural signals. However the amount of data gathered so far is insanely big, that big that a comprenhensive analysis using *"humans-informed"* analyses would take a lot of years. We need machines to do the job.
+Since we haven't been able to disprove any hypothesis regarding extraterrestrial intelligence so far, we can only keep scanning the sky looking for a signature of an intelligent civilization and this is what the SETI does. Through different initiatives, SETI scans most of the electromagnetic spectrum (from radio waves to light sources) trying to find *non-natural* signatures. However, the amount of data gathered so far is insanely big, that big that a comprehensive analysis using *"humans"* to analyze it would take a lot of years. We need machines to do the job.
 {: style="text-align: justify"}
 
 <img src="/images/matrxquote.jpeg" width="500">
 
-SETI, through the Breakthrough program, has released masive datasets containing data from the closests 100000 stars. The data comes from [The Parkes Observatory](https://en.wikipedia.org/wiki/Parkes_Observatory), [The Green Bank Telescope](https://greenbankobservatory.org/science/telescopes/gbt/) and the [Automated Planted Finder(Lick Observatory)](https://en.wikipedia.org/wiki/Automated_Planet_Finder) and you can download everything [here](https://breakthroughinitiatives.org/opendatasearch).
-The idea behind releasing such a dataset is to make it available for the community, so everyone can explore it and this is what I will do in this post:to establish a computational framework so everyone can explore this and other astronomical datasets.
+SETI, through the Breakthrough program, has released massive datasets containing data from the closest 100000 stars. The data comes from [The Parkes Observatory](https://en.wikipedia.org/wiki/Parkes_Observatory), [The Green Bank Telescope](https://greenbankobservatory.org/science/telescopes/gbt/) and the [Automated Planted Finder(Lick Observatory)](https://en.wikipedia.org/wiki/Automated_Planet_Finder) and you can download everything [here](https://breakthroughinitiatives.org/opendatasearch).
+The idea behind releasing such a dataset is to make it available for the community, so everyone can explore it and this is what I will do in this post: To establish a computational framework so that everyone can explore this and other astronomical datasets.
 {: style="text-align: justify"}
 
 ### Navigating the data. 
-In this post I will just focus on the APF dataset because of it's simplicity. The APF dataset is a set of images in [FITS](https://en.wikipedia.org/wiki/FITS) format. Each image corresponds to the observation of one star at one particular timepoint. The "images" are indeed spectrograms which are generated by a telescope coupled with an [echelle spectrograph](https://en.wikipedia.org/wiki/Echelle_grating) that splits the light coming from an star into its different wavelenghts. This allows us to measure the number of photons of each wavelength coming from that particular start:
+In this post, I will just focus on the *APF* dataset because of its simplicity. The *APF* dataset is a set of images in [FITS](https://en.wikipedia.org/wiki/FITS) format. Each image corresponds to the observation of one star at one particular time point. The "images" are indeed spectrograms that are generated by a telescope coupled with an [echelle spectrograph](https://en.wikipedia.org/wiki/Echelle_grating) that splits the light coming from a star into its different wavelengths. This allows us to measure the number of photons of each wavelength coming from that particular star:
 Here is an scheeme of an echelle spectograph:
 {: style="text-align: justify"}   
+
 <img src="/images/micromachines-10-00037-g002.png" width="500">
 [Source](https://www.mdpi.com/2072-666X/10/1/37/htm)
 
@@ -62,17 +64,18 @@ The raw images that we obtain from the echelle telescope look like this:
    
 <img src="/images/echelle1.png" width="500">
    
-The image represents the diffaction of the light of a star. THe wavelenght increases from up to low and from left to right, so the photons with the lower wavelength (red) hit the top left corner and in the lower left corner shows the amount of photons with the highest wavelength (blue). If we assing a colour to each region we would have something like this:   
+The image represents the diffraction of the light of a star. The wavelength increases from up to low and from left to right, so the photons with the lower wavelength (red) hit the top left corner and in the lower-left corner shows the number of photons with the highest wavelength (blue). If we assign a colour to each region we would have something like this:
+{: style="text-align: justify"}   
 
 <img src="/images/echelle-spectrum.jpg" width="500">   
 
-As you can see, there are two features in the image, the shadows and the "tracks". This is more obvious if we zoom in into the image:
+As you can see, there are two features in the image: the shadows and the *"tracks"*. This is more obvious if we zoom in into the image:   
 <img src="/images/echelle%20zoom.png" width="500">
    
-This pattern is indeed an artifact from the technique, not all area on the image is covered by the diffracted light. We are interested only in the tracks of light because they contain the information. Those "tracks" are called orders and we need a way to extract the information laying on the orders in a process called compression (basically because the resulting image with the important information is much smaller in size).   
-The fist step in the compresion is to find out where the tracks lay in the image. 
-The way to do it is a bit convoluted: We need to find functions that *draw"* lines going though all the pixels of every track. 
-As you can see in the image, the tacks are curved and although this is totally normal in echelle spectra, it is a bit problematic for us because the functions tha draw such a curves are 4rd order polynomial functions like this one:  
+This pattern is indeed an artifact of the technique, not all the area on the image is covered by the diffracted light. We are interested only in the tracks of light because they are the ones that contain the information. Those *"tracks"* are called orders and we need a way to extract the information laying on the orders in a process called compression (basically because the resulting image with the important information is much smaller in size).   
+The first step in the compression is to find out where the tracks lay in the image. 
+The way to do it is a bit convoluted: We need to find functions that *"draw"* lines going through all the pixels of every track. 
+As you can see in the image, the tacks are curved and although this is normal in echelle spectra, it is a bit problematic for us because the functions that draw such curves are 4rd order polynomial functions like this one:  
 {: style="text-align: justify"}
 
 $$y=a+b\cdot x+c\cdot x^{2}+d\cdot x^{3}+e\cdot x^{4}$$   
@@ -80,15 +83,16 @@ $$y=a+b\cdot x+c\cdot x^{2}+d\cdot x^{3}+e\cdot x^{4}$$
 Now we *only* need a way to find **a**, **b**, **c** and **d** for each one of the 79 orders. I guess that different tools have their own algorithms but I had to develop my own to estimate the 5 parameters.
 {: style="text-align: justify"}
 
-My algorithm finds the orders by identifying the tracks in the central region of the image, which is where all the tracks are better defined and then, it goes track by track finding the parameters that satisfy the following two conditions: 
- {: style="text-align: justify"}
+My algorithm finds the orders by identifying the tracks in the central region of the image, which is where all the tracks are better defined, and then, it goes track by track finding the parameters that satisfy the following two conditions:  
+{: style="text-align: justify"}
  
-1. The curve must go through the point of the track identified in the central region which I call anchoring point   
-2. The mean of the pixels of the that the curve overlay must be maximize (meaning that we are avoiding the shades between tracks)   
-    
+1. The curve must go through the point of the track identified in the central region that I call the anchoring point    
+2. The mean of the pixels of the image that the function overlays must be maximized (meaning that we are avoiding the shades between tracks)   
+{: style="text-align: justify"}
+
 So let's start coding it: 
     
-Before doing anything we need to load the FITS files and this is done in R using the FITSio library (We also load the rest of the libraries that we are going to use later on)
+But before doing any of this, we need to load the FITS files and this is done in R using the *FITSio* library (We also load the rest of the libraries that we are going to use later on)
 {: style="text-align: justify"}
 
 {% highlight r %}
@@ -107,15 +111,17 @@ df.img<-df$imDat
 
 {% endhighlight %}
 
-You can download the ucb-beck230.fits file from [here](/images/ucb-bek230.fits). Now the image is stored in the df.img matrix with dimensions [2080,4608]. Although you can plot the image I don't recomend it, the rendering is very slow and it is going to be difficult to see anything anyway. This is the best I have obtained by tweaking the zlim of the image function:
+You can download the ucb-beck230.fits file from [here](/images/ucb-bek230.fits). Now the image is stored in the *df.img* matrix with dimensions [2080,4608]. Although you can plot the image I don't recommend it, the rendering is very slow and it is going to be difficult to see anything anyway. This is the best I have obtained by tweaking the *zlim* of the image function:
 {: style="text-align: justify"}
 
 <code>image(df.img, zlim = c(median(df.img)/2, median(df.img)*2))</code>
 
-as you can see the rendering is so inefficient that it even creates horizontal white stripes:
+As I said, the rendering is so inefficient that it even creates horizontal white stripes:
+
 <img src="/images/Rplot27.png" width="500">   
 
-Next, we need to remove the background on the image and we do it by substracting the value corresponding to the first 30 rows of the image, that never have a track:
+Next, we need to remove the background on the image and we do it by subtracting the value corresponding to the first 30 rows of the image, that never have a track:
+{: style="text-align: justify"}
 
 {% highlight r %}
 baseline<-median(df.img[1:30,])
@@ -123,6 +129,7 @@ df.img<-df.img-baseline
 {% endhighlight %}
  
 Then, we look for the 79 peaks of photons corresponding to the orders at the center of the image:
+{: style="text-align: justify"}
 
 {% highlight r %}
 #Identification of N peaks 
@@ -143,20 +150,25 @@ for (i in 1:track.n) {
 anchor.point<-unique(anchor.point)
 {% endhighlight %}
 
-In this algorithm, the peaks are stored in the anchor point vector.
+In this algorithm, the peaks are stored in the *anchor.point* vector.
 
 This is how the order look like when they cross the central part of the image:
+
 <img src="/images/anchorpoints.png" width="500">   
 
-and his is how the algorithm finds the peaks:
+and this is how the algorithm finds the peaks:
+
 <img src="/images/anchorpoints2.png" width="500">   
 
-Now that we have identified the orders in the central part of the spectrogram, we need to identify the tracks. Note that the algorithm has some problems identifying lowest and highest orders (the signal in those wavelengths is so weak that the algorithm fails detecting them over the background noise).
+Now that we have identified the orders in the central part of the spectrogram, we need to find the tracks. Note that the algorithm has some problems identifying lowest and highest orders (the signal in those wavelengths is so weak that the algorithm fails to detect them over the background noise).
+{: style="text-align: justify"}
 
-As I mentioned above, we want to find those 4rd oder functions that overlap the tracks. Since the function to be maximized is not differentiable, we will find the parameters by doing a random search. Parameters *b, c, d,* and *e* will take random values on a small range (because of the similar shape of the curves), so it will be easier for the model to find the optimal solution after few iterations, let's say 10000. The optimal solution is the one in which the mean of the values of the image defined by the functions are maximized. 
+As I mentioned above, we want to find those 4rd order functions that overlap the tracks. Since the function to be maximized is not differentiable, we will find the parameters by doing a random search. Parameters *b, c, d,* and *e* will take random values on a small range (because of the similar shape of the curves), so it will be easier for the model to find the optimal solution after a few iterations, let's say 10000. The optimal solution is the one in which the mean of the values of the image defined by the functions is maximized.  
+{: style="text-align: justify"}
 
-Parameter *a* will be assigned to the only possible value that makes the curve go throught the pixel identified on the cental region. 
-Since the algorithm has to find the parameters for each one of the 79 orders, it is possible to paralelize the code, so each processor gets the task of finding the parameters for one order. Here is the code to do it:
+Parameter *a* will be assigned to the only possible value that makes the curve going through the pixel identified on the central region. 
+Since the algorithm has to find the parameters for each one of the 79 orders, it is possible to parallelize the code, so each processor gets the task of finding the parameters for one order. Here is the code to do it:
+{: style="text-align: justify"}
 
 {% highlight r %}
 fitter <- function(x, a, b, c, d, e){
@@ -223,7 +235,8 @@ for (i in 2:length(output)) {
 }
 {% endhighlight %}
 
-Now, we have found where the orders lay in the image and we need to extract their values. To do that, we average the value of the width of the track (approximately five pixels). 
+Now, we have found where the orders lay in the image and we need to extract their values. To do that, we average the value of the width of the track (approximately five pixels).   
+{: style="text-align: justify"}
 
 {% highlight r %}
 #Order extraction
@@ -244,7 +257,10 @@ for (i in 1:length(anchor.point)) {
 }
 {% endhighlight %}
 
+
+---HERE---
 Althought this method works, the random nature of the paarameters would make the extractions uncomparable unless we aligned them using some common spectral features (eg. The H-band due to the hydrogen and/or iodine bands used to calibrate echelle spectographs). If you find this algorithmic approach interesting, you can just take the code and develope it futher but this additional tests and validations go beyond the scope of this post. Luckily for us, we don't need to do the entire process for each spectrogram. We can just donwload the compressed spectrogram from the SETI webpage.
+{: style="text-align: justify"}
 
 ### Scrapping SETI 
 Now that we have a plan A (to download the compressed spectrogram) and a plan B (to compress the raw spectrogram when it is needed) we can procceed to download the data from the breakthrough database. To do that, we would use an index of the database which you can download [here](/images/apf_log.txt). This is the code to get information about the compressed files (reduced==TRUE) stored in the database.
