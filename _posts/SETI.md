@@ -257,13 +257,12 @@ for (i in 1:length(anchor.point)) {
 }
 {% endhighlight %}
 
-
----HERE---
-Althought this method works, the random nature of the paarameters would make the extractions uncomparable unless we aligned them using some common spectral features (eg. The H-band due to the hydrogen and/or iodine bands used to calibrate echelle spectographs). If you find this algorithmic approach interesting, you can just take the code and develope it futher but this additional tests and validations go beyond the scope of this post. Luckily for us, we don't need to do the entire process for each spectrogram. We can just donwload the compressed spectrogram from the SETI webpage.
+Although this method works, the random nature of the parameters would make the extractions incomparable unless we align them using some common spectral features (eg. The H-band due to the hydrogen and/or iodine bands used to calibrate echelle spectrographs). If you find this algorithmic approach interesting, you can just take the code and develop it further but these additional tests and validations go beyond the scope of this post. Luckily for us, we don't need to do the entire process for each spectrogram. We can just download the compressed spectrogram from the SETI webpage.
 {: style="text-align: justify"}
 
 ### Scrapping SETI 
-Now that we have a plan A (to download the compressed spectrogram) and a plan B (to compress the raw spectrogram when it is needed) we can procceed to download the data from the breakthrough database. To do that, we would use an index of the database which you can download [here](/images/apf_log.txt). This is the code to get information about the compressed files (reduced==TRUE) stored in the database.
+Now that we have plan A (to download the compressed spectrogram) and plan B (to compress the raw spectrogram when it is needed), we can proceed downloading the data from the *breakthrough database*. To do that, we would use an index of the database which you can download [here](/images/apf_log.txt). This is the code to get information about the compressed files *(reduced==TRUE)* stored in the database.
+{: style="text-align: justify"}
 
 {% highlight r %}
 files<-read.csv("/home/nacho/SETI/apf_log.txt", sep = " ", header = FALSE)
@@ -283,10 +282,12 @@ stars<-stars[order(stars.n, decreasing = TRUE)]
 stars.n<-stars.n[order(stars.n, decreasing = TRUE)]
 {% endhighlight %}
 
-This code gets the information about the stars that are in the database and the number of observations for each one of them.  
-From there you could extract information about your favourite star. 
+This code extracts the information about the stars that are in the database and the number of observations for each one of them.  
+From there you could find information about your favorite star. 
+{: style="text-align: justify"}
 
-In this example, I am just going to get the information about *KIC 8462852*, to do that I just need to find and download the files in the dtabase that correspond to observations of Tabby:
+In this post, I'll use *KIC 8462852* as an example. To do that, I just need to find and download the files in the database that correspond to observations of *KIC 8462852* (aka Tabby's):
+{: style="text-align: justify"}
 
 {% highlight r %}
 tabby <- files[grep("8462852", files$V3),]
@@ -300,7 +301,11 @@ for (i in 1:nrow(tabby)) {
 
 {% endhighlight %}
 
+
+----HERE----
 So, what's the deal with *KIC 8462852*? KIC 8462852 is also known as Tabby's star. Tabby's is a star that became very famous a few years ago when it was found that it had *abnormal* reductions on the light intensity that were not consistent with any known stellar event. Several hypotheses were proposed to explain these unusual observations and one of them is the presence of an gigantic megastructe warping the star developed by a very advanced alien civilization to extract the energy of the star. Of couse, once the alien hypothesis reached the media, the idea propagated exponentially. 
+{: style="text-align: justify"}
+
 
 Although the mystery is still unsolved, no radio emisions from Tabby have been detected and the most likely hypothesis nowadays is that the  fluctuations could be originated by a cloud of asteroids/comets/dust there is still a strong interest on this star by the media, so let's surf the vawe of trendiness and explore Tabby looking for aliens. 
 
